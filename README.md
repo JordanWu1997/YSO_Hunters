@@ -16,6 +16,8 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - **將5-dimensional Magnitude Space延伸至更高維度(6,7,...)**
 
 ## **III.Step**
+
+
 ## **IV.Result**
 ## **V.Problem**
 ## **VI.Work log**
