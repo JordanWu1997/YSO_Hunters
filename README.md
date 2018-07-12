@@ -1,8 +1,8 @@
 # **YSO Hunters**
 ## **I.Introduction**
 ## **II.Goal**
-## **III.Steps**
+## **III.Step**
 ## **IV.Result**
-## **V.Problems**
+## **V.Problem**
 ## **VI.Work log**
 ## **VII.Reference**
