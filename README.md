@@ -23,5 +23,6 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - **Flux in all_candidatas.tbl(Inchone's YSO_table) differ from Glue_7_Clouds.tbl(our data source)
 - **Glue_7_Clouds_yso_candidates(Our YSO_table) does not entirely containe all_candidatas.tbl(Inchone's YSO_table) 
 ## **VI.Work log**
-- **7/19 Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
+- **7/19 
+    -Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
 ## **VII.Reference**
