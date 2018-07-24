@@ -17,7 +17,14 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **III.Step**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
-- [ ] step 1
+- [X] step 1
+- [ ] step 2
+- [X] step 3
+- [ ] step 4
+- [X] step 5
+- [ ] step 6
+- [ ] step 7
+- [ ] step 8
 
 ## **IV.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
