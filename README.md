@@ -19,6 +19,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
 
 ## **IV.Result**
+![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
 ## **V.Problem**
 - **Flux in all_candidatas.tbl(Inchone's YSO_table) differ from Glue_7_Clouds.tbl(our data source)**
 - **Glue_7_Clouds_yso_candidates(Our YSO_table) does not entirely containe all_candidatas.tbl(Inchone's YSO_table)**
