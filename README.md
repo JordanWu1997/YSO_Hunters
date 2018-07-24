@@ -34,7 +34,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 ## **VI.Work log**
 - **7/19**
   - **Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog**
-- **7/20**
+- **7/24**
   - **To realize the knowledge about extinction**
 ## **VIII.Data Sources**
 - **Molecular Clouds HREL catalog :**
