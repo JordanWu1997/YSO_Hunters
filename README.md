@@ -11,9 +11,9 @@ Galaxies. Thus, the grid point required by the Multi-dimensional Magnitude Space
 will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are adequate.
 
 ## **II.Goal**
-- **重現 Hsieh & Lai (2013) 之結果**
-- **使用新的邊界劃分節省計算multi-dimensional Magnitude Space之記憶體**
-- **將5-dimensional Magnitude Space延伸至更高維度(6,7,...)**
+- 重現 Hsieh & Lai (2013) 之結果
+- 使用新的邊界劃分節省計算multi-dimensional Magnitude Space之記憶體
+- 將5-dimensional Magnitude Space延伸至更高維度(6,7,...)
 
 ## **III.Step**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
@@ -26,21 +26,20 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - [ ] step 7
 - [ ] step 8
 ## **IV.Extinction**
-    ****
 ## **V.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
 ## **VI.Problem**
-- >Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
-- >Our YSO table(Glue_7_Clouds_yso_candidates) does not entirely containe lInchone's YSO table(all_candidatas.tb)
+- Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
+- Our YSO table(Glue_7_Clouds_yso_candidates) does not entirely containe lInchone's YSO table(all_candidatas.tb)
 ## **VII.Work log**
-- **7/19**
-  - **Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog**
-- **7/24**
-  - **To realize the knowledge about extinction**
+- 7/19
+  - Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
+- 7/24
+  - To realize the knowledge about extinction
 ## **VIII.Data Sources**
-- **Molecular Clouds HREL catalog :**
-  - **/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1**
-- **Programs from Inchone Hsieh :**
-  - **Galaxy Probability:**
-    - **/cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed**
+- Molecular Clouds HREL catalog :
+  - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
+- Programs from Inchone Hsieh :
+  - Galaxy Probability:
+    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed
 ## **IX.Reference**
