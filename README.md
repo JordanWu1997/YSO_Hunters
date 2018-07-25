@@ -36,6 +36,8 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
 - 7/24
   - To realize the knowledge about extinction
+- 7/25
+  - Learn to use astropy to read the data from ds9  
 ## **VIII.Data Sources**
 - Molecular Clouds HREL catalog :
   - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
