@@ -25,13 +25,14 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - [ ] step 6
 - [ ] step 7
 - [ ] step 8
-
-## **IV.Result**
+## **IV.Extinction**
+    ****
+## **V.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
-## **V.Problem**
-- **Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)**
-- **Our YSO table(Glue_7_Clouds_yso_candidates) does not entirely containe lInchone's YSO table(all_candidatas.tb)**
-## **VI.Work log**
+## **VI.Problem**
+- >Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
+- >Our YSO table(Glue_7_Clouds_yso_candidates) does not entirely containe lInchone's YSO table(all_candidatas.tb)
+## **VII.Work log**
 - **7/19**
   - **Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog**
 - **7/24**
@@ -42,4 +43,4 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - **Programs from Inchone Hsieh :**
   - **Galaxy Probability:**
     - **/cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed**
-## **VII.Reference**
+## **IX.Reference**
