@@ -26,6 +26,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - [ ] step 7
 - [ ] step 8
 ## **IV.Extinction**
+- Open Extinction Map with np.loadtxt
 ## **V.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
 ## **VI.Problem**
@@ -41,6 +42,8 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 ## **VIII.Data Sources**
 - Molecular Clouds HREL catalog :
   - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
+- SWIRE galaxy catalog(Full) :
+  - /data/users/inchone/SWIRE_Galaxy_probability/oldddddd/past_catalog/
 - Programs from Inchone Hsieh :
   - Galaxy Probability:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed
