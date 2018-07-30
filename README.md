@@ -44,9 +44,16 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - What are 'Image check '(step6) and 'IR1 image check'(step7)
     - 
 ## **VIII.Data Sources**
-- Molecular Clouds HREL catalog :
-  - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
-- Programs from Inchone Hsieh :
+- **Catalog from c2d & SWIRE :**
+  - Molecular Clouds HREL catalog :
+    - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
+  - Mosaic for Saturate Check
+    - from Hsieh:
+      - /data/users/inchone/Perseus/oldold/mosaic
+    - from spitzer database:
+      - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/CHA_II/MOSAICS
+
+- **Programs from Inchone Hsieh :**
   - Galaxy Probability:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed
   - Galaxy Probability(p):
@@ -55,11 +62,6 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/New_version/
   - Saturate Check:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus
-  - Mosaic for Saturate Check
-    - from Hsieh:
-      - /data/users/inchone/Perseus/oldold/mosaic
-    - from spitzer database:
-      - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/CHA_II/MOSAICS
   - Image Check:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus/YSO_Selection/notPSF1_check
 ## **IX.Reference**
