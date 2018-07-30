@@ -17,7 +17,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **III.Step**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
-- [X] step 1
+- [ ] step 1
 - [ ] step 2
 - [X] step 3
 - [ ] step 4
