@@ -42,7 +42,10 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - To handle problems with Ichone :
     - How to remove the Av from c2d sources
     - What are 'Image check '(step6) and 'IR1 image check'(step7)
-    - 
+- 8/06
+  - check CHA_II catalog after extinction correction :
+    - HREL is different from Hsieh's catalog (He may use Full table)
+    - One candidate is missing in HREL table (Check Hsieh's table, that one is not in HREL table) 
 ## **VIII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
