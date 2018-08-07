@@ -28,6 +28,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 ## **IV.Extinction**
 ## **V.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
+- Problem : We did not remove stars
 ## **VI.Problem**
 - Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
 - Our YSO table(Glue_7_Clouds_yso_candidates) does not entirely containe lInchone's YSO table(all_candidatas.tb)
