@@ -50,6 +50,8 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 8/07
   - Check data_type from Inchome's Chamaleon_RemoveStar_catalog (can_iden.tbl)
   - Remove star form every cloud catalog
+- 8/08
+  - Problem : The data types from inchone's Star_removal_catalog differ from our catalog 
 ## **VIII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
