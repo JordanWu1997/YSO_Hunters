@@ -25,7 +25,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - [ ] step 6
 - [ ] step 7
 - [ ] step 8
-## **IV.Extinction**
+## **IV.Star Removal**
 ## **V.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
 - Problem : We did not remove stars
