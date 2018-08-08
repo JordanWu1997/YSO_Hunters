@@ -12,7 +12,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **II.Goal**
 - 重現 Hsieh & Lai (2013) 之結果
-- 使用新的邊界劃分節省計算multi-dimensional Magnitude Space之記憶體
+- 使用新的邊界劃分(on multi-d MMD)節省計算multi-dimensional Magnitude Space之記憶體
 - 將5-dimensional Magnitude Space延伸至更高維度(6,7,...)
 
 ## **III.Step**
