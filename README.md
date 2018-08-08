@@ -33,7 +33,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 7/25
   - Learn to use astropy to read the data from ds9
 - 7/26
-  - Discussion with Ichone :
+  - Discussion with Inchone Hsieh :
     - How to remove the Av from c2d sources
     - What are 'Image check '(step6) and 'IR1 image check'(step7)
 - 8/06
@@ -41,7 +41,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - HREL is different from Hsieh's catalog (He may use Full table)
     - One candidate is missing in HREL table (Check Hsieh's table, that one is not in HREL table) 
 - 8/07
-  - Check data_type from Inchome's Chamaleon_RemoveStar_catalog (can_iden.tbl)
+  - Check data_type from Inchone's Chamaleon_RemoveStar_catalog (can_iden.tbl)
   - Remove star form every cloud catalog
 ## **VIII.Data Sources**
 - **Catalog from c2d & SWIRE :**
