@@ -76,5 +76,5 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - Image Check:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus/YSO_Selection/notPSF1_check
 ## **IX.Reference**
-**Catalog Classification from c2d:**
+**Catalog Classification from c2d :**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/c2d_obtype.png)
