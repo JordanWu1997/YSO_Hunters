@@ -33,7 +33,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 7/25
   - Learn to use astropy to read the data from ds9
 - 7/26
-  - To handle problems with Ichone :
+  - Discussion with Ichone :
     - How to remove the Av from c2d sources
     - What are 'Image check '(step6) and 'IR1 image check'(step7)
 - 8/06
