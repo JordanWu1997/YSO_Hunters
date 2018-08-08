@@ -17,7 +17,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **III.Step**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
-## **IV.Star Removal**
+## ***IV.Star Removal***
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Star_removal.PNG)
 ## **V.Result**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/inchone_vs_YSOHunters_7.19.png)
