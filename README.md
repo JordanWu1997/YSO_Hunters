@@ -31,7 +31,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - Problem : We did not remove stars
 ## **VI.Problem**
 - Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
-- Our YSO table(Glue_7_Clouds_yso_candidates) does not entirely containe lInchone's YSO table(all_candidatas.tb)
+  - Because we did not consider the extinction
 ## **VII.Work log**
 - 7/19
   - Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
@@ -50,8 +50,6 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 8/07
   - Check data_type from Inchome's Chamaleon_RemoveStar_catalog (can_iden.tbl)
   - Remove star form every cloud catalog
-- 8/08
-  - Problem : The data types from inchone's Star_removal_catalog differ from our catalog in same location
 ## **VIII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
