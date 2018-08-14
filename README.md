@@ -45,7 +45,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - Remove star form every cloud catalog
 - 8/14
   - Uncertainties Package (python's package to calculate uncertainties)
-    - Maybe go wrong with log (since it use Gaussian to fit, the upper and the lower are symmetric )
+    - Maybe go wrong with log (since it uses Gaussian to fit, the upper and the lower are symmetric )
     - It can't use numpy or math (Use Uncertianties its own log etc.)
 ## **VIII.Data Sources**
 - **Catalog from c2d & SWIRE :**
