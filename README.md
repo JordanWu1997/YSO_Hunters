@@ -43,6 +43,10 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 8/07
   - Check data_type from Inchone's Chamaleon_RemoveStar_catalog (can_iden.tbl)
   - Remove star form every cloud catalog
+- 8/14
+  - Uncertainties Package (python's package to calculate uncertainties)
+    - Maybe go wrong with log (since it use Gaussian to fit, the upper and the lower are symmetric )
+    - It can't use numpy or math (Use Uncertianties its own log etc.)
 ## **VIII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
