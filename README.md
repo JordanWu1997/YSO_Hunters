@@ -76,6 +76,6 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 **Hsieh and Lai's Result vs Evan's Result :**
 ![alt_text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Hsieh's_Result.png)
 **Hsieh and Lai's missing YSOs :**
-![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Hsieh's_Result.png)
+![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Hsieh's_missing_YSO.png)
 **Catalog Classification from c2d legacy project :**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/c2d_obtype.png)
