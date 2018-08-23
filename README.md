@@ -70,6 +70,10 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/multi-dim_version/Saturate_and_Band_fill_correct/Chamaleon/Saturate_no_count/getfits.py
   - Image Check:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus/YSO_Selection/notPSF1_check
+## **X.Improve**
+- Make all procession be automatic
+- Reduce the errors about extinction correction
+- Use marginal curved surface instead of the marginal plane
 ## **IX.Reference**
 **Hsieh and Lai's Result vs Evan's Result :**
 ![alt_text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Hsieh's_Result.png)
