@@ -12,7 +12,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **II.Goal**
 - Repeat the procession of Hsieh & Lai (2013) and get the same result
-- Use marginal plane on multi-dimensional space to save SAM
+- Use marginal plane on multi-dimensional space to save RAM
 - Make the program construct mroe dimension space at same time
 
 ## **III.Improvement**
