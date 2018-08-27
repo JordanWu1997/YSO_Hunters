@@ -17,13 +17,11 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **III.Step**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
-## **IV.Star Removal**
-![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Star_removal.PNG)
 
-## **VI.Problem**
+## **IV.Problem**
 - Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
   - Because we did not consider the extinction
-## **VII.Work log**
+## **V.Work log**
 - 7/19
   - Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
 - 7/24
@@ -47,7 +45,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - It can't use numpy or math (Use Uncertianties its own log etc.)
 - 8/27
   - To write the each part of program about SOP
-## **VIII.Data Sources**
+## **VI.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
     - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
@@ -76,7 +74,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - Make all procession be automatic
 - Reduce the errors about extinction correction
 - Use marginal curved surface instead of the marginal plane
-## **IX.Reference**
+## **VII.Reference**
 **Hsieh and Lai's Result vs Evan's Result :**
 ![alt_text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Hsieh's_Result.png)
 **Hsieh and Lai's missing YSOs :**
