@@ -11,14 +11,14 @@ Galaxies. Thus, the grid point required by the Multi-dimensional Magnitude Space
 will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are adequate.
 
 ## **II.Goal**
-- 重現 Hsieh & Lai (2013) 之結果
-- 使用新的邊界劃分(on multi-d MMD)節省計算multi-dimensional Magnitude Space之記憶體
-- 將5-dimensional Magnitude Space延伸至更高維度(6,7,...)
+- Repeat the procession of Hsieh & Lai (2013) and get the same result
+- Use marginal plane on multi-dimensional space to save SAM
+- Make the program construct mroe dimension space at same time
 
 ## **III.Improvement**
-- Make all processions be automatic
+- Make all processions be automatic (SOP Program)
 - Reduce the errors about extinction correction
-- Use marginal curved surface instead of the marginal plane
+- Use marginal curved surface instead of the marginal plane (position support vector)
 
 ## **IV.Step**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Steps.png)
