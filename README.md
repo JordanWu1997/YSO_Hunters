@@ -51,6 +51,11 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - It can't use numpy or math (Use Uncertianties its own log etc.)
 - 8/27
   - To write the each part of program about SOP
+- 9/02
+  - SOP program for 
+    - (1)Star_Removal complete
+    - (2)Extinction_Correction complete
+    - (3)Gal_Prob calulate and sort complete (but still improving)
   
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
