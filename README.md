@@ -28,34 +28,35 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - Because we did not consider the extinction
 
 ## **VI.Work log**
-- 7/19
+- 07/19
   - Find the possible cause about problem 1 : We did not de-redden the whole c2d catalog
-- 7/24
+- 07/24
   - To realize the knowledge about extinction
-- 7/25
+- 07/25
   - Learn to use astropy to read the data from ds9
-- 7/26
+- 07/26
   - Discussion with Inchone Hsieh :
     - How to remove the Av from c2d sources
     - What are 'Image check '(step6) and 'IR1 image check'(step7)
-- 8/06
+- 08/06
   - check CHA_II catalog after extinction correction :
     - HREL is different from Hsieh's catalog (He may use Full table)
     - One candidate is missing in HREL table (Check Hsieh's table, that one is not in HREL table) 
-- 8/07
+- 08/07
   - Check data_type from Inchone's Chamaleon_RemoveStar_catalog (can_iden.tbl)
   - Remove star form every cloud catalog
-- 8/14
+- 08/14
   - Uncertainties Package (python's package to calculate uncertainties)
     - Maybe go wrong with log (since it uses Gaussian to fit, the upper and the lower are symmetric )
     - It can't use numpy or math (Use Uncertianties its own log etc.)
-- 8/27
+- 08/27
   - To write the each part of program about SOP
-- 9/02
+- 09/02
   - SOP program for 
     - (1)Star_Removal complete
     - (2)Extinction_Correction complete
     - (3)Gal_Prob calulate and sort complete (but still improving)
+  - Program of producing image check for saturate sources is still missing.(maybe write a new one)
   
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
