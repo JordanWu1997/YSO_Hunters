@@ -58,7 +58,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - (3)Gal_Prob calulate and sort complete (but still improving)
   - Program of producing image check for saturate sources is still missing.(maybe write a new one)
 - 09/04
-  -SOP program for Gal_Prob calculate and sort complete and improved
+  - SOP program for Gal_Prob calculate and sort complete and improved
   
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
