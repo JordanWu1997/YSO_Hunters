@@ -59,7 +59,11 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - Program of producing image check for saturate sources is still missing.(maybe write a new one)
 - 09/04
   - SOP program for Gal_Prob calculate and sort complete and improved
-  
+- 09/06
+  - SOP program for MP1_Saturate(Step 4) is almost complete but with some questions
+    - mosaics of OPH has different file name compared to CHA_II, LUP ...
+    - what's difference  between file name with an A and BCD ?
+  - SOP program for Image_Check(Step 7) confronts same questions as MP1_saturate does.
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
