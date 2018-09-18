@@ -66,7 +66,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
   - SOP program for Image_Check(Step 7) confronts same questions as MP1_saturate does.
 - 09/18
   - SOP programs for individual steps are OK.
-  - program to run all SOP program is OK with step1~step4
+  - program to run all SOP program is OK with step1~step6 (but Saturate_Check, Image_Check are still trying.)
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
