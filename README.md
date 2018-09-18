@@ -64,6 +64,9 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - mosaics of OPH has different file name compared to CHA_II, LUP ...
     - what's difference  between file name with an A and BCD ?
   - SOP program for Image_Check(Step 7) confronts same questions as MP1_saturate does.
+- 09/18
+  - SOP programs for individual steps are OK.
+  - program to run all SOP program is OK with step1~step4
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
