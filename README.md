@@ -67,6 +67,9 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 09/18
   - SOP programs for individual steps are OK.
   - program to run all SOP program is OK with step1~step6 (but Saturate_Check, Image_Check are still trying.)
+- 09/19
+  - program to run all SOP program is OK with step1~step (including Image_Check)
+  - still working on distinguish Saturate source after Gal_Prob check
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
