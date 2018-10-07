@@ -70,6 +70,11 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - 09/19
   - program to run all SOP program is OK with step1~step (including Image_Check)
   - still working on distinguish Saturate source after Gal_Prob check
+- 10/07
+  - SER's Yso candidates have some problems
+    - Hsieh's Yso candidates are not fully included in our solid yso result(before image check)
+    - not Hsieh's but ours, not ours but Hsieh both are not zero.
+  - plot SER's Yso candidates onto MP1 image, IR1 image
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
