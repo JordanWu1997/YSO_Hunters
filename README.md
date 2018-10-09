@@ -75,6 +75,12 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
     - Hsieh's Yso candidates are not fully included in our solid yso result(before image check)
     - not Hsieh's but ours, not ours but Hsieh both are not zero.
   - plot SER's Yso candidates onto MP1 image, IR1 image
+- 10/09
+  - SER's problems are found
+    - Extinction correction didn't work due to the wrong extinction map.
+  - trying to fix
+    - Use PNICER to create a new extinction map.
+    
 ## **VII.Data Sources**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
