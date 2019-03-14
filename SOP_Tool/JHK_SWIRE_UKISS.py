@@ -34,29 +34,18 @@ data2 = open(str(argv[2]), 'r')
 UK_cat = data2.readlines()[14:]
 data2.close()
 
-NUM = 0
-i = 0
-tol = 1.8 #arcsec
 t_start = time.time()
 Out_catalog = []
-for row1 in two_mass_cat:
-    col1 = row1.split()
-    RA, DEC = float(col1[0]), float(col1[2])
-    TEST = 0
-    for row2 in UK_cat:
-        col2 = row2.split()
-        RA_f, DEC_f = float(col2[6].strip(',')), float(col2[7].strip(','))
-        if (abs(RA - RA_f) < tol) and (abs(DEC - DEC_f) < tol):
-            # Magnitude
-            col1[35], col1[56], col1[77] = col2[10].strip(','), col2[12].strip(','), col2[14].strip(',')
-            # Mag Error
-            col1[36], col1[57], col1[78] = col2[11].strip(','), col2[13].strip(','), col2[15].strip(',')
-            TEST += 1
-    if TEST > 1:
-        NUM += 1
+for i in len(two_mass_cat):
+    col1 = two_mass_cat[i].split()
+    col2 = UK_cat[i].split()    
+    # Magnitude
+    col1[35], col1[56], col1[77] = col2[10].strip(','), col2[12].strip(','), col2[14].strip(',')
+    # Mag Error
+    col1[36], col1[57], col1[78] = col2[11].strip(','), col2[13].strip(','), col2[15].strip(',')
+
     new_row = '\t'.join(col1)
     Out_catalog.append(str(new_row))
-    i += 1
     print(('%f.6' % (i/len(two_mass_cat)*100)) + '%')
 
 t_end = time.time()
