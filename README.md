@@ -112,7 +112,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 
 ## **VIII.Reference**
 **Hsieh and Lai's Result vs Evan's Result :**
-<img src=Templates_and_Charts/Hsieh's_Result.png />
+<img src='https://github.com/ShihPingLai/YSO_Hunters/blob/master/Templates_and_Charts/Hsieh's_Result.png' />
 **Hsieh and Lai's missing YSOs :**
 ![alt text](https://github.com/ShihPingLai/YSO_Hunters/blob/master/Hsieh's_missing_YSO.png)
 **Catalog Classification from c2d legacy project :**
