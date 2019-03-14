@@ -117,5 +117,3 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 <img src='Templates_and_Charts/Hsiehs_missing_YSO.png'/>
 **Catalog Classification from c2d legacy project :**
 <img src='Templates_and_Charts/c2d_obtype.png'/>
-
-# Test
