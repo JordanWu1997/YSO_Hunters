@@ -21,7 +21,7 @@ will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are 
 - Use marginal curved surface instead of the marginal plane (position support vector)
 
 ## **IV.Step**
-<img src=./Templates_and_Charts/Steps.png/>
+<img src=./Templates_and_Charts/Steps.png />
 
 ## **V.Problem**
 - Inchone's YSO_table(Flux in all_candidatas.tbl) differ from our data source(Glue_7_Clouds.tbl)
