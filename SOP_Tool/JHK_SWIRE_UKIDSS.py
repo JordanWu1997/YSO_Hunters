@@ -45,7 +45,7 @@ if len(two_mass_cat) < len(UK_cat_origin):
         if col_1[1] == col_2[1]:
             UK_cat.remove(UK_cat_origin[i])
     t_end = time.time()
-    print('Dealing with repeated sources in catalog took %.6f ...' % (t_end - t_start))
+    print('Dealing with repeated sources in catalog took %.6f secs ...' % (t_end - t_start))
     print('NR in new UKIDSS ELAIS N1 catalog: %i' % len(UK_cat))
     
     #Output = open(str(argv[2])+'reduction', 'w')
@@ -68,10 +68,10 @@ for i in range(len(two_mass_cat)):
             col1[36], col1[57], col1[78] = col2[11].strip(','), col2[13].strip(','), col2[15].strip(',')
             new_row = '\t'.join(col1)
             Out_catalog.append(str(new_row))
-    if (i/len(two_mass_cat)) % 100 == 0:
-        print(('%.6f' % (i/len(two_mass_cat)*100)) + '%')
+    if (i>=100) and (i%100 == 0):
+        print('%.6f' % (float(i*100)/float(len(two_mass_cat))) + '%')
 t_end = time.time()
-print('Replace procedure took %.6f ...' % (t_end - t_start))
+print('Replace procedure took %.6f secs ...' % (t_end - t_start))
 
 Output = open(str(argv[3]), 'w')
 for row in Out_catalog:
