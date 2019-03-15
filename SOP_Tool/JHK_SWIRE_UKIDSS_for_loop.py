@@ -25,7 +25,7 @@ if len(argv) != 4:
         \nExample: python [program] [Swire] [UKIDSS] [output file name]\
         \nNote: Replace [Swire] J,H,K with [UKIDSS]')
 else:
-    print('\nStart input check ...')
+    print('Start ...')
 
 data1 = open(str(argv[1]), 'r')
 two_mass_cat = data1.readlines()
@@ -45,54 +45,37 @@ if len(two_mass_cat) < len(UK_cat_origin):
         if col_1[1] == col_2[1]:
             UK_cat.remove(UK_cat_origin[i])
     t_end = time.time()
-    print('\nDealing with repeated sources in catalog took %.6f secs ...' % (t_end - t_start))
-    print('\nNR in new UKIDSS ELAIS N1 catalog: %i' % len(UK_cat))
-
-    Output = open(str(argv[2])+'_reduction', 'w')
+    print('Dealing with repeated sources in catalog took %.6f secs ...' % (t_end - t_start))
+    print('NR in new UKIDSS ELAIS N1 catalog: %i' % len(UK_cat))
+    
+    Output = open(str(argv[2])+'reduction', 'w')
     for row in UK_cat:
         Output.write(str(row))
     Output.close()
-    
-    # Save and Reload catalog corrected
-    data1 = open(str(argv[1]), 'r')
-    data2 = open(str(argv[2])+'_reduction', 'r')
-    swire = np.array(data1.readlines())
-    ukidss = np.array(data2.readlines())
-    data1.close(); data2.close();
 else:
-    swire = np.array(two_mass_cat)
-    ukidss = np.array(UK_cat_origin)
+    UK_cat = UK_cat_origin
 
-print('\nStart replacing ...\n')
+'''
 t_start = time.time()
-swire_ra = []
-for row in swire:
-    swire_ra.append(row.split()[0])
-swire_ra = np.array(swire_ra)
-
-for i in range(len(ukidss)):
-    row_u = ukidss[i]
-    ra = row_u.split()[1]
-    ra = ra.strip(',')
-    ra = ra.strip('+')
-    mag_J, mag_H, mag_K = row_u[10].strip(','), row_u[12].strip(','), row_u[14].strip(',')
-    err_J, err_H, err_K = row_u[11].strip(','), row_u[13].strip(','), row_u[15].strip(',')
-    index = int(np.where(swire_ra == ra)[0][0])
-    row = swire[index]
-    row_s = row.split()
-    row_s[35], row_s[56], row_s[77] = mag_J, mag_H, mag_K
-    row_s[36], row_s[57], row_s[78] = err_J, err_H, err_K
-    swire[index] = '\t'.join(row_s)
-    
-    # Percentage Indicator
-    if i>100 and i%100==0: 
-        print('%.6f' % (float(i)/float(len(ukidss))) + '%') 
-
+Out_catalog = []
+for i in range(len(two_mass_cat)):
+    col1 = two_mass_cat[i].split()
+    for j in range(len(UK_cat)):
+        col2 = UK_cat[j].split()     
+        if round(float(col1[0]), 6) == round(float(col2[1].strip(',')), 6):
+            # Magnitude: J, H, K 
+            col1[35], col1[56], col1[77] = col2[10].strip(','), col2[12].strip(','), col2[14].strip(',')
+            # Mag Error: J, H, K
+            col1[36], col1[57], col1[78] = col2[11].strip(','), col2[13].strip(','), col2[15].strip(',')
+            new_row = '\t'.join(col1)
+            Out_catalog.append(str(new_row))
+    if (i>=100) and (i%100 == 0):
+        print('%.6f' % (float(i*100)/float(len(two_mass_cat))) + '%')
 t_end = time.time()
-print('\nReplace procedure took %.6f secs ...' % (t_end - t_start))
+print('Replace procedure took %.6f secs ...' % (t_end - t_start))
 
 Output = open(str(argv[3]), 'w')
-for ls in Out_catalog:
-    row = '\t'.join(list(ls))
+for row in Out_catalog:
     Output.write(row + '\n')
 Output.close()
+'''
