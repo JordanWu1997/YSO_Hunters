@@ -59,7 +59,7 @@ This file is for storing all information about index in SWIRE-format catalog.
 		- 5D GP1, 5D GP2, 6D GP
 		- 238, 240, 244
 
-## Program to convert different format catalogs
+## Program to convert catalogs in different format
 - #### Transform from c2d format to SWIRE format
 	- /home/ken/C2D-SWIRE_20180710/SOP_Tool_20181117/to_c2d_format.py
 - #### (1)Transform SWIRE flux into magnitude (2)Write UKIDSS JHK magnitude to SWIRE format catalog
