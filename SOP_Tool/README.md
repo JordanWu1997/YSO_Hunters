@@ -4,4 +4,5 @@
 - new catalog with UKIDSS JHK, SWIRE IR1~MP1 magnitudes
   - /home/ken/C2D-SWIRE_20180710/Converted_catalog/catalog-SWIRE_UKIDSS_ELAIS_N1.tbl
  # Note:
- - 2MASS_To_
+ - 2MASS_TO_UKIDSS.py is for transforming those region where UKIDSS doesn't detect. (e.g. LUPUS)
+ 
