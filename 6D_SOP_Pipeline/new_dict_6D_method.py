@@ -83,7 +83,14 @@ for i in range(len(catalog)):
         print('%.6f' % (float(i)/float(len(catalog))*100) + '%')
     # Set up initial condition
     line = catalog[i].split()
-    mag_list = magnitudelist(line)
+    
+    #===============================================
+    mag_list = mag_magnitudelist(line)
+    
+    # Command below is for UKIDSS-SWIRE type catalog
+    #mag_llist = mag_magnitudelist(line)
+    #===============================================
+    
     magJ = mag_list[0]; magIR1 = mag_list[1]; magIR2 = mag_list[2]; magIR3 = mag_list[3]; magIR4 = mag_list[4]; magMP1 = mag_list[5]
     PSF_list = [line[39], line[102], line[123], line[144], line[165], line[186]]
     SEQ = [seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)]
@@ -217,7 +224,14 @@ for i in range(len(catalog)):
     
     # Set up initial condition
     line = catalog[i].split()
+    
+    #===============================================
     mag_list = PSF_magnitudelist(line)
+
+    # Command below is for UKIDSS-SWIRE type catalog 
+    #mag_llist = mag_PSF_magnitudelist(line)
+    #===============================================
+    
     magJ = mag_list[0]; magIR1 = mag_list[1]; magIR2 = mag_list[2]; magIR3 = mag_list[3]; magIR4 = mag_list[4]; magMP1 = mag_list[5]
     PSF_list = [line[39], line[102], line[123], line[144], line[165], line[186]]
     SEQ = [seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)]

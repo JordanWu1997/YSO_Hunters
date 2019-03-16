@@ -5,10 +5,15 @@ This program is for packing all functions needed for calculating galaxy probabil
 *Note: 
     (1)6 bands are J, IR1, IR2, IR3, IR4, MP1
     (2)Catalog's format is SWIRE catalog
+
+*New upload"
+    (1)function that sets critierion on magnitude with flux_qua of different sources.
+    (2)function that sets critierion on magnitude with imtype of different sources.
 -------------------------------------------------------------------
 latest update : 2019/02/20 Jordan Wu'''
 
 #--------------------------------------------------------------------------------------------------------------
+
 import numpy as np
 
 cube=0.2
@@ -38,6 +43,7 @@ def magnitudelist(x):
                 mag_list.append(-2.5*np.log10(float(flux_list[i])/F0_list[i]))
             else:
                 mag_list.append('no')
+
         # IR1,IR2,IR3,IR4,MP1 band     
         elif flux_Qua[i]=="A" or  flux_Qua[i]=="B" or flux_Qua[i]=="C" or flux_Qua[i]=="D" or flux_Qua[i]=="K":
             mag_list.append(-2.5*np.log10(float(flux_list[i])/F0_list[i]))
@@ -56,7 +62,9 @@ def magnitudelist(x):
             mag_list.append('no')
 
     return mag_list
+
 #--------------------------------------------------------------------------------------------------------------
+
 def PSF_magnitudelist(x):
     '''
     This function is to change fluxes on the catalog to magnitudes and select whose imagetype=1
@@ -85,7 +93,9 @@ def PSF_magnitudelist(x):
         else:
             mag_list.append('no')
     return mag_list
+
 #--------------------------------------------------------------------------------------------------------------
+
 def index(X,Y,a,b): #a,b are transition point, X,Y are input color and mag (data)
     '''
     This function is to determine if the object is an AGB or not
@@ -101,7 +111,9 @@ def index(X,Y,a,b): #a,b are transition point, X,Y are input color and mag (data
             pass
     value=Y-cutY
     return value
+
 #--------------------------------------------------------------------------------------------------------------
+
 def seq(X,lim):
     '''
     This function is to put criterions we set for multi-d spaces onto the object 
@@ -115,4 +127,79 @@ def seq(X,lim):
     else:
         reu=int((X-lim[0])/cube)
     return reu
+
+#--------------------------------------------------------------------------------------------------------------
+
+def mag_magnitudelist(x):
+    '''
+    This function is for classifying different band's magnitude by flux_Qua
+    This is for new kind of catalog (with magnitudes of different bands)
+    '''
+    mag_list = [float(x[98]), float(x[119]), float(x[140]), float(x[161]), float(x[182])]
+    flux_Qua=[x[37], x[100], x[121], x[142], x[163], x[184]]
+    
+    select_mag_list = []
+    for i in range(len(mag_list)):
+        # J band 
+        if i==0:
+            if mag_list[i]<0:
+                select_mag_list.append(mag_list[i])
+            else:
+                select_mag_list.append('no')
+
+        # IR1,IR2,IR3,IR4,MP1 band
+        elif flux_Qua[i]=="A" or  flux_Qua[i]=="B" or flux_Qua[i]=="C" or flux_Qua[i]=="D" or flux_Qua[i]=="K":
+            select_mag_list.append(mag_list[i])
+
+        # Qua labeled as 'S' (saturate candidate)
+        elif flux_Qua[i]=="S":
+            select_mag_list.append(-100)
+
+        # Qua labeled as 'N' (not detected)
+        elif flux_Qua[i]=="N":
+            select_mag_list=['no','no','no','no','no','no']
+            break
+
+        # Qua labeled as 'U' (upper-limit)
+        else:
+            select_mag_list.append('no')
+    return select_mag_list
+
+#--------------------------------------------------------------------------------------------------------------
+
+def mag_PSF_magnitudelist(x):
+    '''
+    This function is to select those source with imagetype=1
+    This is for counting Galaxy Probability P
+    '''
+    mag_list = [float(x[98]), float(x[119]), float(x[140]), float(x[161]), float(x[182])]
+    flux_Qua=[x[37], x[100], x[121], x[142], x[163], x[184]]
+    PSF_list=[x[39],x[102],x[123],x[144],x[165],x[186]]
+    
+    select_mag_list=[]
+    for i in range(len(mag_list)):
+        # J band is excluded since no flux_qua label on UKIDSS catalog
+        if i==0:
+            if mag_list[i]<0:
+                select_mag_list.append(mag_list[i])
+            else:
+                select_mag_list.append('no')
+        
+        # To select source with imtype==1 or flux_qua=='S'
+        elif PSF_list[i]!="1" and flux_Qua[i]!="S":
+            mag_list.append('no')
+        
+        elif flux_Qua[i]=="A" or  flux_Qua[i]=="B" or flux_Qua[i]=="C" or flux_Qua[i]=="D" or flux_Qua[i]=="K":
+            select_mag_list.append(mag_list[i])
+        
+        elif flux_Qua[i]=="S":
+            select_mag_list.append(-100)
+        
+        elif flux_Qua[i]=="N":
+            select_mag_list=['no','no','no','no','no','no','no']
+            break
+        else:
+            select_mag_list.append('no')
+    return mag_list
+
 #--------------------------------------------------------------------------------------------------------------

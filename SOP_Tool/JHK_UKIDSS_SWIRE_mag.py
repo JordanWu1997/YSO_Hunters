@@ -80,15 +80,17 @@ data2 = open(str(argv[2]), 'r')
 UK_cat_origin = data2.readlines()[14:]
 data2.close()
 
+data3 = open(str(argv[2]), 'r')
+UK_cat = data3.readlines()[14:]
+data3.close()
+
 # Input file check for repeating sources
 #==================================================
 if len(two_mass_cat) < len(UK_cat_origin):
     t_start = time.time()
-    UK_cat = [UK_cat_origin[0]]
     for i in range(len(UK_cat_origin)-1):
         col_1 = UK_cat_origin[i].split()
         col_2 = UK_cat_origin[i+1].split()
-        UK_cat.append(UK_cat_origin[i+1])
         if col_1[1] == col_2[1]:
             UK_cat.remove(UK_cat_origin[i])
     t_end = time.time()
@@ -101,15 +103,15 @@ if len(two_mass_cat) < len(UK_cat_origin):
     Output.close()
     
     # Save and Reload catalog corrected
-    data1 = open(str(argv[1]), 'r')
-    data2 = open(str(argv[2])+'_reduction', 'r')
-    swire = np.array(data1.readlines())
-    ukidss = np.array(data2.readlines())
-    data1.close(); data2.close();
-
+    data4 = open(str(argv[1]), 'r')
+    data5 = open(str(argv[2])+'_reduction', 'r')
+    swire = np.array(data4.readlines())
+    ukidss = np.array(data5.readlines())
+    data4.close()
+    data5.close()
 else:
     swire = np.array(two_mass_cat)
-    ukidss = np.array(UK_cat_origin)
+    ukidss = np.array(UK_cat)
 #==================================================
 
 print('\nStart writing ...\n')
@@ -136,40 +138,36 @@ for i in range(len(ukidss)):
     index = int(np.where(swire_ra == ra)[0][0])
     row = swire[index]
     row_s = row.split()
-    row_s[35] = mag_J
-    row_s[56] = mag_H
-    row_s[77] = mag_K
-    row_s[36] = err_J 
-    row_s[57] = err_H
-    row_s[78] = err_K
-    swire[index] = '\t'.join(row_s)
-    
+    row_s[35] = str(mag_J)
+    row_s[56] = str(mag_H)
+    row_s[77] = str(mag_K)
+    row_s[36] = str(err_J)
+    row_s[57] = str(err_H)
+    row_s[78] = str(err_K)
+
     # Write SWIRE IR1~MP1 magnitude and error
     mag_list = IRAC_MP1_magnitudelist(row_s)
-    err_list = IRAC_MP1_errorlist(row_s)
-   
-    #df_list = [x[97], x[118], x[139], x[160], x[181]]
+    err_list = IRAC_MP1_errorlist(row_s) 
     row_s[98] = str(mag_list[0])
     row_s[119] = str(mag_list[1])
     row_s[140] = str(mag_list[2])
     row_s[161] = str(mag_list[3])
     row_s[182] = str(mag_list[4])
-
     row_s[99] = str(err_list[0])
     row_s[120] = str(err_list[1])
     row_s[141] = str(err_list[2])
     row_s[162] = str(err_list[3])
     row_s[183] = str(err_list[4])
     
-    swire[index] = '\t'.join(row_s)
+    swire[index] = '\t'.join(row_s) + '\n'
     # Percentage Indicator
-    if i>100 and i%100==0: 
+    if i>1000 and i%1000==0: 
         print('%.6f' % (100*float(i)/float(len(ukidss))) + '%') 
 
 t_end = time.time()
 print('\nThis procedure took %.6f secs ...' % (t_end - t_start))
 
 Output = open(str(argv[3]), 'w')
-for row in swire:
-    Output.write(row + '\n')
+for row in list(swire):
+    Output.write(row)
 Output.close()
