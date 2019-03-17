@@ -30,11 +30,12 @@ Output:
        only the last source in catalog will take into consideration.
 
 ---------------------------------------------------------------------------------------
-latest update : 2019/03/16 Jordan Wu'''
+latest update : 2019/03/18 Jordan Wu'''
 
 from sys import argv, exit
 import numpy as np
 import time
+import os
 
 if len(argv) != 4:
     exit('Wrong Input Argument!\
@@ -42,6 +43,20 @@ if len(argv) != 4:
         \nNote: Replace [Swire] J,H,K with [UKIDSS]')
 else:
     print('\nStart input check ...')
+
+def remove_E(mag):
+    '''
+    On UKIDSS catalog, no detection or saturation will be assigned as\
+    '+0.000000E000' and '-9.999995E008', but "E" can't be transfromed to\
+    float in python. Therefore, it must be replaced with "e".
+    '''
+    if str(mag) == '+0.000000E000':
+        new_mag = '+0.000000e000'
+    elif str(mag) =='-9.999995E008':
+        new_mag = -9.999995e008
+    else:
+        new_mag = mag
+    return str(new_mag)
 
 def IRAC_MP1_errorlist(x):
     F0_list = [280900, 179700, 115000, 64130, 7140]
@@ -138,12 +153,13 @@ for i in range(len(ukidss)):
     index = int(np.where(swire_ra == ra)[0][0])
     row = swire[index]
     row_s = row.split()
-    row_s[35] = str(mag_J)
-    row_s[56] = str(mag_H)
-    row_s[77] = str(mag_K)
-    row_s[36] = str(err_J)
-    row_s[57] = str(err_H)
-    row_s[78] = str(err_K)
+
+    row_s[35] = remove_E(mag_J)
+    row_s[56] = remove_E(mag_H)
+    row_s[77] = remove_E(mag_K)
+    row_s[36] = remove_E(err_J)
+    row_s[57] = remove_E(err_H)
+    row_s[78] = remove_E(err_K)
 
     # Write SWIRE IR1~MP1 magnitude and error
     mag_list = IRAC_MP1_magnitudelist(row_s)
@@ -171,3 +187,5 @@ Output = open(str(argv[3]), 'w')
 for row in list(swire):
     Output.write(row)
 Output.close()
+
+os.system('wc ' + str(argv[3]))
