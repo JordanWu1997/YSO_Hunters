@@ -27,7 +27,7 @@ from os import system
 from sys import argv, exit
 from Hsieh_Functions import *
 
-if len(argv) == 3 or ((len(argv) == 4) and (('python' in argv) or ('ipython' in argv))):
+if len(argv) == 3:
     print('Start 6D Galaxy Prob calculating ...')
 else:
     exit('Error: Wrong Usage!\nExmaple: python [program] [catalog] [cloud\'s name]')
