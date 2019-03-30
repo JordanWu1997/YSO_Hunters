@@ -1,4 +1,4 @@
-#!usr/bin/python
+#!usr/bin/ipython
 '''
 #-----------------------------------------------------------
 Lastest Change: (1) Unify indents of all code lines
@@ -84,7 +84,7 @@ def seq(X,lim):
     elif X<lim[0]:
 	reu="Bright"
     elif X>lim[1]:
-        eu="Faint"
+        reu="Faint"
     else:
         reu=int((X-lim[0])/cube)
     return reu
