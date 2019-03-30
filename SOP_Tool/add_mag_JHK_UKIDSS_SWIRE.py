@@ -7,7 +7,7 @@ This program is to write :
 
 Input :
     (1)SWIRE catalog to be replaced
-    (2)UKIDSS catalog to replace
+    (2)UKIDSS catalog to replace (WITHOUT HEADERS !!)
     (3)Output catalog filename
 
 Output: 
@@ -27,10 +27,10 @@ Output:
     3. If a band is undetected, the magnitude and error will be assigned as '0.0'
 
     4. If a 2MASS object is found more than one source in UKIDSS catalog,
-       only the last source in catalog will take into consideration.
-
+       distance to the original RADEC on SWIRE catalog will be calculated, 
+       and the nearest one will be selected.
 ---------------------------------------------------------------------------------------
-latest update : 2019/03/18 Jordan Wu'''
+latest update : 2019/03/30 Jordan Wu'''
 
 from sys import argv, exit
 from astropy.coordinates import SkyCoord
@@ -96,7 +96,7 @@ if len(two_mass_cat) < len(UK_cat_origin):
         Repeat_dict[index] += UK_cat_origin[i] + ';'
         if i>1000 and i%1000==0:
             print('%.6f' % (100*float(i)/float(len(UK_cat_origin))) + '%')
-    print('\nEnd of finding repeated sources ...')
+    print('End of finding repeated sources ...\n')
     
     no_rpt_catalog = []
     for i in range(len(Repeat_dict)):
@@ -147,11 +147,11 @@ print('\nStart writing ...\n')
 t_start = time.time()
 
 out = []
-if len(ukidss) == len(swire):
-    
+if len(ukidss) == len(swire):    
     for i in range(len(swire)):
         row_s = swire[i].split()
         row_u = ukidss[i]
+
         # Write SWIRE IR1~MP1 magnitude and error 
         mag_list = IRAC_MP1_magnitudelist(row_s)
         err_list = IRAC_MP1_errorlist(row_s)
@@ -162,7 +162,9 @@ if len(ukidss) == len(swire):
 
         # Write UKIDSS J,H,K magnitude and error 
         mag_J, mag_H, mag_K = row_u.split(',')[10], row_u.split(',')[12], row_u.split(',')[14]
+                                                                                        #===================
         err_J, err_H, err_K = row_u.split(',')[11], row_u.split(',')[13], (row_u.split(',')[15]).strip('\n')
+                                                                                        #===================
         row_s[35], row_s[56], row_s[77] = mag_J, mag_H, mag_K
         row_s[36], row_s[57], row_s[78] = err_J, err_H, err_K
         
@@ -170,6 +172,10 @@ if len(ukidss) == len(swire):
         # Percentage Indicator
         if i>1000 and i%1000==0: 
             print('%.6f' % (100*float(i)/float(len(ukidss))) + '%') 
+else:
+    print('wrong catalog line number')
+    print('SWIRE NR: %i' % len(swire)) 
+    print('UKIDSS NR: %i' % len(ukidss))
 
 t_end = time.time()
 print('\nThis procedure took %.6f secs ...' % (t_end - t_start))
@@ -178,5 +184,4 @@ Output = open(str(argv[3]), 'w')
 for row in out:
     Output.write(row)
 Output.close()
-
 os.system('wc ' + str(argv[3]))
