@@ -13,15 +13,14 @@ latest update : 20190330 Jordan Wu'''
 from sys import argv
 from os import system
 
-path = '/home/ken/C2D-SWIRE_20180710/SOP_Program_20181117/'
-catalog = str(argv[-1])
-system('ipython ' + path + 'multi-d_Prob_J_MP1.py ' + catalog)
-system('ipython ' + path + 'multi-d_Prob_IR1_MP1.py')
-system('rm step')
-system('awk \'($235!~/no_count/||$237!~/no_count/)&&($235<=\"1.0\"||$237<=\"1.0\") {print $235,$237}\' Out_catalog > GP_LESS_1.tbl')
+#path = '/home/ken/C2D-SWIRE_20180710/SOP_Program_20181117/'
+path = '/home/ken/C2D-SWIRE_20180710/SOP_Program_6D_20190224/'
 
-print('\nGalaxy candidate that GP=<1 ...')
-system('cat GP_LESS_1.tbl')
+catalog = str(argv[-1])
+system('ipython ' + path + 'new_dict_6D_method.py ' + catalog + ' Galaxy_Sample')
 
 print('\nThe number of Galaxy candidate that GP<=1 ...')
-system('wc GP_LESS_1.tbl')
+system('awk \'($243!~/no_count/)&&($243<=\"1.0\") {print $243}\' '+ 'Galaxy_Sample_6D_GP_all_out_catalog.tbl | wc')
+print('\nGalaxy candidate that GP=<1 ...')
+system('awk \'($243!~/no_count/)&&($243<=\"1.0\") {print $243}\' '+ 'Galaxy_Sample_6D_GP_all_out_catalog.tbl')
+system('awk \'($243!~/no_count/)&&($243<=\"1.0\")\' '+ 'Galaxy_Sample_6D_GP_all_out_catalog.tbl > GP_LESS_1.tbl')
