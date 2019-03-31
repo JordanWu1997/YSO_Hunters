@@ -27,10 +27,12 @@ from os import system
 from sys import argv, exit
 from Hsieh_Functions import *
 
-if len(argv) == 3:
+if len(argv) == 4:
     print('Start 6D Galaxy Prob calculating ...')
 else:
-    exit('Error: Wrong Usage!\nExmaple: python [program] [catalog] [cloud\'s name]')
+    exit('Error: Wrong Usage!\n \
+          Exmaple: python [program] [catalog] [cloud\'s name] [data_type]\n \
+          data_type: flux or mag (default=flux)')
 
 #======================================================================================
 # Start loading Galaxy probabilty dictionary
@@ -38,7 +40,9 @@ else:
 tStart = time.time()
 
 print('Loading arrays ...')
-path = '/home/ken/new_mg/new_6ds_correct/'
+
+#path = '/home/ken/new_mg/new_6ds_correct/'
+path = '/home/ken/new_mg/ukidss_6d/'
 #path_1 = '/home/ken/new_mg/6d/'
 
 # New type galaxy position in dictionary 
@@ -57,8 +61,10 @@ time.sleep(2)
 print('Loading catalog ...')
 table = open(str(argv[1]), 'r')
 catalog = table.readlines()
-Cloud = str(argv[2])
 table.close()
+
+Cloud = str(argv[2])
+data_type = str(argv[3])
 
 #parameter
 cube = 0.2
@@ -85,10 +91,16 @@ for i in range(len(catalog)):
     line = catalog[i].split()
     
     #===============================================
-    mag_list = mag_magnitudelist(line)
-    
-    # Command below is for UKIDSS-SWIRE type catalog
-    #mag_llist = mag_magnitudelist(line)
+    if data_type == 'flux':
+        mag_list = magnitudelist(line)
+
+    # Command below is for UKIDSS-SWIRE type catalog  
+    elif data_type == 'mag':
+        mag_list = mag_magnitudelist(line)
+
+    # Default: flux type
+    else:
+        mag_list = magnitudelist(line)
     #===============================================
     
     magJ = mag_list[0]; magIR1 = mag_list[1]; magIR2 = mag_list[2]; magIR3 = mag_list[3]; magIR4 = mag_list[4]; magMP1 = mag_list[5]
@@ -180,16 +192,6 @@ for i in range(len(catalog)):
     else:
         line[241] = ob_type
         line[242] = str(count)
-
-#-------------------------------------- 
-#        new_key = ''
-#        if KEY != '_':
-#            for key in KEY.split():
-#                new_key += key + '_'
-#        else:
-#            new_key = '_'
-#        line[245] = new_key
-#--------------------------------------
     
     out.append("\t".join(line))
 
@@ -226,10 +228,16 @@ for i in range(len(catalog)):
     line = catalog[i].split()
     
     #===============================================
-    mag_list = PSF_magnitudelist(line)
-
-    # Command below is for UKIDSS-SWIRE type catalog 
-    #mag_llist = mag_PSF_magnitudelist(line)
+    if data_type == 'flux':
+        mag_list = PSF_magnitudelist(line)
+   
+    # Command below is for UKIDSS-SWIRE type catalog  
+    elif data_type == 'mag':
+        mag_list = mag_PSF_magnitudelist(line)
+    
+    # Default: flux type
+    else:
+        mag_list = PSF_magnitudelist(line)
     #===============================================
     
     magJ = mag_list[0]; magIR1 = mag_list[1]; magIR2 = mag_list[2]; magIR3 = mag_list[3]; magIR4 = mag_list[4]; magMP1 = mag_list[5]
@@ -248,7 +256,7 @@ for i in range(len(catalog)):
             de = "AGB"
             ob_type += "AGB_"
             count = "no_count"
-
+    
     # Sort with detected band num
     if num >= 3 and de != "AGB":
 
