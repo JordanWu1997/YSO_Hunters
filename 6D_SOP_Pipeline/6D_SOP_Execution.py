@@ -28,53 +28,74 @@ path_P0 = '/home/ken/C2D-SWIRE_20180710/SOP_Program_6D_20190224/'
 path_P1 = '/home/ken/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/' 
 table_0 = path_P1 + 'all_candidates.tbl'
 
-if len(argv) == 2 or ((len(argv) == 3) and (('python' in argv) or ('ipython' in argv))):
+if len(argv) == 5:
     print('Start calculating ...')
 else:
-    exit('Error: Wrong Usage!\nExmaple: python [program] [cloud\'s name]')
+    exit('Error: Wrong Usage!\n \
+          Exmaple: python [program] [catalog] [cloud\'s name] [data_type] [sort]\n \
+          data_type: flux or mag (default=flux)\n \
+          sort: yes or no')
 
-cloud = str(argv[1])
+table = str(argv[1])
+cloud = str(argv[2])
+data_type = str(argv[3])
+sort = str(argv[4])
 
-#======================================================================================
-# Initialize directories to storage
-#======================================================================================
-if path.isdir('./' + cloud + '_6D'):
-    system('rm -r ' + cloud + '_6D')
+if sort == 'yes':
+    #======================================================================================
+    # Calculate 6D Gal_Prob
+    #======================================================================================
+    chdir(cloud + '_6D')
+    #table = '../catalog-CHA_II_Gal_Prob_All.tbl'
+    system('new_dict_6D_method.py ' + table + ' ' + cloud + ' ' + data_type)
+
+    #======================================================================================
+    # Sort and Compare
+    #======================================================================================
+    system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
+
+    #======================================================================================
+    # Initialize directories to storage
+    #======================================================================================
+    if path.isdir('./' + cloud + '_6D'):
+        system('rm -r ' + cloud + '_6D')
+    else:
+        pass
+
+    system('mkdir ' + cloud + '_6D')
+    system('mkdir ' + cloud + '_6D/YSO_5D6D')
+    system('mkdir ' + cloud + '_6D/YSO_5D6D/5D')
+    system('mkdir ' + cloud + '_6D/YSO_5D6D/6D')
+    system('mkdir ' + cloud + '_6D/YSO_5D6D/5D_6D')
+    system('mkdir ' + cloud + '_6D/IC_5D6D')
+    system('mkdir ' + cloud + '_6D/IC_5D6D/5D_HSIEH')
+    system('mkdir ' + cloud + '_6D/IC_5D6D/6D_HSIEH')
+    system('mkdir ' + cloud + '_6D/IC_5D6D/5D_6D')
+
+    chdir('YSO_5D6D/5D')
+    system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_YSO.tbl' + ' ' + table_0 + ' 5D HSIEH 7 yes no')
+    chdir('../6D')
+    system('Comparator_SWIRE_format.py ' + '../../' + cloud + '_6D_YSO.tbl' + ' ' + table_0 + ' 6D HSIEH 7 yes no')
+    chdir('../5D_6D')
+    system('Comparator_SWIRE_format.py ' + '../6D/' + '6D_and_HSIEH.tbl' + ' ' + '../5D/' + '5D_and_HSIEH.tbl ' + ' 6D 5D 7 yes no')
+
+    chdir('../../IC_5D6D/5D_HSIEH')
+    system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_GP_to_image_check.tbl' + ' ' + table_0 + ' 5D HSIEH  7 yes no')
+    chdir('../6D_HSIEH')
+    system('Comparator_SWIRE_format.py ' + '../../' + cloud + '_6D_GP_to_image_check.tbl' + ' ' + table_0 + ' 6D HSIEH 7 yes no')
+    chdir('../5D_6D')
+    system('Comparator_SWIRE_format.py ' + '../6D_HSIEH/' + '6D_and_HSIEH.tbl' + ' ' + '../5D_HSIEH/' + '5D_and_HSIEH.tbl' + ' 6D 5D 7 yes no')
+
 else:
-    pass
+    #======================================================================================
+    # Calculate 6D Gal_Prob
+    #======================================================================================
+    #table = '../catalog-CHA_II_Gal_Prob_All.tbl'
+    system('new_dict_6D_method.py ' + table + ' ' + cloud + ' ' + data_type)
 
-system('mkdir ' + cloud + '_6D')
-system('mkdir ' + cloud + '_6D/YSO_5D6D')
-system('mkdir ' + cloud + '_6D/YSO_5D6D/5D') 
-system('mkdir ' + cloud + '_6D/YSO_5D6D/6D')
-system('mkdir ' + cloud + '_6D/YSO_5D6D/5D_6D')
-system('mkdir ' + cloud + '_6D/IC_5D6D')
-system('mkdir ' + cloud + '_6D/IC_5D6D/5D_HSIEH')
-system('mkdir ' + cloud + '_6D/IC_5D6D/6D_HSIEH')
-system('mkdir ' + cloud + '_6D/IC_5D6D/5D_6D')
-
-#======================================================================================
-# Calculate 6D Gal_Prob
-#======================================================================================
-chdir(cloud + '_6D')
-table = '../catalog-CHA_II_Gal_Prob_All.tbl'
-system('new_dict_6D_method.py ' + table + ' ' + cloud)
-
-#======================================================================================
-# Sort and Compare
-#======================================================================================
-system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
-
-chdir('YSO_5D6D/5D')
-system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_YSO.tbl' + ' ' + table_0 + ' 5D HSIEH 7 yes no')
-chdir('../6D')
-system('Comparator_SWIRE_format.py ' + '../../' + cloud + '_6D_YSO.tbl' + ' ' + table_0 + ' 6D HSIEH 7 yes no')
-chdir('../5D_6D')
-system('Comparator_SWIRE_format.py ' + '../6D/' + '6D_and_HSIEH.tbl' + ' ' + '../5D/' + '5D_and_HSIEH.tbl ' + ' 6D 5D 7 yes no')
-
-chdir('../../IC_5D6D/5D_HSIEH')
-system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_GP_to_image_check.tbl' + ' ' + table_0 + ' 5D HSIEH  7 yes no')
-chdir('../6D_HSIEH')
-system('Comparator_SWIRE_format.py ' + '../../' + cloud + '_6D_GP_to_image_check.tbl' + ' ' + table_0 + ' 6D HSIEH 7 yes no')
-chdir('../5D_6D')
-system('Comparator_SWIRE_format.py ' + '../6D_HSIEH/' + '6D_and_HSIEH.tbl' + ' ' + '../5D_HSIEH/' + '5D_and_HSIEH.tbl' + ' 6D 5D 7 yes no')
+    #======================================================================================
+    # Sort and Compare
+    #======================================================================================
+    system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
+    
+    print('End of calculating 6D galaxy probability ...')
