@@ -202,7 +202,7 @@ print("Calculating 6D_Gal_Prob took %f sec" % (tEnd - tStart))
 # END of calculating 6D GALAXY PROB; Save the result
 #======================================================================================
 system('rm ./' + Cloud + "_6D_GP_out_catalog")
-out = "\n".join(out)
+out = "\n".join(out) + '\n'
 out_ca = open(Cloud + "_6D_GP_out_catalog","w")
 out_ca.write(out)
 out_ca.close()
@@ -328,11 +328,11 @@ print("Calculating 6D Gal_Prob_P took %f sec" % (tEnd - tStart))
 #======================================================================================
 # END of calculating 6D GALAXY PROB P; Clean old results and Save the new results     
 #======================================================================================
-system('rm ./' + Cloud + "_6D_GP_all_out_catalog.tbl")
-out = "\n".join(out)
+system('rm ' + Cloud + "_6D_GP_all_out_catalog.tbl")
+out = "\n".join(out) + '\n'
 out_ca = open(Cloud + "_6D_GP_all_out_catalog.tbl","w")
 out_ca.write(out)
 out_ca.close()
 
-print('6D Gal Prob calculation end ...')
-system('rm ./' + Cloud + "_6D_GP_out_catalog")
+print('6D Gal Prob calculation ends ...')
+system('rm ' + Cloud + "_6D_GP_out_catalog")
