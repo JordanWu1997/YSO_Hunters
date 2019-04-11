@@ -4,23 +4,29 @@
 -------------------------------------------------------------------
 This program is for running all program in order to get YSO candidates
 
-Input : c2d HREL catalog
+Input : (1) w/o 6D calculation: c2d HREL catalog
+        (2) w/i 6D calculation: c2d HREL catalog after calculating magnitudes
 
-Output : YSO candidates, candidates to image check, Galaxy candidates
-
+Output: (1) w/o 6D calculation: 
+            1. 5D YSO candidates, candidates to image check, Galaxy candidates
+        (2) w/i 6D calculation:
+            1. 5D YSO candidates, candidates to image check, Galaxy candidates
+            2. 6D YSO candidates, candidates to image check, Galaxy candidates
+            3. optionally, comparison between 5D, 6D, Hsieh's catalog
 -------------------------------------------------------------------
-latest update : 20190303 Jordan Wu'''
+latest update : 20190411 Jordan Wu'''
 
 import os
 import time
 from sys import argv
 from sys import exit
 
-if len(argv) != 4:
-    print('Error: Wrong Usage')
-    print('Example: python [SOP_Execution.py] [HREL catalog] [cloud\'s name] [skip]')
-    print('skip: True/False to skip star_removal and deredden processes')
-    exit()
+if len(argv) != 5:
+    exit('Error: Wrong Usage\n\
+    Example: python [SOP_Execution.py] [HREL catalog] [cloud\'s name] [skip] [6D-OPTION]\n\
+    skip: True/False to skip star_removal and deredden processes\n\
+    6D-OPTION: True/False to in addition to calculate in 6D method\n\
+    Warning: Input catalog must with magnitudes if 6D-OPTION is True')
 
 tStart = time.time()
 
@@ -29,14 +35,16 @@ tStart = time.time()
 #Step0 : SETUP
 catalog = str(argv[1])
 cloud = str(argv[2])
-skip = str(argv[3])
+skip = bool(argv[3])
+option = bool(argv[4])
+
 path = '/home/ken/C2D-SWIRE_20180710' + '/SOP_Program_20181117/'
 path_Av_table = '/home/ken/C2D-SWIRE_20180710' + '/Backup_Av_table_20180826/'
 path_Av_table_PER = '/home/ken/'
 
 #-------------------------------------------------------------------------
 
-if skip == "False":
+if ~skip:
 
     #Step1: Remove stars
     os.system('python ' + path + 'Star_Removal.py ' + catalog + ' ' + cloud + ' ' + 'True')
@@ -113,5 +121,8 @@ print("This process took %f sec" % (tEnd - tStart))
 
 #=========================================================================
 #Step6: Calculate 6D galaxy probability
-os.system('6D_SOP_Execution.py ' + cloud)
+if option:
+    os.system('6D_SOP_Execution.py ' + cloud + ' mag True')
+else:
+    print('End of calculation ...')
 #=========================================================================
