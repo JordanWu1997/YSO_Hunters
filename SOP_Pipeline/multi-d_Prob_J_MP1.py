@@ -150,6 +150,6 @@ for i in range(len(catalog)):
     line[233]=type
     line[234]=str(count)
     out.append("\t".join(line))
-out="\n".join(out)
+out="\n".join(out) + "\n"
 out_ca=open("step","w")
 out_ca.write(out)

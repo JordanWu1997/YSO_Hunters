@@ -134,6 +134,6 @@ for i in range(len(catalog)):
     line[235]=type
     line[236]=str(count)
     out.append("\t".join(line))
-out="\n".join(out)
+out="\n".join(out) + "\n"
 out_ca=open("Out_catalog","w")
 out_ca.write(out)

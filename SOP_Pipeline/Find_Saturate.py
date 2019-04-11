@@ -9,8 +9,10 @@ Input : c2d HREL catalog after extinction correction
 Output : catalog with (1)quality == 'U', source that are not saturate but undetected
                       (2)quality == 'S', source that might be saturate or undetected
                                          still need to image check
+
+Note : add +"\n" to avoid row number -1 problem 
 -------------------------------------------------------------------
-latest update : 2018/09/06
+latest update : 2019/04/11
 '''
 
 from os import system
@@ -113,6 +115,6 @@ for i in range(len(mosaic_li)):
 		    new_catalog[j][Qua_in[i]] = "S"
 
 output = open(str(cloud) + '_saturate_correct_file.tbl','w')
-output.write("\n".join(["\t".join(line) for line in new_catalog]))
+output.write("\n".join(["\t".join(line) for line in new_catalog]) + "\n")
 
 system('rm step *pix')
