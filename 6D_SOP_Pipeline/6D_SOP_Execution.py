@@ -28,32 +28,18 @@ path_P0 = '/home/ken/C2D-SWIRE_20180710/SOP_Program_6D_20190224/'
 path_P1 = '/home/ken/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/' 
 table_0 = path_P1 + 'all_candidates.tbl'
 
-if len(argv) == 5:
+if len(argv) == 4:
     print('Start calculating ...')
 else:
-    exit('Error: Wrong Usage!\n \
-          Exmaple: python [program] [catalog] [cloud\'s name] [data_type] [sort]\n \
-          data_type: flux or mag (default=flux)\n \
-          sort: yes or no')
+    exit('Error: Wrong Usage!\n\
+          Exmaple: python [program] [cloud\'s name] [data_type] [sort]\n\
+          data_type: flux or mag (default=flux)\n\
+          sort: True or False')
 
-table = str(argv[1])
-cloud = str(argv[2])
-data_type = str(argv[3])
-sort = str(argv[4])
-
-if sort == 'yes':
-    #======================================================================================
-    # Calculate 6D Gal_Prob
-    #======================================================================================
-    chdir(cloud + '_6D')
-    #table = '../catalog-CHA_II_Gal_Prob_All.tbl'
-    system('new_dict_6D_method.py ' + table + ' ' + cloud + ' ' + data_type)
-
-    #======================================================================================
-    # Sort and Compare
-    #======================================================================================
-    system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
-
+cloud = str(argv[1])
+data_type = str(argv[2])
+sort = bool(argv[3])
+if sort:
     #======================================================================================
     # Initialize directories to storage
     #======================================================================================
@@ -71,6 +57,18 @@ if sort == 'yes':
     system('mkdir ' + cloud + '_6D/IC_5D6D/5D_HSIEH')
     system('mkdir ' + cloud + '_6D/IC_5D6D/6D_HSIEH')
     system('mkdir ' + cloud + '_6D/IC_5D6D/5D_6D')
+
+    #======================================================================================
+    # Calculate 6D Gal_Prob
+    #======================================================================================
+    chdir(cloud + '_6D')
+    system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type)
+
+    #======================================================================================
+    # Check, Sort, and Compare
+    #======================================================================================
+
+    system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
 
     chdir('YSO_5D6D/5D')
     system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_YSO.tbl' + ' ' + table_0 + ' 5D HSIEH 7 yes no')
@@ -91,8 +89,8 @@ else:
     # Calculate 6D Gal_Prob
     #======================================================================================
     #table = '../catalog-CHA_II_Gal_Prob_All.tbl'
-    system('new_dict_6D_method.py ' + table + ' ' + cloud + ' ' + data_type)
-
+    system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type)
+    
     #======================================================================================
     # Sort and Compare
     #======================================================================================
