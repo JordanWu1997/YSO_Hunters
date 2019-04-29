@@ -14,7 +14,7 @@ import os
 from sys import argv
 from sys import exit
 
-if len(argv) == 3 or len(argv) == 4:
+if len(argv) == 3:
     pass
 else:
     exit('Wrong Usage!\nExample: ipython [program] [catalog] [MC cloud]')
@@ -65,7 +65,7 @@ for i in Galaxy:
     out_ca.write(str(i))
 out_ca.close()
 
-out_cat=open(cloud + '_6D_GP_to_image_check.tbl',"w")
+out_cat = open(cloud + '_6D_GP_to_image_check.tbl',"w")
 for i in GP_IC:
     out_cat.write(str(i))
 out_cat.close()
