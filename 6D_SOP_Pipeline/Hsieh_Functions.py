@@ -16,8 +16,6 @@ latest update : 2019/02/20 Jordan Wu'''
 import math as mh
 import numpy as np
 
-cube=0.2
-Jaxlim=[4.0,18.0]
 Ksaxlim=[4.0,18.0]
 IR1axlim=[8.0,18]
 IR2axlim=[7.0,18.0]
@@ -114,8 +112,9 @@ def index(X,Y,a,b): #a,b are transition point, X,Y are input color and mag (data
         return Y-cutY
 
 #--------------------------------------------------------------------------------------------------------------
+#Note: Cube is now a variable
 
-def seq(X,lim):
+def seq(X,lim,cube):
     '''
     This function is to put criterions we set for multi-d spaces onto the object 
     '''
