@@ -15,6 +15,8 @@ Output: catalog with
     #================================================================
     (3)Gal_Prob=0 is now assigned to Gal_Prob =1e-9 (Originally, 1e-3)
     #================================================================
+
+**New add function: computing with different binsizes
 -------------------------------------------------------------------
 latest update : 2019/02/26 Jordan Wu'''
 
@@ -39,11 +41,12 @@ else:
 #======================================================================================
 tStart = time.time()
 
+Binsize = str(input('binsize = '))
 print('Loading arrays ...')
 
-#path = '/home/ken/new_mg/new_6ds_correct/'
-path = '/home/ken/new_mg/ukidss_6d/'
-#path_1 = '/home/ken/new_mg/6d/'
+#path = '/home/ken/new_mg/ukidss_6d/'
+path = '/home/ken/new_mg/GPV_SOP_Program/result' + Binsize + '/'
+print('Array path: ' + path)
 
 # New type galaxy position in dictionary 
 Fu_Dict = np.load(path + 'all_detect_grid_Full_6d.npy').item()
@@ -67,7 +70,7 @@ Cloud = str(argv[2])
 data_type = str(argv[3])
 
 #parameter
-cube = 0.2
+cube = float(Binsize)
 Jaxlim = [4.0,18.0]
 IR1axlim = [8.0,18]
 IR2axlim = [7.0,18.0]
@@ -105,7 +108,7 @@ for i in range(len(catalog)):
     
     magJ = mag_list[0]; magIR1 = mag_list[1]; magIR2 = mag_list[2]; magIR3 = mag_list[3]; magIR4 = mag_list[4]; magMP1 = mag_list[5]
     PSF_list = [line[39], line[102], line[123], line[144], line[165], line[186]]
-    SEQ = [seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)]
+    SEQ = [seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube), seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)]
     num = 6 - SEQ.count('Lack')
     ob_type = str(num) + "bands_"
     count = 'no_count'
@@ -124,10 +127,10 @@ for i in range(len(catalog)):
     if num >= 3 and de != "AGB":
         
         # Set up parameters for searching lack bands
-        KEY = str([seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)])
+        KEY = str([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube), seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])
         KEY = KEY.strip('[')
         KEY = KEY.strip(']')
-        key_array = np.array([seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)])    
+        key_array = np.array([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube), seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])    
         index_array = np.argwhere(key_array=='Lack')
         
         if SEQ.count('Faint') > 0:
@@ -242,7 +245,7 @@ for i in range(len(catalog)):
     
     magJ = mag_list[0]; magIR1 = mag_list[1]; magIR2 = mag_list[2]; magIR3 = mag_list[3]; magIR4 = mag_list[4]; magMP1 = mag_list[5]
     PSF_list = [line[39], line[102], line[123], line[144], line[165], line[186]]
-    SEQ = [seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)]
+    SEQ = [seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube), seq(magIR2,IR2axlim,cube), seq(magIR3,IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)]
     num = 6 - SEQ.count('Lack')
     ob_type = str(num) + "bands_"
     count = 'no_count'
@@ -261,10 +264,10 @@ for i in range(len(catalog)):
     if num >= 3 and de != "AGB":
 
         # Set up parameters for searching lack bands                                                                                            
-        KEY = str([seq(magJ,Jaxlim), seq(magIR1,IR1axlim),seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)])
+        KEY = str([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube),seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])
         KEY = KEY.strip('[')
         KEY = KEY.strip(']')
-        key_array = np.array([seq(magJ,Jaxlim), seq(magIR1,IR1axlim), seq(magIR2,IR2axlim), seq(magIR3, IR3axlim), seq(magIR4,IR4axlim), seq(magMP1,MP1axlim)])
+        key_array = np.array([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube), seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])
         index_array = np.argwhere(key_array=='Lack')
 
         if SEQ.count('Faint') > 0:
