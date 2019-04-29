@@ -121,8 +121,8 @@ print("This process took %f sec" % (tEnd - tStart))
 
 #=========================================================================
 #Step6: Calculate 6D galaxy probability
-if option:
-    os.system('6D_SOP_Execution.py ' + cloud + ' mag True')
-else:
-    print('End of calculation ...')
+#if option:
+#    os.system('6D_SOP_Execution.py ' + cloud + ' mag True')
+#else:
+#    print('End of calculation ...')
 #=========================================================================
