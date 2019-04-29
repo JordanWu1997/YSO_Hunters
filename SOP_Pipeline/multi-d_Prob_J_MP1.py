@@ -1,4 +1,4 @@
-#!usr/bin/ipython
+#!/usr/bin/ipython
 '''
 #-----------------------------------------------------------
 Lastest Change: (1) Unify indents of all code lines
