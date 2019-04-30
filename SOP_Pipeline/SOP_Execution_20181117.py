@@ -13,8 +13,11 @@ Output: (1) w/o 6D calculation:
             1. 5D YSO candidates, candidates to image check, Galaxy candidates
             2. 6D YSO candidates, candidates to image check, Galaxy candidates
             3. optionally, comparison between 5D, 6D, Hsieh's catalog
+
+NOTE: (1) **Remove 6D gal prob counting function for temp.
+      (2) add new extinction correction for mag
 -------------------------------------------------------------------
-latest update : 20190411 Jordan Wu'''
+latest update : 20190430 Jordan Wu'''
 
 import os
 import time
@@ -23,9 +26,9 @@ from sys import exit
 
 if len(argv) != 5:
     exit('Error: Wrong Usage\n\
-    Example: python [SOP_Execution.py] [HREL catalog] [cloud\'s name] [skip] [6D-OPTION]\n\
+    Example: python [SOP_Execution.py] [HREL catalog] [cloud\'s name] [skip] [datatype]\n\
     skip: True/False to skip star_removal and deredden processes\n\
-    6D-OPTION: True/False to in addition to calculate in 6D method\n\
+    datatype: flux/mag input datatype for EXTINCTION CORRECTION (defualt:flux)\n\
     Warning: Input catalog must with magnitudes if 6D-OPTION is True')
 
 tStart = time.time()
@@ -36,7 +39,7 @@ tStart = time.time()
 catalog = str(argv[1])
 cloud = str(argv[2])
 skip = bool(argv[3])
-option = bool(argv[4])
+datatype = str(argv[4])
 
 path = '/home/ken/C2D-SWIRE_20180710' + '/SOP_Program_20181117/'
 path_Av_table = '/home/ken/C2D-SWIRE_20180710' + '/Backup_Av_table_20180826/'
@@ -67,8 +70,14 @@ if ~skip:
         cloud1, cloud2 = cloud, cloud
         print('Extinction Map: ' + path_Av_table + cloud1 + '_Av_table.tbl')
 
-    os.system('python ' + path + 'Extinction_Correction.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + 'catalog-' + cloud2 + '-HREL_all_star_removal.tbl ' + cloud)
-    
+    #=======================================================================
+    if datatype == 'flux':
+        os.system('python ' + path + 'Extinction_Correction.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + 'catalog-' + cloud2 + '-HREL_all_star_removal.tbl ' + cloud)
+    else:
+        print('mag ...')
+        os.system('python ' + path + 'Extinction_Correction_mag.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + 'catalog-' + cloud2 + '-HREL_all_star_removal.tbl ' + cloud)
+    #=======================================================================
+
     t_deredden_end = time.time() 
     print('Extinction Correction took %f sec' % (t_deredden_end - t_deredden_start))
 
@@ -118,11 +127,3 @@ os.system('rm '+ cloud + '_cans_to_wcs_IR1_check.tbl')
 
 tEnd = time.time()
 print("This process took %f sec" % (tEnd - tStart))
-
-#=========================================================================
-#Step6: Calculate 6D galaxy probability
-#if option:
-#    os.system('6D_SOP_Execution.py ' + cloud + ' mag True')
-#else:
-#    print('End of calculation ...')
-#=========================================================================
