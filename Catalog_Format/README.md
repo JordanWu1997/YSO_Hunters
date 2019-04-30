@@ -27,7 +27,7 @@ This file is for storing all information about index in SWIRE-format catalog.
 		- 102, 123, 144, 165, 186, 207
 	- #### zero-point flux value (flux for magnitude=0)
 		- J, H, K, IR1, IR2, IR3, IR4, MP1
-		- 1594000, 666700, 280900, 179700, 115000, 64130, 7140
+		- 1594000, 1024000, 666700, 280900, 179700, 115000, 64130, 7140
 		- Note:
 			- (1) These are actual values, not index on catalog
 			- (2) Unit: mili-Jansky
