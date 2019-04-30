@@ -116,5 +116,4 @@ for i in range(len(mosaic_li)):
 
 output = open(str(cloud) + '_saturate_correct_file.tbl','w')
 output.write("\n".join(["\t".join(line) for line in new_catalog]) + "\n")
-
 system('rm step *pix')
