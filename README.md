@@ -84,7 +84,9 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
       - /data/users/inchone/Perseus/oldold/mosaic
     - from spitzer database:
       - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/CHA_II/MOSAICS
-
+- **Data for new alogorithm :**
+    - new binsize galaxy probability
+      - /home/ken/new_mg/GPV_SOP_Program
 - **Programs from Inchone Hsieh :**
   - Make multi-D space:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_IR1-MP1
