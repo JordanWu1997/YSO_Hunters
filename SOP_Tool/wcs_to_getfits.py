@@ -17,12 +17,11 @@ from sys import exit
 from os import system
 
 if len(argv) != 8:
-    print('Example: python [catalog] [cloud\'s name] [Output Name] [horizontal_pix_num] [vertical_pix_num] [option] [save table]')
+    print('Example: python [program] [catalog] [cloud\'s name] [Output Name] [horizontal_pix_num] [vertical_pix_num] [option] [save table]')
     print('Require: [horizontal_pix_num] [vertical_pix_num] must both be integers')
     print(' option: Saturate / Image_Check / IR1_Check/ NAN')
     print(' save table: save transformed RA DEC table [yes/no]')
     exit()
-
 
 cloud = str(argv[2])
 name = str(argv[3])
