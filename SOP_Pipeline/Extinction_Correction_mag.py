@@ -105,9 +105,7 @@ for objects in catalog:
             C_av = float(band[2])
             if mag > 0.0: 
                 Av = float(Av)
-                flux = 10**(mag/-2.5) * band[3]
-                new_far_flux = flux*10**(Av*C_av/2.5)
-                new_far_mag  = str(-2.5*log10(new_far_flux/band[3]))
+                new_far_mag = str(mag - C_av*Av) #from def of Av, Cv
             else:
                 new_far_mag = str(mag)
             far_line[band[1]] = new_far_mag
