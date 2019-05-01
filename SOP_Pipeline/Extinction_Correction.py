@@ -1,5 +1,4 @@
 #!/usr/bin/ipython
-
 '''
 -------------------------------------------------------------------
 This program is for step2 (extinction_correction)
@@ -9,9 +8,7 @@ Input : Av_table, c2d HREL catalog
 Output : Deredden.tbl
 
 -------------------------------------------------------------------
-
-latest update : 2018/12/19
-'''
+latest update : 2019/5/01 Jordan Wu'''
 
 from sys import argv
 from sys import exit
@@ -112,17 +109,13 @@ for objects in catalog:
             
             if flux >= 0:
 		
-                Av=float(Av)
-            
+                Av=float(Av) 
                 new_far_flux = str(flux*10**(Av*C_av/2.5))
             
             far_line[band[1]]=new_far_flux
-    
     else:
         print('Not on this extinction map')
 
     new_far_line="\t".join(far_line) + "\n"
-
     out_Avfar.write(new_far_line)
-
 out_Avfar.close()
