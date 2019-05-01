@@ -39,9 +39,9 @@ import math as mh
 import time
 import os
 
-if len(argv) != 4:
+if len(argv) != 5:
     exit('Wrong Input Argument!\
-        \nExample: python [program] [Swire] [UKIDSS] [output file name]\
+        \nExample: python [program] [Swire] [UKIDSS] [HEADER_LENGTH] [output file name]\
         \nNote: Replace [Swire] J,H,K with [UKIDSS]')
 else:
     print('\nStart input check ...')
@@ -52,7 +52,7 @@ def IRAC_MP1_errorlist(x):
     
     dm_list = []
     for i in range(len(F0_list)):
-        if df_list[i] != 0.0:
+        if df_list[i] > 0.0:
             dm = (float(df_list[i])/F0_list[i]) * 2.5 * mh.log10(mh.e)
         else :
             dm = 0.0
@@ -68,7 +68,7 @@ def IRAC_MP1_magnitudelist(x):
     
     mag_list = []
     for i in range(len(F0_list)):    
-        if float(flux_list[i]) != 0.0:    
+        if float(flux_list[i]) > 0.0:    
             mag = -2.5 * mh.log10(float(flux_list[i])/F0_list[i])
         else:
             mag = 0.0
@@ -79,8 +79,9 @@ data1 = open(str(argv[1]), 'r')
 two_mass_cat = data1.readlines()
 data1.close()
 
+HEADER_LEN = int(argv[3])
 data2 = open(str(argv[2]), 'r')
-UK_cat_origin = data2.readlines()
+UK_cat_origin = data2.readlines()[HEADER_LEN:]
 data2.close()
 
 # Input file check for repeating sources
@@ -180,8 +181,8 @@ else:
 t_end = time.time()
 print('\nThis procedure took %.6f secs ...' % (t_end - t_start))
 
-Output = open(str(argv[3]), 'w')
+Output = open(str(argv[4]), 'w')
 for row in out:
     Output.write(row)
 Output.close()
-os.system('wc ' + str(argv[3]))
+os.system('wc ' + str(argv[4]))
