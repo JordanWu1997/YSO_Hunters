@@ -13,10 +13,12 @@
 #Comparator_SWIRE_format.py CHA_II_6D_YSO.tbl ../../../../Table_to_Compare/Table_From_Hsieh/all_candidates.tbl 6D_YSO_WI_UK 5D_ALL 7 yes no && \
 #Comparator_SWIRE_format.py CHA_II_6D_GP_to_image_check.tbl ../../../../Table_to_Compare/Table_From_Hsieh/all_candidates.tbl 6D_IC_WI_UK 5D_ALL 7 yes no
 
-echo Start calculating ...
+#:18,24s/to_be_replaced/to_replace/g; #mkdir '6D_bs=0.2'
+
 # Combination (Pipeline)
-new_dict_6D_method.py ../catalog-CHA_II_Gal_Prob_All.tbl CHA_II mag && \
-Check_6D_Gal_Prob.py CHA_II_6D_GP_all_out_catalog.tbl CHA_II &&\
-Comparator_SWIRE_format.py CHA_II_6D_YSO.tbl ../CHA_II_YSO.tbl 6D_YSO_WI_UK 5D_YSO 7 yes no && \
-Comparator_SWIRE_format.py CHA_II_6D_YSO.tbl ../../../../Table_to_Compare/Table_From_Hsieh/all_candidates.tbl 6D_YSO_WI_UK 5D_ALL 7 yes no && \
-Comparator_SWIRE_format.py CHA_II_6D_GP_to_image_check.tbl ../../../../Table_to_Compare/Table_From_Hsieh/all_candidates.tbl 6D_IC_WI_UK 5D_ALL 7 yes no
+echo Start calculating ...
+new_dict_6D_method.py ../catalog-LUP_III_Gal_Prob_All.tbl LUP_III mag && \
+Check_6D_Gal_Prob.py LUP_III_6D_GP_all_out_catalog.tbl LUP_III && \
+Comparator_SWIRE_format.py LUP_III_6D_YSO.tbl ../LUP_III_YSO.tbl 6D_YSO_WI_UK 5D_YSO 7 yes no && \
+Comparator_SWIRE_format.py LUP_III_6D_YSO.tbl ../../../../Table_to_Compare/Table_From_Hsieh/all_candidates.tbl 6D_YSO_WI_UK 5D_ALL 7 yes no && \
+Comparator_SWIRE_format.py LUP_III_6D_GP_to_image_check.tbl ../../../../Table_to_Compare/Table_From_Hsieh/all_candidates.tbl 6D_IC_WI_UK 5D_ALL 7 yes no
