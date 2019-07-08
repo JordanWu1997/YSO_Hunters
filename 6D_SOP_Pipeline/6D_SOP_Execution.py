@@ -24,7 +24,7 @@ latest update : 2019/03/02 Jordan Wu'''
 from os import system, path, chdir
 from sys import argv, exit
 
-path_P0 = '/home/ken/C2D-SWIRE_20180710/SOP_Program_6D_20190224/'
+path_P0 = '/home/ken/C2D-SWIRE_20180710/SOP_Program_6D_method/'
 path_P1 = '/home/ken/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/' 
 table_0 = path_P1 + 'all_candidates.tbl'
 

@@ -29,23 +29,33 @@ from os import system
 from sys import argv, exit
 from Hsieh_Functions import *
 
-if len(argv) == 4:
+if len(argv) == 5 or len(argv) == 7:
     print('Start 6D Galaxy Prob calculating ...')
 else:
     exit('Error: Wrong Usage!\n \
-          Exmaple: python [program] [catalog] [cloud\'s name] [data_type]\n \
-          data_type: flux or mag (default=flux)')
+          Exmaple: python [program] [catalog] [cloud\'s name] [data_type] [model]\n \
+          data_type: flux or mag (default=flux)\n\
+          model_set: old/new/latest: full/conditional/conditional_wi_new_limit UKIDSS catalog')
 
 #======================================================================================
 # Start loading Galaxy probabilty dictionary
 #======================================================================================
 tStart = time.time()
 
-Binsize = str(input('binsize = '))
+if str(argv[-1]) == 'argv':
+    Binsize = str(argv[-2])
+else:
+    Binsize = str(input('binsize = '))
 print('Loading arrays ...')
 
-#path = '/home/ken/new_mg/ukidss_6d/'
-path = '/home/ken/new_mg/GPV_SOP_Program/result' + Binsize + '/'
+if str(argv[4]) == 'old':
+    path = '/home/ken/new_mg/GPV_SOP_Program/result' + Binsize + '/'
+elif str(argv[4]) == 'new':
+    path = '/home/ken/new_mg/GPV_SOP_Program/result_condition_' + Binsize + '/'
+elif str(argv[4]) == 'latest':
+    path = '/home/ken/new_mg/GPV_SOP_Program/' ###################### TO BE CONTINUED ...
+else:
+    exit('Wrong model selection ...')
 print('Array path: ' + path)
 
 # New type galaxy position in dictionary 
@@ -71,12 +81,22 @@ data_type = str(argv[3])
 
 #parameter
 cube = float(Binsize)
-Jaxlim = [4.0,18.0]
-IR1axlim = [8.0,18]
-IR2axlim = [7.0,18.0]
-IR3axlim = [5.0,17]
-IR4axlim = [5.0,18.0]
-MP1axlim = [3.5,11.0]
+if str(argv[4]) == 'latest':
+    Jaxlim =   [4.0, 18.0]
+    IR1axlim = [8.0, 18.0]
+    IR2axlim = [7.0, 18.0]
+    IR3axlim = [5.0, 18.0]
+    IR4axlim = [5.0, 18.0]
+    MP1axlim = [3.5, 11.0]
+else:
+    # NEW BOUNDARY WI UKIDSS CATALOG
+    Jaxlim =   [3.5, 22.0]
+    IR1axlim = [8.0, 20.0]
+    IR2axlim = [7.0, 19.0]
+    IR3axlim = [5.0, 18.0]
+    IR4axlim = [5.0, 18.0]
+    MP1axlim = [3.5, 12.0]
+
 band_name = ['J','IR1','IR2','IR3','IR4','MP1']
 
 #======================================================================================
@@ -113,7 +133,7 @@ for i in range(len(catalog)):
     ob_type = str(num) + "bands_"
     count = 'no_count'
     KEY = '_'
-
+    
     # Remove AGB
     de="unknown"
     if magIR2 != 'no' and magIR3 != 'no' and magMP1 != 'no':
@@ -136,8 +156,6 @@ for i in range(len(catalog)):
         if SEQ.count('Faint') > 0:
             count = 99999
             ob_type += 'Faint'
-
-
         elif SEQ.count('Bright') > 0:
             count = 1e-4
             ob_type += 'Bright'
@@ -149,7 +167,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_no_"
-                ob_type += '6D_Missing_'
+                ob_type += '_6D_NOGALAXY_'
 
         elif num == 5:
             try:
@@ -158,7 +176,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_" + band_name[int(index_array[0])]
-                ob_type += '_5D_Missing_'
+                ob_type += '_5D_NOGALAXY_'
             
         elif num == 4:
             try:
@@ -167,7 +185,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_" + band_name[int(index_array[0])] + band_name[int(index_array[1])]
-                ob_type += '_4D_Missing_'
+                ob_type += '_4D_NOGALAXY_'
 
         elif num == 3:
             try:
@@ -176,7 +194,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_" + band_name[int(index_array[0])] + band_name[int(index_array[1])] + band_name[int(index_array[2])]
-                ob_type += '_3D_Missing_'
+                ob_type += '_3D_NOGALAXY_'
  
         if count == 0.0:
             count = 10**-9
@@ -285,7 +303,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_no_"
-                ob_type += '6D_Missing_'
+                ob_type += '_6D_NOGALAXY_'
 
         elif num == 5:
             try:
@@ -294,7 +312,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_" + band_name[int(index_array[0])]
-                ob_type += '_5D_Missing_'
+                ob_type += '_5D_NOGALAXY_'
 
         elif num == 4:
             try:
@@ -303,7 +321,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_" + band_name[int(index_array[0])] + band_name[int(index_array[1])]
-                ob_type += '_4D_Missing_'
+                ob_type += '_4D_NOGALAXY_'
 
         elif num == 3:
             try:
@@ -312,7 +330,7 @@ for i in range(len(catalog)):
             except KeyError:
                 count = 1e-5
                 ob_type += "Lack_" + band_name[int(index_array[0])] + band_name[int(index_array[1])] + band_name[int(index_array[2])]
-                ob_type += '_3D_Missing_'
+                ob_type += '_3D_NOGALAXY_'
 
         if count == 0.0:
             count = 10**-9

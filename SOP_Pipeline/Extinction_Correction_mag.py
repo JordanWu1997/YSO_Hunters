@@ -7,6 +7,7 @@ Input : Av_table, c2d HREL catalog with MAGNITUDE
 
 Output : Deredden.tbl
 
+Note : Av_table's header must be removed before starting
 -------------------------------------------------------------------
 latest update : 2019/04/30 Jordan Wu
 '''
@@ -43,9 +44,7 @@ catalog = open(argv[2])
 cloud = str(argv[3])
 
 #-----------------------------------------------------------
-#[20:] to remove header of Av_table
-Av_table_lines = Av_table.readlines()[20:]
-#Av_table_lines = Av_table.readlines()
+Av_table_lines = Av_table.readlines()
 catalog = catalog.readlines()
 object_num = len(catalog)
 

@@ -16,10 +16,11 @@ latest update : 2019/02/20 Jordan Wu'''
 import math as mh
 import numpy as np
 
+Jaxlim=[4.0,18.0]
 Ksaxlim=[4.0,18.0]
-IR1axlim=[8.0,18]
+IR1axlim=[8.0,18.0]
 IR2axlim=[7.0,18.0]
-IR3axlim=[5.0,17]
+IR3axlim=[5.0,17.0]
 IR4axlim=[5.0,18.0]
 MP1axlim=[3.5,11.0]
 
@@ -37,14 +38,15 @@ def magnitudelist(x):
     for i in range(len(F0_list)):    
         # J band
         if i==0:
-            if flux_list[i]>0.0:
-                mag_list.append(-2.5*mh.log10(float(flux_list[i])/F0_list[i]))
+            if flux_list[i] > 0.0:
+                mag_list.append(-2.5*mh.log10(flux_list[i]/F0_list[i]))
             else:
                 mag_list.append('no')
 
         # IR1,IR2,IR3,IR4,MP1 band     
         elif flux_Qua[i]=="A" or  flux_Qua[i]=="B" or flux_Qua[i]=="C" or flux_Qua[i]=="D" or flux_Qua[i]=="K":
-            mag_list.append(-2.5*mh.log10(float(flux_list[i])/F0_list[i]))
+            if flux_list[i] > 0.0:
+                mag_list.append(-2.5*mh.log10(flux_list[i]/F0_list[i]))
         
         # Qua labeled as 'S' (saturate candidate)
         elif flux_Qua[i]=="S":
@@ -75,14 +77,15 @@ def PSF_magnitudelist(x):
     mag_list = []
     for i in range(len(F0_list)):
         if i==0:
-            if flux_list[i]>0.0:
+            if flux_list[i] > 0.0:
                 mag_list.append(-2.5*mh.log10(float(flux_list[i])/F0_list[i]))
             else:
                 mag_list.append('no')
         elif PSF_list[i]!="1" and flux_Qua[i]!="S":
             mag_list.append('no')
         elif flux_Qua[i]=="A" or  flux_Qua[i]=="B" or flux_Qua[i]=="C" or flux_Qua[i]=="D" or flux_Qua[i]=="K":
-            mag_list.append(-2.5*mh.log10(float(flux_list[i])/F0_list[i]))
+            if flux_list[i] > 0.0:
+                mag_list.append(-2.5*mh.log10(flux_list[i]/F0_list[i]))
         elif flux_Qua[i]=="S":
             mag_list.append(-100.0)
         elif flux_Qua[i]=="N":
@@ -119,13 +122,13 @@ def seq(X,lim,cube):
     This function is to put criterions we set for multi-d spaces onto the object 
     '''
     if X=='no':
-        reu="Lack"
-    elif X<lim[0]:
-        reu="Bright"
-    elif X>lim[1]:
-        reu="Faint"
+        reu = "Lack"
+    elif float(X) < lim[0]:
+        reu = "Bright"
+    elif float(X) > lim[1]:
+        reu = "Faint"
     else:
-        reu=int((X-lim[0])/cube)
+        reu=int((float(X)-lim[0])/cube)
     return reu
 
 #--------------------------------------------------------------------------------------------------------------

@@ -60,8 +60,8 @@ for Row in candidate1:
     for row in candidate2:
         cat2 = row.split()
 
-        if round(float(cat1[0]),round_to) == round(float(cat2[0]),round_to) and round(float(cat1[2]),round_to) == round(float(cat2[2]),round_to):
-
+        #if round(float(cat1[0]),round_to) == round(float(cat2[0]),round_to) and round(float(cat1[2]),round_to) == round(float(cat2[2]),round_to):
+        if round(float(cat1[0]),round_to) == round(float(cat2[0]),round_to) and round(float(cat1[2]),round_to) == round(float(cat2[1]),round_to):
             SameSource += 1
             n_A_B += 1
             A_and_B.append(Row)

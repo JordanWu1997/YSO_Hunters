@@ -44,7 +44,7 @@ for line in catalog:
 
     new_line = str(ra_degree) + " " + str(dec_degree) + "\t" + ra + " " + dec + "\t" + "".join(Qua) + "".join(imtype) + "\n"
     new.append(new_line)
-    print(new_line)
+    print(new_line.strip('\n'))
 
 out_ca = open(name + '_cans_to_wcs.tbl','w')
 for i in new:

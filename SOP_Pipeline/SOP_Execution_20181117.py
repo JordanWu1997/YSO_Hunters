@@ -28,7 +28,7 @@ if len(argv) != 5:
     exit('Error: Wrong Usage\n\
     Example: python [SOP_Execution.py] [HREL catalog] [cloud\'s name] [skip] [datatype]\n\
     skip: True/False to skip star_removal and deredden processes\n\
-    datatype: flux/mag input datatype for EXTINCTION CORRECTION (defualt:flux)\n\
+    datatype: flux/mag input datatype for EXTINCTION CORRECTION (defualt:mag)\n\
     Warning: Input catalog must with magnitudes if 6D-OPTION is True')
 
 tStart = time.time()
@@ -41,7 +41,7 @@ cloud = str(argv[2])
 skip = bool(argv[3])
 datatype = str(argv[4])
 
-path = '/home/ken/C2D-SWIRE_20180710' + '/SOP_Program_20181117/'
+path = '/home/ken/C2D-SWIRE_20180710' + '/SOP_Program_5D_method/'
 path_Av_table = '/home/ken/C2D-SWIRE_20180710' + '/Backup_Av_table_20180826/'
 path_Av_table_PER = '/home/ken/'
 
@@ -74,8 +74,11 @@ if ~skip:
     if datatype == 'flux':
         os.system('python ' + path + 'Extinction_Correction.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + 'catalog-' + cloud2 + '-HREL_all_star_removal.tbl ' + cloud)
     else:
-        print('mag ...')
-        os.system('python ' + path + 'Extinction_Correction_mag.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + 'catalog-' + cloud2 + '-HREL_all_star_removal.tbl ' + cloud)
+        print('Extinction Correction for mag ...')
+        os.system('python ' + path + 'Extinction_Correction.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + 'catalog-' + cloud2 + '-HREL_all_star_removal.tbl ' + cloud + '_step')
+        print('Extinction Correction for flux ...')
+        os.system('python ' + path + 'Extinction_Correction_mag.py ' + path_Av_table + cloud1 + '_Av_table.tbl ' + cloud + '_step_Deredden.tbl ' + cloud)
+        os.system('rm ' + cloud + '_step_Deredden.tbl')
     #=======================================================================
 
     t_deredden_end = time.time() 

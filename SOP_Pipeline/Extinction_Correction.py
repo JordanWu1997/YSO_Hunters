@@ -7,6 +7,7 @@ Input : Av_table, c2d HREL catalog
 
 Output : Deredden.tbl
 
+Note : Av_table's header must be removed before starting
 -------------------------------------------------------------------
 latest update : 2019/5/01 Jordan Wu'''
 
@@ -19,6 +20,7 @@ if len(argv) != 4:
     print('Help: ')
     print('Example: python Extinctin_Correction.py [Av_table] [catalog] [cloud\'s name]')
     exit()
+
 #parameters [band, index in catalog, C_av(Exctintion_coef)]
 parameter=[['J',33,0.2741],
           ['H',54,0.1622],
@@ -40,9 +42,7 @@ cloud = str(argv[3])
 
 #-----------------------------------------------------------
 
-#[20:] to remove header of Av_table
-Av_table_lines = Av_table.readlines()[20:]
-#Av_table_lines = Av_table.readlines()
+Av_table_lines = Av_table.readlines()
 catalog = catalog.readlines()
 object_num = len(catalog)
 
@@ -69,7 +69,7 @@ for objects in catalog:
     for line in Av_table_lines:
         
         if -tolerance < Ra_catalog_degree-float(line.split()[0]) < tolerance and -tolerance < Dec_catalog_degree-float(line.split()[1]) < tolerance:
-		   
+	    
             Ra_table_rad = float(line.split()[0])/360*2*pi
 	    Dec_table_rad =float(line.split()[1])/360*2*pi
 	    
@@ -79,23 +79,20 @@ for objects in catalog:
 	    diffZ = sin(Dec_catalog_rad) - sin(Dec_table_rad)
 	    
             #Squared distance
-            SQdistance = diffX**2 + diffY**2 + diffZ**2
-	    
+            SQdistance = diffX**2 + diffY**2 + diffZ**2	    
             minlist.append(SQdistance)
 	    min_info_list.append(line)
     
     if len(min_info_list) != 0:
 
         minSQ = min(minlist)
-        minnumber = minlist.index(minSQ)
-	        
+        minnumber = minlist.index(minSQ)    
         correct_line = min_info_list[minnumber]
         Av = correct_line.split()[6]
 	
         #Store Av value on catalog
         object_data = objects.split()
         object_data[17] = Av
-        
         far_line = object_data
 
         for band in parameter:
@@ -104,18 +101,17 @@ for objects in catalog:
             C_av = float(band[2])
                 
             if flux < 0:
-                
                 new_far_flux = str(flux)
             
             if flux >= 0:
-		
                 Av=float(Av) 
                 new_far_flux = str(flux*10**(Av*C_av/2.5))
             
-            far_line[band[1]]=new_far_flux
+            far_line[band[1]] = new_far_flux
     else:
+        far_line = 'NOT FOUND'
         print('Not on this extinction map')
 
-    new_far_line="\t".join(far_line) + "\n"
+    new_far_line = "\t".join(far_line) + "\n"
     out_Avfar.write(new_far_line)
 out_Avfar.close()

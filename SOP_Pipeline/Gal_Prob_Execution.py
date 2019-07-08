@@ -30,7 +30,7 @@ if len(argv) != 3:
     print('Exmaple: ipython Gal_Prob_Execution.py [catalog] [MC cloud]')
     exit()
 
-path = '/home/ken/C2D-SWIRE_20180710/SOP_Program_20181117/'
+path = '/home/ken/C2D-SWIRE_20180710/SOP_Program_5D_method/'
 
 catalog = argv[1]; cloud = argv[2]
 

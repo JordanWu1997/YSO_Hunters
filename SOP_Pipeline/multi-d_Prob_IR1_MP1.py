@@ -26,7 +26,7 @@ print "Loading catalog"
 catalog=open("step")
 catalog=catalog.readlines()
 
-#prameter
+#parameter
 cube=0.2
 IR1axlim=[8.0,18.0]
 IR2axlim=[7.0,18.0]

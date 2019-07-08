@@ -156,8 +156,6 @@ if len(ukidss) == len(swire):
         # Write SWIRE IR1~MP1 magnitude and error 
         mag_list = IRAC_MP1_magnitudelist(row_s)
         err_list = IRAC_MP1_errorlist(row_s)
-        mag_list = IRAC_MP1_magnitudelist(row_s)
-        err_list = IRAC_MP1_errorlist(row_s)
         row_s[98], row_s[119], row_s[140], row_s[161], row_s[182] = mag_list[0], mag_list[1], mag_list[2], mag_list[3], mag_list[4]
         row_s[99], row_s[120], row_s[141], row_s[162], row_s[183] = err_list[0], err_list[1], err_list[2], err_list[3], err_list[4]
 

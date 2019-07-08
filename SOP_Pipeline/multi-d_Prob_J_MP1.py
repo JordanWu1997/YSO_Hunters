@@ -26,10 +26,8 @@ print "Loading catalog"
 catalog=open(argv[-1])
 catalog=catalog.readlines()
 
-#prameter
-
+#parameter
 cube=0.2
-
 Jaxlim=[4.0,18.0]
 Ksaxlim=[4.0,18.0]
 #IR1axlim=[8.0,18]
@@ -137,7 +135,6 @@ for i in range(len(catalog)):
 	    L2 += 1
 	    type += "Lack_" + band_name[L1] + band_name[L2]
 	    count=array_matrix[L1][L2][SEQ[0]][SEQ[1]][SEQ[2]]
-
 #===================================
 	if count==0.0:
 	    count=10**-9 #originally, 10**-3

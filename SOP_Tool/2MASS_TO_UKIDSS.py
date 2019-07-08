@@ -61,7 +61,7 @@ def IRAC_MP1_errorlist(x):
 
     dm_list = []
     for i in range(len(F0_list)):
-        if df_list[i] != 0.0:
+        if df_list[i] > 0.0:
             dm = float(df_list[i])/F0_list[i] * 2.5*np.log10(np.e)
         else :
             dm = 0.0
@@ -78,7 +78,7 @@ def IRAC_MP1_magnitudelist(x):
 
     mag_list = []
     for i in range(len(F0_list)):
-        if float(flux_list[i]) != 0.0:
+        if float(flux_list[i]) > 0.0:
             mag_list.append(-2.5*np.log10(float(flux_list[i])/F0_list[i]))
         else:
             mag_list.append(0.0)
