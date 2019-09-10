@@ -18,19 +18,22 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 ## **V. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
   - e.g. In .cshrc file:
-    - ```
-      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Toolkit
-      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Preset
-      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_5D_method
-      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_6D_method
-      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Extinction_Check
-      ```
-2. Revised Some Program Location if **No such file** error happens.
+    ```
+    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Toolkit
+    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Preset
+    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_5D_method
+    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_6D_method
+    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Extinction_Check
+    ```
+2. Revise Locations of Some Programs if **No such file** error happens.
+  - e.g. Some Locations May be needed to Revised
+    - Location where multi-D Galaxy Probability Array stored
+    - Location where Gal_SOP_EXECUTION.py calling other programming
 3. Standard Sequence for Execution:
-  - SOP_Execution_Preset.py
-  - SOP_Execution_5D_method.py
-  - SOP_Execution_6D_method.py
-  - SOP_Execution_Extinction_check.py
+  1. SOP_Execution_Preset.py
+  2. SOP_Execution_5D_method.py
+  3. SOP_Execution_6D_method.py
+  4. SOP_Execution_Extinction_check.py
     - **Note This Command Must Execute inside Specific Binsize Directory**
   
 ## **VI.Data Location**
