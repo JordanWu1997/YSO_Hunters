@@ -16,8 +16,15 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 <img src='Templates_and_Charts/Steps.png'/>
 
 ## **V. How To Use SOP Programs**
-
-
+1. Add Directories started with SOP to current working environments
+  - e.g. In .cshrc:
+    - ```
+      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Toolkit
+      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Preset
+      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_5D_method
+      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_6D_method
+      setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Extinction_Check
+      ```
 
 ## **VI.Data Location**
 - **Catalog from c2d & SWIRE :**
