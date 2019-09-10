@@ -17,7 +17,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 ## **V. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
-  - e.g. In .cshrc:
+  - e.g. In .cshrc file:
     - ```
       setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Toolkit
       setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Preset
@@ -25,7 +25,14 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
       setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_6D_method
       setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Extinction_Check
       ```
-
+2. Revised Some Program Location if **No such file** error happens.
+3. Standard Sequence for Execution:
+  - SOP_Execution_Preset.py
+  - SOP_Execution_5D_method.py
+  - SOP_Execution_6D_method.py
+  - SOP_Execution_Extinction_check.py
+    - **Note This Command Must Execute inside Specific Binsize Directory**
+  
 ## **VI.Data Location**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
