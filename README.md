@@ -9,6 +9,8 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 ## **III.Improvement**
 - Make all processions be automatic (SOP Program)
+- Add 1 more band to multi-D galaxy probability
+- Add new extinction test (Apply for selecting Liable YSO candidates)
 - ~~Reduce the errors about extinction correction~~
 - ~~Use marginal curved surface instead of the marginal plane (position support vector)~~
 
