@@ -12,7 +12,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 - ~~Reduce the errors about extinction correction~~
 - ~~Use marginal curved surface instead of the marginal plane (position support vector)~~
 - Add 1 more band to multi-D galaxy probability
-- Add new extinction test (Apply for selecting Liable YSO candidates)
+- Add new extinction test (application for selecting reliable YSO candidates)
 
 ## **IV.Step**
 <img src='Templates_and_Charts/Steps.png'/>
