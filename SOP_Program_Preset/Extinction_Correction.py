@@ -91,8 +91,6 @@ for objects in catalog:
             minlist.append(SQdistance)
 	    min_info_list.append(line)
 
-
-
     object_data = objects.split()
     far_line = object_data
 

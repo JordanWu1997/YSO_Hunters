@@ -18,11 +18,10 @@ from sys import exit
 import numpy as np
 
 if len(argv) != 8:
-    print('ERROR! Wrong Arguments!')
-    print('Input Example:Comparator_SWIRE_format.py [catalog_1] [catalog_2] [name_1] [name_2] [round_to] [option] [C_check]')
-    print('option: yes/no (yes: save A_and_B, ~A_and_B, A_and_~B catalogs ; no: nothing)')
-    print('C_check: yes/no (Consistency_Check to check same source\'s flux (IR1~MP1))')
-    exit()
+    exit('\n\tERROR! Wrong Arguments!\
+        \n\tInput Example:Comparator_SWIRE_format.py [catalog_1] [catalog_2] [name_1] [name_2] [round_to] [option] [C_check]\
+        \n\toption: yes/no (yes: save A_and_B, ~A_and_B, A_and_~B catalogs ; no: nothing\
+        \n\tC_check: yes/no (Consistency_Check to check same source\'s flux (IR1~MP1))\n')
 
 catalog1 = open(argv[1],'r')
 catalog2 = open(argv[2],'r')
@@ -32,7 +31,7 @@ round_to = int(argv[5])
 option = str(argv[6])
 Consistency_Check = str(argv[7])
 
-print('catalog: '+str(argv[1])+ ', '+str(argv[2]))
+print('\ncatalog: '+str(argv[1])+ ', '+str(argv[2]))
 
 candidate1 = catalog1.readlines()
 candidate2 = catalog2.readlines()
@@ -80,7 +79,7 @@ for Row in candidate1:
                 
                 else:
                     Consistence +=1
-            
+
 print('SameSource '+'round_to '+str(round_to)+' : '+str(SameSource))
 print('Inconsistence :'+str(Inconsistence))
 print('Consistence :'+str(Consistence))
@@ -109,7 +108,7 @@ if option == 'yes':
         if count == len(A_and_B):        
             n_not_A_but_B += 1
             not_A_but_B.append(Row)  
-
+    
     out_cat_A_and_B = open(name1 + '_and_' + name2 + '.tbl', 'w')
     out_cat_not_A_but_B = open('not_' + name1 + '_but_' + name2 + '.tbl', 'w')
     out_cat_not_B_but_A = open('not_' + name2 + '_but_' + name1 + '.tbl', 'w')
@@ -126,7 +125,7 @@ if option == 'yes':
     out_cat_A_and_B.close()
     out_cat_not_A_but_B.close()
     out_cat_not_B_but_A.close()
-
+    
     print(name1 + '_and_' + name2 + ': ' + str(n_A_B))  
     print('not_' + name1 + '_but_' + name2 + ': ' + str(n_not_A_but_B))
     print('not_' + name2 + '_but_' + name1 + ': ' + str(n_not_B_but_A))

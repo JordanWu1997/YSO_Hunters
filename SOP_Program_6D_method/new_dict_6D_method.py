@@ -23,6 +23,7 @@ latest update : 2019/02/26 Jordan Wu'''
 #======================================================================================
 # Setup initial environment; Check input arguments
 #======================================================================================
+import os
 import time
 import numpy as np
 from os import system
@@ -222,7 +223,8 @@ print("Calculating 6D_Gal_Prob took %f sec" % (tEnd - tStart))
 #======================================================================================
 # END of calculating 6D GALAXY PROB; Save the result
 #======================================================================================
-system('rm ./' + Cloud + "_6D_GP_out_catalog")
+if os.path.isfile(Cloud + "_6D_GP_out_catalog"):
+    system('rm ./' + Cloud + "_6D_GP_out_catalog")
 out = "\n".join(out) + '\n'
 out_ca = open(Cloud + "_6D_GP_out_catalog","w")
 out_ca.write(out)
@@ -349,7 +351,8 @@ print("Calculating 6D Gal_Prob_P took %f sec" % (tEnd - tStart))
 #======================================================================================
 # END of calculating 6D GALAXY PROB P; Clean old results and Save the new results     
 #======================================================================================
-system('rm ' + Cloud + "_6D_GP_all_out_catalog.tbl")
+if os.path.isfile(Cloud + "_6D_GP_all_out_catalog.tbl"):
+    system('rm ' + Cloud + "_6D_GP_all_out_catalog.tbl")
 out = "\n".join(out) + '\n'
 out_ca = open(Cloud + "_6D_GP_all_out_catalog.tbl","w")
 out_ca.write(out)

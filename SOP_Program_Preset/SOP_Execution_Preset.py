@@ -29,9 +29,9 @@ cloud = str(argv[2])
 emap = str(argv[3])
 
 if emap == 'Old':
-    path_Av_table = '/home/ken/C2D-SWIRE_20180710/All_Extinction_Tables/Tables_From_Hsieh/'
+    path_Av_table = '/home/ken/C2D-SWIRE_20180710/All_Extinction_Table/Tables_From_Hsieh/'
 else:
-    path_Av_table = '/home/ken/C2D-SWIRE_20180710/All_Extinction_Tables/Tables_Self_Made/'
+    path_Av_table = '/home/ken/C2D-SWIRE_20180710/All_Extinction_Table/Tables_Self_Made/'
 
 tStart = time.time()
 # Step1: Remove stars
