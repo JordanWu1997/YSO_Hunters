@@ -9,8 +9,8 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 ## **III.Improvement**
 - Make all processions be automatic (SOP Program)
-- Reduce the errors about extinction correction
-- Use marginal curved surface instead of the marginal plane (position support vector)
+- ~~Reduce the errors about extinction correction
+- ~~Use marginal curved surface instead of the marginal plane (position support vector)
 
 ## **IV.Step**
 <img src='Templates_and_Charts/Steps.png'/>
