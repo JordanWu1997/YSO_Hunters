@@ -8,6 +8,7 @@
   - Remove source detected in
     - 0-2 bands (labeled as 'zero, one, two, red1, red2')
     - only 2mass (labeled as '2mass')
+
 ## **III.Result**
 <img src='../../Templates_and_Charts/Star_removal.png'>
 ## **IV.Reference**
