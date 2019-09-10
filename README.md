@@ -30,11 +30,11 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
     - Location where multi-D Galaxy Probability Array stored
     - Location where Gal_SOP_EXECUTION.py calling other programming
 3. Standard Sequence for Execution:
-  1. SOP_Execution_Preset.py
-  2. SOP_Execution_5D_method.py
-  3. SOP_Execution_6D_method.py
-  4. SOP_Execution_Extinction_check.py
-      - **Note This Command Must Execute inside Specific Binsize Directory**
+    1. SOP_Execution_Preset.py
+    2. SOP_Execution_5D_method.py
+    3. SOP_Execution_6D_method.py
+    4. SOP_Execution_Extinction_check.py
+        - **Note This Command Must Execute inside Specific Binsize Directory**
   
 ## **VI.Data Location**
 - **Catalog from c2d & SWIRE :**
