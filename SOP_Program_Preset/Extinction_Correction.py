@@ -65,29 +65,29 @@ for objects in catalog:
 
     Ra_catalog_degree = float(objects.split()[0])
     Dec_catalog_degree = float(objects.split()[2])
-	
+
     Ra_catalog_rad = Ra_catalog_degree/360*2*pi
     Dec_catalog_rad = Dec_catalog_degree/360*2*pi
-	
+
     # Store distance of possible point sources from Av_table
     minlist=[]
     # Store information of all possible points
     min_info_list=[]
-	
+
     for line in Av_table_lines:
-        
+
         if -tolerance < Ra_catalog_degree-float(line.split()[0]) < tolerance and -tolerance < Dec_catalog_degree-float(line.split()[1]) < tolerance:
-	    
+
             Ra_table_rad = float(line.split()[0])/360*2*pi
 	    Dec_table_rad =float(line.split()[1])/360*2*pi
-	    
+
             # Calculate distance(angular) on spherical coordinate
             diffX = cos(Ra_catalog_rad) * cos(Dec_catalog_rad) - cos(Ra_table_rad) * cos(Dec_table_rad)
 	    diffY = cos(Ra_catalog_rad) * sin(Dec_catalog_rad) - cos(Ra_table_rad) * sin(Dec_table_rad)
 	    diffZ = sin(Dec_catalog_rad) - sin(Dec_table_rad)
-	    
+
             # Calculate Squared distance
-            SQdistance = diffX**2 + diffY**2 + diffZ**2	    
+            SQdistance = diffX**2 + diffY**2 + diffZ**2
             minlist.append(SQdistance)
 	    min_info_list.append(line)
 
@@ -97,29 +97,29 @@ for objects in catalog:
     if len(min_info_list) != 0:
 
         minSQ = min(minlist)
-        minnumber = minlist.index(minSQ)    
+        minnumber = minlist.index(minSQ)
         correct_line = min_info_list[minnumber]
         Av = correct_line.split()[Av_col]
-	
+
         # Store Av value on catalog
-        far_line[17] = object_data[17]
+        far_line[17] = Av
 
         for band in parameter:
-            
+
             flux = float(far_line[band[1]])
             mag = float(far_line[band[2]])
             C_av = float(band[3])
-            
+
             #=============================
             # Flux Correction
             #=============================
             if flux < 0.0:
                 new_far_flux = str(flux)
             else:
-                Av=float(Av) 
+                Av=float(Av)
                 new_far_flux = str(flux*10**(Av*C_av/2.5))
             far_line[band[1]] = new_far_flux
-            
+
             #=============================
             # Magnitude Correction
             #=============================
@@ -128,9 +128,9 @@ for objects in catalog:
                 new_far_mag = str(mag - C_av*Av) #from def of Av, Cv
             else:
                 new_far_mag = str(mag)
-            far_line[band[2]] = new_far_mag    
+            far_line[band[2]] = new_far_mag
         new_far_line = "\t".join(far_line) + "\n"
-    
+
     else:
         for band in parameter:
             far_line[band[2]] =  'NOT_FOUND'
