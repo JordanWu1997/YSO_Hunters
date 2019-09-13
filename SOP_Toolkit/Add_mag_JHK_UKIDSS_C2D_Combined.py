@@ -36,8 +36,9 @@ if len(argv) != 6:
         \n\t[Option]: 2MASSBR <= keep 2MASS Bright Sources (Jmag>11.5)\
         \n\t**Note**: This Program Replace [SWIRE] J,H,K with [UKIDSS]\n')
 
+#==========================================================
 # For transformation of old 2MASS data to new UKIDSS format
-#=====================================================================
+#==========================================================
 def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
     '''
     This function is to (1)change fluxes on the catalog to magnitudes
@@ -58,8 +59,6 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
             mag_H = mag_H + 0.07  * (mag_J - mag_H)
         if mag_J > 0.0 and mag_K > 0.0:
             mag_K = mag_K + 0.01  * (mag_J - mag_K)
-    else:
-        pass
 
     return str(mag_Jw), str(mag_Hw), str(mag_Kw)
 
@@ -86,18 +85,74 @@ def IRAC_MP1_magnitudelist(x):
             mag = 0.0
         mag_list.append(str(mag))
     return mag_list
+
 #=====================================================================
+# Load Input catalog and apply input file check for repeating sources
+#=====================================================================
+with open(str(argv[2]), 'r') as data:
+    head = int(argv[3])
+    ukidss_cat_origin = data.readlines()[head:]
 
 with open(str(argv[1]), 'r') as data:
     two_mass_cat = data.readlines()
-with open(str(argv[2]), 'r') as data:
-    head = int(argv[3])
-    ukidss_cat = data.readlines()[head:]
 
+if len(two_mass_cat) < len(ukidss_cat_origin):
+    print('Repeated source ID found ...\n')
+    print('Start finding repeated sources ...\n')
+    t_start = time.time()
+
+    Repeat_dict = {}
+    for i in range(len(UK_cat_origin)):
+        index = int(UK_cat_origin[i].split()[0].strip(',')) - 1
+        Repeat_dict.update({index: ''})
+        Repeat_dict[index] += UK_cat_origin[i] + ';'
+        if i>1000 and i%1000==0:
+            print('%.6f' % (100*float(i)/float(len(UK_cat_origin))) + '%')
+    print('Complete finding repeated sources ...\n')
+
+    no_rpt_catalog = []
+    print('Start comparing repeated sources distances to target\n')
+    for i in range(len(Repeat_dict)):
+        if i>1000 and i%1000==0:
+            print('%.6f' % (100*float(i)/float(len(Repeat_dict))) + '%')
+
+        REPT = Repeat_dict[i].split(';')[:-1]
+        SKYC = []
+        for j in range(len(REPT)):
+            ra0 = str(float((REPT[j].split(','))[1]))
+            dec0 = str(float((REPT[j].split(','))[2]))
+            SKYC0 = SkyCoord(ra0, dec0, unit="deg", frame='fk5')
+            SKYC.append(SkyCoord(str(float((REPT[j].split(','))[6])), str(float((REPT[j].split(','))[7])), unit = 'deg', frame = 'fk5'))
+
+        SEP = []
+        for k in range(len(SKYC)):
+            SEP.append(SKYC0.separation(SKYC[k]).value)
+        ind = SEP.index(max(SEP))
+        no_rpt_catalog.append(REPT[ind])
+
+    t_end = time.time()
+    print('End of comparing distances between repeated sources ...\n')
+    print('Dealing with repeated sources in catalog took %.6f secs ...\n' % (t_end - t_start))
+    print('NR in new UKIDSS ELAIS N1 catalog: %i\n' % len(no_rpt_catalog))
+
+    # Save and Reload catalog corrected
+    with open(str(argv[2])+'_reduction', 'w') as output
+        for i, row in enumerate(no_rpt_catalog):
+            if i>1000 and i%1000==0:
+                print('%.6f' % (100*float(i)/float(len(no_rpt_catalog))) + '%')
+            output.write(str(row)
+
+    with open(str(argv[2])+'_reduction', 'r') as data:
+        ukidss_cat = data.readlines()
+else:
+    ukidss_cat = ukidss_cat_origin
+
+#===============================================
+# Replace 2MASS Observation with UKIDSS Survey
+#===============================================
 t_start = time.time()
 out_catalog = []
 for i in range(len(ukidss_cat)):
-
     index = int(ukidss_cat[i].split()[0].strip(',')) - 1
     row_s = two_mass_cat[index].split()
     row_u = ukidss_cat[i].split()
