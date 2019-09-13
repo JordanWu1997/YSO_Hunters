@@ -32,17 +32,19 @@ import os
 
 if len(argv) != 6:
     exit('\n\tWrong Input Argument!\
-        \n\tExample: python [program] [SWIRE] [UKIDSS] [Header length] [Output filename] [Option]\
+        \n\tExample: [Program] [C2D] [UKIDSS] [Header length] [Output filename] [Option]\
         \n\t[Option]: 2MASSBR <= keep 2MASS Bright Sources (Jmag>11.5)\
-        \n\t**Note**: This Program Replace [SWIRE] J,H,K with [UKIDSS]\n')
+        \n\t**Note**: This Program Replace [C2D] J,H,K with [UKIDSS]\n')
 
 #==========================================================
 # For transformation of old 2MASS data to new UKIDSS format
 #==========================================================
 def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
     '''
-    This function is to (1)change fluxes on the catalog to magnitudes
-                        (2)transform magnitudes from 2MASS to UKIDSS
+    This function is to
+        (1)change fluxes on the catalog to magnitudes
+        (2)transform magnitudes from 2MASS to UKIDSS
+
     **Note** F0 unit: mJy
     '''
     F0_list = [1594000, 1024000, 666700]
@@ -63,6 +65,9 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
     return str(mag_Jw), str(mag_Hw), str(mag_Kw)
 
 def IRAC_MP1_errorlist(x):
+    '''
+    This function is to calculate IRACS MP1 obervational error
+    '''
     F0_list = [280900, 179700, 115000, 64130, 7140]
     df_list = [x[97], x[118], x[139], x[160], x[181]]
     dm_list = []
@@ -75,6 +80,9 @@ def IRAC_MP1_errorlist(x):
     return dm_list
 
 def IRAC_MP1_magnitudelist(x):
+    '''
+    This function is to calculate IRACS MP1 obervational magnitude
+    '''
     flux_list = [x[96], x[117], x[138], x[159], x[180]]
     F0_list = [280900.0, 179700.0, 115000.0, 64130.0, 7140.0]
     mag_list = []
@@ -86,28 +94,18 @@ def IRAC_MP1_magnitudelist(x):
         mag_list.append(str(mag))
     return mag_list
 
-#=====================================================================
-# Load Input catalog and apply input file check for repeating sources
-#=====================================================================
-with open(str(argv[2]), 'r') as data:
-    head = int(argv[3])
-    ukidss_cat_origin = data.readlines()[head:]
-
-with open(str(argv[1]), 'r') as data:
-    two_mass_cat = data.readlines()
-
-if len(two_mass_cat) < len(ukidss_cat_origin):
-    print('Repeated source ID found ...\n')
-    print('Start finding repeated sources ...\n')
-    t_start = time.time()
-
+def merge_repeated(catalog, outfile='out.tbl', store=False):
+    '''
+    This function is to merge sources with repeated ID in UKIDSS survey
+    '''
     Repeat_dict = {}
-    for i in range(len(UK_cat_origin)):
-        index = int(UK_cat_origin[i].split()[0].strip(',')) - 1
+    print('Start finding repeated sources ...\n')
+    for i in range(len(catalog)):
+        index = int(catalog[i].split()[0].strip(',')) - 1
         Repeat_dict.update({index: ''})
-        Repeat_dict[index] += UK_cat_origin[i] + ';'
+        Repeat_dict[index] += catalog[i] + ';'
         if i>1000 and i%1000==0:
-            print('%.6f' % (100*float(i)/float(len(UK_cat_origin))) + '%')
+            print('%.6f' % (100*float(i)/float(len(catalog))) + '%')
     print('Complete finding repeated sources ...\n')
 
     no_rpt_catalog = []
@@ -131,19 +129,32 @@ if len(two_mass_cat) < len(ukidss_cat_origin):
         no_rpt_catalog.append(REPT[ind])
 
     t_end = time.time()
-    print('End of comparing distances between repeated sources ...\n')
+    print('Complete comparing distances between repeated sources ...\n')
     print('Dealing with repeated sources in catalog took %.6f secs ...\n' % (t_end - t_start))
-    print('NR in new UKIDSS ELAIS N1 catalog: %i\n' % len(no_rpt_catalog))
 
-    # Save and Reload catalog corrected
-    with open(str(argv[2])+'_reduction', 'w') as output
-        for i, row in enumerate(no_rpt_catalog):
-            if i>1000 and i%1000==0:
-                print('%.6f' % (100*float(i)/float(len(no_rpt_catalog))) + '%')
-            output.write(str(row)
+    if store == True:
+        # Save corrected catalog
+        print('Saving merged catalog ...\n')
+        with open(outfile, 'w') as output:
+            for i, row in enumerate(no_rpt_catalog):
+                if i>1000 and i%1000==0:
+                    print('%.6f' % (100*float(i)/float(len(no_rpt_catalog))) + '%')
+                output.write(str(row))
+    return no_rpt_catalog
 
-    with open(str(argv[2])+'_reduction', 'r') as data:
-        ukidss_cat = data.readlines()
+#=====================================================================
+# Load Input catalog and apply input file check for repeating sources
+#=====================================================================
+with open(str(argv[2]), 'r') as data:
+    head = int(argv[3])
+    ukidss_cat_origin = data.readlines()[head:]
+
+with open(str(argv[1]), 'r') as data:
+    two_mass_cat = data.readlines()
+
+if len(two_mass_cat) < len(ukidss_cat_origin):
+    print('Repeated source ID found ...\n')
+    ukidss_cat = merge_repeated(ukidss_cat_origin)
 else:
     ukidss_cat = ukidss_cat_origin
 
