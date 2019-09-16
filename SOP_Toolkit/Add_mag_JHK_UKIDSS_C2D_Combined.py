@@ -142,6 +142,13 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
                 output.write(str(row))
     return no_rpt_catalog
 
+#=======================================
+# Index of parameters on UKIDSS catalog
+#=======================================
+Coor_ID = [7, 8]       # Ra, Dec
+Mag_ID  = [10, 12, 14] # J, H, K
+Err_ID  = [11, 13, 15] # J, H, K
+
 #=====================================================================
 # Load Input catalog and apply input file check for repeating sources
 #=====================================================================
@@ -179,11 +186,11 @@ for i in range(len(ukidss_cat)):
     row_s[99], row_s[120], row_s[141], row_s[162], row_s[183] = err_list[0], err_list[1], err_list[2], err_list[3], err_list[4]
 
     # Write UKIDSS JHK magnitude and error
-    mag_J, mag_H, mag_K = row_u.split(',')[10], row_u.split(',')[12], row_u.split(',')[14]
-    err_J, err_H, err_K = row_u.split(',')[11], row_u.split(',')[13], (row_u.split(',')[15]).strip('\n')
+    mag_J, mag_H, mag_K = row_u.split(',')[Mag_ID[0]], row_u.split(',')[Mag_ID[1]], row_u.split(',')[Mag_ID[2]]
+    err_J, err_H, err_K = row_u.split(',')[Err_ID[0]], row_u.split(',')[Err_ID[1]], row_u.split(',')[Err_ID[2]].strip('\n')
 
     # If No Detection => Transform from 2MASS to UKIDSS
-    if float((row_u[i].split(','))[6]) == 0.0 or float((row_u[i].split(','))[7]) == 0.0:
+    if float((row_u[i].split(','))[Coor_ID[0]]) == 0.0 or float((row_u[i].split(','))[Coor_ID[1]]) == 0.0:
         row_s[35], row_s[56], row_s[77] = JHK_flux_to_mag(row_s[33], row_s[54], row_s[75])
         row_s[36], row_s[57], row_s[78] = 0.0, 0.0, 0.0
     else:
