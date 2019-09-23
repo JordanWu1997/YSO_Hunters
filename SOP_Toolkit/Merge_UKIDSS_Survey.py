@@ -15,10 +15,30 @@ if len(argv) <= 2:
         \n\tExample: [Program] [Output filename] [Catalogs to merge ...]\
         \n\t[Catalogs to merge]: input catalogs respectively\n')
 
+#=======================================
+# Index of parameters on UKIDSS catalog
+#=======================================
+Coor_ID = [7, 8]       # Ra, Dec
+
+# IN DR10PLUS
+# Mag_ID  = [10, 12, 14] # J, H, K
+# Err_ID  = [11, 13, 15] # J, H, K
+
+# IN DR11PLUS
+#MagType: AperMag3
+#J_mag ID: 55
+#H_mag ID: 80
+#K_mag ID: 105
+#J_err ID: 56
+#H_err ID: 81
+#K_err ID: 106
+Mag_ID = [55, 80, 105]
+Err_ID = [56, 81, 106]
+
 #==========================================================
 # Useful Functions
 #==========================================================
-def merge_repeated(catalog, outfile='out.tbl', store=False):
+def merge_repeated(catalog, outfile='out.tbl', store=False, ra_id=Coor_ID[0], dec_id=Coor_ID[1]):
     '''
     This function is to merge sources with repeated ID in UKIDSS survey
     '''
@@ -44,7 +64,7 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
             ra0 = str(float((REPT[j].split(','))[1]))
             dec0 = str(float((REPT[j].split(','))[2]))
             SKYC0 = SkyCoord(ra0, dec0, unit="deg", frame='fk5')
-            SKYC.append(SkyCoord(str(float((REPT[j].split(','))[6])), str(float((REPT[j].split(','))[7])), unit = 'deg', frame = 'fk5'))
+            SKYC.append(SkyCoord(str(float((REPT[j].split(','))[ra_id])), str(float((REPT[j].split(','))[dec_id])), unit = 'deg', frame = 'fk5'))
 
         SEP = []
         for k in range(len(SKYC)):
@@ -66,6 +86,7 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
                 output.write(str(row))
     return no_rpt_catalog
 
+
 #=============================================
 # Merge Repeated Source Respectivily
 #=============================================
@@ -73,7 +94,8 @@ input_list = [str(inp) for inp in argv[2:]]
 survey_list = []
 for inp in input_list:
     with open(inp, 'r') as data:
-        survey_list.append(merge_repeated(data))
+        catalog = data.readlines()[13:]
+        survey_list.append(merge_repeated(catalog))
 
 # Check merge sucess or not
 for i, survey in enumerate(survey_list):
@@ -83,27 +105,24 @@ for i, survey in enumerate(survey_list):
 #=============================================
 # Merge UKIDSS Surveys
 #=============================================
-mag_id = [10, 12, 14]
-err_id = [11, 13, 15]
-
 merge_output = []
 for i in range(len(survey_list[0])):
 
     # Take first input survey as reference
     source0 = survey_list[0][i].split(',')
-    ra0  = float(source0[6])
-    dec0 = float(source0[7])
+    ra0  = float(source0[7])
+    dec0 = float(source0[8])
 
     # If no detection in first input survey, check others
     if ra0 == 0.0 or dec0 == 0.0:
         for j in range(1, len(survey_list)):
             source = survey_list[j][i].split(',')
-            ra  = float(source[6])
-            dec = float(source[7])
+            ra  = float(source[7])
+            dec = float(source[8])
 
             # If there's detection in others, substitute it for first survey
             if ra != 0.0 and dec != 0.0:
-                source0[6], source0[7] = ra, dec
+                source0[7], source0[8] = ra, dec
                 for mag in mag_id:
                     source0[mag] = source[mag]
                 for err in err_id:
