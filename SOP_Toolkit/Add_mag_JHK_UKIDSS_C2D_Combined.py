@@ -36,6 +36,26 @@ if len(argv) != 6:
         \n\t[Option]: 2MASSBR <= keep 2MASS Bright Sources (Jmag>11.5)\
         \n\t**Note**: This Program Replace [C2D] J,H,K with [UKIDSS]\n')
 
+#=======================================
+# Index of parameters on UKIDSS catalog
+#=======================================
+Coor_ID = [7, 8]       # Ra, Dec
+
+# IN DR10PLUS
+# Mag_ID  = [10, 12, 14] # J, H, K
+# Err_ID  = [11, 13, 15] # J, H, K
+
+# IN DR11PLUS
+#MagType: AperMag3
+#J_mag ID: 55
+#H_mag ID: 80
+#K_mag ID: 105
+#J_err ID: 56
+#H_err ID: 81
+#K_err ID: 106
+Mag_ID = [55, 80, 105]
+Err_ID = [56, 81, 106]
+
 #==========================================================
 # For transformation of old 2MASS data to new UKIDSS format
 #==========================================================
@@ -47,7 +67,10 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
 
     **Note** F0 unit: mJy
     '''
+
     F0_list = [1594000, 1024000, 666700]
+    mag_J, mag_H, mag_K = 0.0, 0.0, 0.0
+
     if float(J_flux) > 0.0:
         mag_J = -2.5 * np.log10(float(J_flux)/F0_list[0])
     if float(H_flux) > 0.0:
@@ -62,7 +85,7 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
         if mag_J > 0.0 and mag_K > 0.0:
             mag_K = mag_K + 0.01  * (mag_J - mag_K)
 
-    return str(mag_Jw), str(mag_Hw), str(mag_Kw)
+    return str(mag_J), str(mag_H), str(mag_K)
 
 def IRAC_MP1_errorlist(x):
     '''
@@ -94,7 +117,7 @@ def IRAC_MP1_magnitudelist(x):
         mag_list.append(str(mag))
     return mag_list
 
-def merge_repeated(catalog, outfile='out.tbl', store=False):
+def merge_repeated(catalog, outfile='out.tbl', store=False, ra_id=Coor_ID[0], dec_id=Coor_ID[1]):
     '''
     This function is to merge sources with repeated ID in UKIDSS survey
     '''
@@ -120,7 +143,7 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
             ra0 = str(float((REPT[j].split(','))[1]))
             dec0 = str(float((REPT[j].split(','))[2]))
             SKYC0 = SkyCoord(ra0, dec0, unit="deg", frame='fk5')
-            SKYC.append(SkyCoord(str(float((REPT[j].split(','))[6])), str(float((REPT[j].split(','))[7])), unit = 'deg', frame = 'fk5'))
+            SKYC.append(SkyCoord(str(float((REPT[j].split(','))[ra_id])), str(float((REPT[j].split(','))[dec_id])), unit = 'deg', frame = 'fk5'))
 
         SEP = []
         for k in range(len(SKYC)):
@@ -142,28 +165,8 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
                 output.write(str(row))
     return no_rpt_catalog
 
-#=======================================
-# Index of parameters on UKIDSS catalog
-#=======================================
-Coor_ID = [7, 8]       # Ra, Dec
-
-# IN DR10PLUS
-# Mag_ID  = [10, 12, 14] # J, H, K
-# Err_ID  = [11, 13, 15] # J, H, K
-
-# IN DR11PLUS
-#MagType: AperMag3
-#J_mag ID: 55
-#H_mag ID: 80
-#K_mag ID: 105
-#J_err ID: 56
-#H_err ID: 81
-#K_err ID: 106
-Mag_ID = [55, 80, 105]
-Err_ID = [56, 81, 106]
-
 #=====================================================================
-# Load Input catalog and apply input file check for repeating sources
+# Load input catalog and apply input file check for repeating sources
 #=====================================================================
 with open(str(argv[2]), 'r') as data:
     head = int(argv[3])
@@ -181,13 +184,16 @@ else:
 #===============================================
 # Replace 2MASS Observation with UKIDSS Survey
 #===============================================
+num1, num2 = 0, 0
 t_start = time.time()
 out_catalog = []
 for i in range(len(ukidss_cat)):
+    
+    # Loading Sources
     index = int(ukidss_cat[i].split()[0].strip(',')) - 1
     row_s = two_mass_cat[index].split()
-    row_u = ukidss_cat[i].split()
-
+    row_u = ukidss_cat[i].split(',')
+    
     # Percentage Indicator
     if i>1000 and i%1000==0:
         print('%.6f' % (100*float(i)/float(len(ukidss_cat))) + '%')
@@ -195,29 +201,35 @@ for i in range(len(ukidss_cat)):
     # Write SWIRE IR1~MP1 magnitude and error
     mag_list = IRAC_MP1_magnitudelist(row_s)
     err_list = IRAC_MP1_errorlist(row_s)
-    row_s[98], row_s[119], row_s[140], row_s[161], row_s[182] = mag_list[0], mag_list[1], mag_list[2], mag_list[3], mag_list[4]
-    row_s[99], row_s[120], row_s[141], row_s[162], row_s[183] = err_list[0], err_list[1], err_list[2], err_list[3], err_list[4]
+    row_s[98], row_s[119], row_s[140], row_s[161], row_s[182] = str(mag_list[0]), str(mag_list[1]), str(mag_list[2]), str(mag_list[3]), str(mag_list[4])
+    row_s[99], row_s[120], row_s[141], row_s[162], row_s[183] = str(err_list[0]), str(err_list[1]), str(err_list[2]), str(err_list[3]), str(err_list[4])
 
     # Write UKIDSS JHK magnitude and error
-    mag_J, mag_H, mag_K = row_u.split(',')[Mag_ID[0]], row_u.split(',')[Mag_ID[1]], row_u.split(',')[Mag_ID[2]]
-    err_J, err_H, err_K = row_u.split(',')[Err_ID[0]], row_u.split(',')[Err_ID[1]], row_u.split(',')[Err_ID[2]].strip('\n')
+    mag_uJ, mag_uH, mag_uK = row_u[Mag_ID[0]], row_u[Mag_ID[1]], row_u[Mag_ID[2]]
+    err_uJ, err_uH, err_uK = row_u[Err_ID[0]], row_u[Err_ID[1]], row_u[Err_ID[2]].strip('\n')
 
     # If No Detection => Transform from 2MASS to UKIDSS
-    if float((row_u[i].split(','))[Coor_ID[0]]) == 0.0 or float((row_u[i].split(','))[Coor_ID[1]]) == 0.0:
-        row_s[35], row_s[56], row_s[77] = JHK_flux_to_mag(row_s[33], row_s[54], row_s[75])
-        row_s[36], row_s[57], row_s[78] = 0.0, 0.0, 0.0
+    if float(row_u[Coor_ID[0]]) == 0.0 or float(row_u[Coor_ID[1]]) == 0.0:
+        num1 += 1
+        mag_J, mag_H, mag_K = JHK_flux_to_mag(row_s[33], row_s[54], row_s[75])
+        row_s[35], row_s[56], row_s[77] = str(mag_J), str(mag_H), str(mag_K)
+        row_s[36], row_s[57], row_s[78] = '0.0', '0.0', '0.0'
     else:
-        row_s[35], row_s[56], row_s[77] = mag_J, mag_H, mag_K
-        row_s[36], row_s[57], row_s[78] = err_J, err_H, err_K
+        row_s[35], row_s[56], row_s[77] = mag_uJ, mag_uH, mag_uK
+        row_s[36], row_s[57], row_s[78] = err_uJ, err_uH, err_uK
 
     # Pick Up Bright Sources In 2MASS Observation
     if str(argv[5]) == '2MASSBR':
-        if float(mag_J) < 11.5:
-            row_s[35], row_s[56], row_s[77] = JHK_flux_to_mag(row_s[33], row_s[54], row_s[75])
-            row_s[36], row_s[57], row_s[78] = 0.0, 0.0, 0.0
+        if float(mag_uJ) < 11.5:
+            num2 += 1
+            mag_J, mag_H, mag_K = JHK_flux_to_mag(row_s[33], row_s[54], row_s[75])
+            row_s[35], row_s[56], row_s[77] = str(mag_J), str(mag_H), str(mag_K)
+            row_s[36], row_s[57], row_s[78] = '0.0', '0.0', '0.0'
+    else:
+        pass
 
     # Write New Output Catalog
-    out_catalog.append(row_s)
+    out_catalog.append('\t'.join(row_s) + '\n')
 
 # Write Output
 with open(str(argv[4]), 'w') as out:
@@ -226,3 +238,5 @@ with open(str(argv[4]), 'w') as out:
 
 t_end = time.time()
 print('\nThis procedure took %.6f secs ...' % (t_end - t_start))
+print('\nNon-Detection In UKIDSS survey: %i' % num1)
+print('\nBright Source In 2MASS survey %i' % num2)
