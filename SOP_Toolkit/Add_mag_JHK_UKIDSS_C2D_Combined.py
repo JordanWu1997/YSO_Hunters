@@ -146,8 +146,21 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
 # Index of parameters on UKIDSS catalog
 #=======================================
 Coor_ID = [7, 8]       # Ra, Dec
-Mag_ID  = [10, 12, 14] # J, H, K
-Err_ID  = [11, 13, 15] # J, H, K
+
+# IN DR10PLUS
+# Mag_ID  = [10, 12, 14] # J, H, K
+# Err_ID  = [11, 13, 15] # J, H, K
+
+# IN DR11PLUS
+#MagType: AperMag3
+#J_mag ID: 55
+#H_mag ID: 80
+#K_mag ID: 105
+#J_err ID: 56
+#H_err ID: 81
+#K_err ID: 106
+Mag_ID = [55, 80, 105]
+Err_ID = [56, 81, 106]
 
 #=====================================================================
 # Load Input catalog and apply input file check for repeating sources
