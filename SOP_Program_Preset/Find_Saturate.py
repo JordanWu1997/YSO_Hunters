@@ -38,6 +38,10 @@ elif cloud == "PER":
     mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + "PER" + "/MOSAICS/"
     mosaic_band_li = ["_ALL_COMB_IRAC1_mosaic.fits","_ALL_COMB_IRAC2_mosaic.fits","_ALL_COMB_IRAC3_mosaic.fits","_ALL_COMB_IRAC4_mosaic.fits","_ALL_A_MIPS1_mosaic.fits"]
 
+elif cloud == "OPH":
+    mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + "OPH" + "/MOSAICS/"
+    mosaic_band_li = ["_ALL_COMB_IRAC1_mosaic.fits","_ALL_COMB_IRAC2_mosaic.fits","_ALL_COMB_IRAC3_mosaic.fits","_ALL_COMB_IRAC4_mosaic.fits","_ALL_A_MIPS1_mosaic.fits"]
+
 else:
     mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + str(cloud) + "/MOSAICS/"
     mosaic_band_li = ["_COMB_IRAC1_mosaic.fits","_COMB_IRAC2_mosaic.fits","_COMB_IRAC3_mosaic.fits","_COMB_IRAC4_mosaic.fits","_A_MIPS1_mosaic.fits"]
