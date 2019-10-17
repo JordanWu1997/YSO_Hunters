@@ -82,7 +82,7 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
 
     if store == True:
         # Save corrected catalog
-        print('Saving merged catalog ...\n')
+        print('Saving repeated-merged catalog ...\n')
         with open(outfile, 'w') as output:
             for i, row in enumerate(no_rpt_catalog):
                 if i>1000 and i%1000==0:
@@ -101,9 +101,11 @@ for inp in input_list:
         survey_list.append(merge_repeated(catalog))
 
 # Check merge sucess or not
+print('Merged Survey should have %i rows' % len(survey_list[0]))
 for i, survey in enumerate(survey_list):
     if len(survey) != len(survey_list[0]):
         print('%ith Survey Merge failed ...' % i)
+        print('%ith Survey has %i rows' % (i, len(survey)))
 
 #=============================================
 # Merge UKIDSS Surveys
