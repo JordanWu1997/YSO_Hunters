@@ -39,8 +39,6 @@ if len(argv) != 6:
 #=======================================
 # Index of parameters on UKIDSS catalog
 #=======================================
-Coor_ID = [7, 8]       # Ra, Dec
-
 # IN DR10PLUS
 # Mag_ID  = [10, 12, 14] # J, H, K
 # Err_ID  = [11, 13, 15] # J, H, K
@@ -53,6 +51,9 @@ Coor_ID = [7, 8]       # Ra, Dec
 #J_err ID: 56
 #H_err ID: 81
 #K_err ID: 106
+
+Ref_Coor_ID = [7, 8]       # Ra, Dec Input
+Coor_ID = [1, 2]           # Ra, Dec on UKIDSS
 Mag_ID = [55, 80, 105]
 Err_ID = [56, 81, 106]
 
@@ -136,14 +137,17 @@ def merge_repeated(catalog, outfile='out.tbl', store=False, ra_id=Coor_ID[0], de
     for i in range(len(Repeat_dict)):
         if i>1000 and i%1000==0:
             print('%.6f' % (100*float(i)/float(len(Repeat_dict))) + '%')
-
         REPT = Repeat_dict[i].split(';')[:-1]
+
+        ra0  = "{:.7f}".format(float((REPT[0].split(','))[Ref_Coor_ID[0]]))
+        dec0 = "{:.7f}".format(float((REPT[0].split(','))[Ref_Coor_ID[1]]))
+        SKYC0 = SkyCoord(ra0, dec0, unit="deg", frame='fk5')
+
         SKYC = []
         for j in range(len(REPT)):
-            ra0 = str(float((REPT[j].split(','))[1]))
-            dec0 = str(float((REPT[j].split(','))[2]))
-            SKYC0 = SkyCoord(ra0, dec0, unit="deg", frame='fk5')
-            SKYC.append(SkyCoord(str(float((REPT[j].split(','))[ra_id])), str(float((REPT[j].split(','))[dec_id])), unit = 'deg', frame = 'fk5'))
+            ra  = "{:.7f}".format(float((REPT[0].split(','))[Coor_ID[0]]))
+            dec = "{:.7f}".format(float((REPT[0].split(','))[Coor_ID[1]]))
+            SKYC.append(SkyCoord(ra, dec, unit = 'deg', frame = 'fk5'))
 
         SEP = []
         for k in range(len(SKYC)):
