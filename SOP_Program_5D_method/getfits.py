@@ -30,11 +30,15 @@ if path.isdir(cloud + "_" + option + "_Fits_and_shape"):
 #=======================================
 if cloud == 'PER':
     MOSAIC_li = ["PER_ALL_COMB_IRAC1_mosaic.fits","PER_ALL_COMB_IRAC2_mosaic.fits","PER_ALL_COMB_IRAC3_mosaic.fits","PER_ALL_COMB_IRAC4_mosaic.fits","PER_ALL_A_MIPS1_mosaic.fits"]
+elif cloud == 'OPH':
+    MOSAIC_li = ["OPH_ALL_COMB_IRAC1_mosaic.fits","OPH_ALL_COMB_IRAC2_mosaic.fits","OPH_ALL_COMB_IRAC3_mosaic.fits","OPH_ALL_COMB_IRAC4_mosaic.fits","OPH_ALL_A_MIPS1_mosaic.fits"]
+
 else:
     MOSAIC = ["_COMB_IRAC1_mosaic.fits","_COMB_IRAC2_mosaic.fits","_COMB_IRAC3_mosaic.fits","_COMB_IRAC4_mosaic.fits","_A_MIPS1_mosaic.fits"]
     MOSAIC_li = []
     for element in MOSAIC:
         MOSAIC_li.append(cloud+element)
+
 if 'LUP' in cloud:
     path = '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/LUP/MOSAICS/'
 else:
