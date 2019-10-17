@@ -13,7 +13,8 @@ from sys import exit
 
 if len(argv) != 3:
     exit('\n\tError: Wrong Arguments\
-    \n\tExample: [SOP_Execution.py] [Input table or \"Default\"] [cloud\'s name]\n')
+    \n\tExample: [SOP_Execution.py] [Input table or \"Default\"] [cloud\'s name]\
+    \n\t[Default]: find standard input style file')
 else:
     print('Excecuting 5D-method ...')
 
