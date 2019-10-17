@@ -127,7 +127,7 @@ for i in range(len(survey_list[0])):
 
             # If there's detection in others, substitute it for first survey
             if ra != 0.0 and dec != 0.0:
-                source0[7], source0[8] = ra, dec
+                source0[7], source0[8] = str(ra), str(dec)
                 for mag in Mag_ID:
                     source0[mag] = source[mag]
                 for err in Err_ID:
