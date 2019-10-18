@@ -7,7 +7,7 @@ Input : catalog_to_Image_Check with (ra/dec) , wcs , imagetype
 
 Output : Fits_and_shape directory with different bands' mosaics
 -------------------------------------------------------------------
-latest update : 2018/09/18'''
+latest update : 2019/10/18'''
 
 from os import system, path
 from sys import argv, exit
@@ -59,13 +59,25 @@ else:
 
 print('\nGet fitting ...')
 band = ["IR1","IR2","IR3","IR4","MP1"]
-for i in range(len(coor)):        
-    print str(i+1) + '/' + str(len(coor))
+for i in range(len(coor)):
+
+    # Percentage Indicator
+    print(str(i+1) + '/' + str(len(coor)))
+    
+    # Assuming i+1 always less than 1000
+    if i+1 < 10:
+        index = '00' + str(i+1)
+    elif i+1 < 100:
+        index = '0' + str(i+1)
+    elif i+1 < 1000:
+        index = str(i+1)
+    
+    # Get Fits from Images 
     Qua = "_" + coor[i].split()[4]
-    system("mkdir " + str(i+1) + Qua)
+    system("mkdir " + index + Qua)
     for j in range(len(MOSAIC_li)):
 	Ra = coor[i].split()[2]
 	Dec = coor[i].split()[3]
-	system("getfits " + path + MOSAIC_li[j] + " " + Ra + ", " + Dec + "," + " 100 100 -o " + band[j] + "_" + str(i+1) + "fits &> /dev/null")
-    	system("mv " + band[j] + "_"+str(i+1) + "fits " + str(i+1) + Qua)
-    system("mv "+str(i+1)+Qua+ " " + cloud + "_" +  option + "_Fits_and_shape")
+	system("getfits " + path + MOSAIC_li[j] + " " + Ra + ", " + Dec + "," + " 100 100 -o " + band[j] + "_" + index + ".fits &> /dev/null")
+    	system("mv " + band[j] + "_" + index + ".fits " + index + Qua)
+    system("mv " + index + Qua + " " + cloud + "_" +  option + "_Fits_and_shape")

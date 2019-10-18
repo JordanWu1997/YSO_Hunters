@@ -27,19 +27,18 @@ catalog = open(argv[-3],'r')
 catalog=catalog.readlines()
 
 new=[]
-
 for line in catalog:
-	line = line.split()
-        ra_degree = float(line[0])
-	dec_degree = float(line[2])
-	Qua = [line[100], line[121], line[142], line[163], line[184]]
-	imtype = [line[102], line[123], line[144], line[165], line[186]]
-	ra = str("%02d"%int(ra_degree/360*24))+":"+str("%02d"%int(ra_degree/360*24%1*60))+":"+str("%05.2f"%(ra_degree/360*24*60%1*60))
-	dec = str("%02d"%int(dec_degree))+":"+str("%02d"%int(abs(dec_degree)%1*60))+":"+str("%05.2f"%(abs(dec_degree)*60%1*60))
+    line = line.split()
+    ra_degree = float(line[0])
+    dec_degree = float(line[2])
+    Qua = [line[100], line[121], line[142], line[163], line[184]]
+    imtype = [line[102], line[123], line[144], line[165], line[186]]
+    ra = str("%02d"%int(ra_degree/360*24))+":"+str("%02d"%int(ra_degree/360*24%1*60))+":"+str("%05.2f"%(ra_degree/360*24*60%1*60))
+    dec = str("%02d"%int(dec_degree))+":"+str("%02d"%int(abs(dec_degree)%1*60))+":"+str("%05.2f"%(abs(dec_degree)*60%1*60))
 	
-        new_line = str(ra_degree) + " " + str(dec_degree) + "\t" + ra + " " + dec + "\t" + "".join(Qua) + "".join(imtype) + "\n"
-	new.append(new_line)
-        print new_line
+    new_line = str(ra_degree) + " " + str(dec_degree) + "\t" + ra + " " + dec + "\t" + ",".join(Qua) + '_' + ",".join(imtype) + "\n"
+    new.append(new_line)
+    print(new_line)
 
 if option == 'Saturate':
     catalog_tail = '_saturate.tbl'
