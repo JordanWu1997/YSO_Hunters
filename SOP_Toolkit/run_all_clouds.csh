@@ -14,13 +14,13 @@
 
 
 # Initialization
-#mkdir CHA_II
-#mkdir LUP_I
-#mkdir LUP_III
-#mkdir LUP_IV
-#mkdir SER
-#mkdir PER
-#mkdir OPH
+mkdir CHA_II
+mkdir LUP_I
+mkdir LUP_III
+mkdir LUP_IV
+mkdir SER
+mkdir PER
+mkdir OPH
 
 #==================================================================================================================
 # Catalog Dir And Naming Style - Without UKIDSS Observation
@@ -82,11 +82,10 @@ cd SER_6D_BS_0.4
 SOP_Execution_Extinction_check.py SER 0.2 7.45
 cd ../../
 
-# No Perseus for now 2019.10.17
-#cd PER
-#SOP_Execution_Preset.py ../../All_Converted_Catalog/UKIDSS_DR11PLUS_WI_2MASS_BR/ADD_UKIDSS/catalog-PER_C2D_UKIDSS_WI_2MASS_BR.tbl PER New
-#SOP_Execution_5D_method.py Default PER
-#SOP_Execution_6D_method.py PER mag True Default 0.4
-#cd PER_6D_BS_0.4
-#SOP_Execution_Extinction_check.py PER 0.2 4.56
-#cd ../../
+cd PER
+SOP_Execution_Preset.py ../../All_Converted_Catalog/UKIDSS_DR11PLUS_WI_2MASS_BR/ADD_UKIDSS/catalog-PER_C2D_UKIDSS_WI_2MASS_BR.tbl PER New
+SOP_Execution_5D_method.py Default PER
+SOP_Execution_6D_method.py PER mag True Default 0.4
+cd PER_6D_BS_0.4
+SOP_Execution_Extinction_check.py PER 0.2 4.56
+cd ../../
