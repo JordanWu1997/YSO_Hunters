@@ -30,10 +30,10 @@ Qua_Order = ['K', 'A', 'B', 'C', 'D', 'E' ,'F']
 file_list = []
 for dirs in inp_dirs:
     index, Qua, Imtype = dirs.split('_')
-    
+
     Ind_list = index
     Qua_list = [Qua_Order.index(qua) for qua in Qua.split(',')]
-    
+
     Im_list  = []
     for im in Imtype.split(','):
         if int(im) == -2:
@@ -42,14 +42,14 @@ for dirs in inp_dirs:
             Im_list.append(int(im))
 
     if Im_list == [1] * len(Band):
-        name = Band[Qua_list.index(max(Qua_list))] + '_' + Ind_list + 'fits'
+        name = Band[Qua_list.index(max(Qua_list))] + '_' + Ind_list + '.fits'
     else:
         max_Im_list = np.argwhere(np.array(Im_list) == max(Im_list))[0]
         if len(max_Im_list) == 1:
-            name = Band[Im_list.index(max(Im_list))] + '_' + Ind_list + 'fits'
+            name = Band[Im_list.index(max(Im_list))] + '_' + Ind_list + '.fits'
         else:
             qua_list = Qua_list[max_Im_list[0]:max_Im_list[-1]+1]
-            name = Band[Qua_list.index(max(qua_list))] + '_' + Ind_list + 'fits'
+            name = Band[Qua_list.index(max(qua_list))] + '_' + Ind_list + '.fits'
 
     file_list.append(dirs + '/' + name)
 
