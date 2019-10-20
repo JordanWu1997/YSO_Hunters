@@ -21,23 +21,29 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 1. Add Directories started with SOP to current working environments
   - e.g. In .cshrc file:
     ```
-    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Toolkit
-    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Preset
-    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_5D_method
-    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_6D_method
-    setenv PATH ${PATH}:/home/jordan/YSO_PROJECT/YSO_Hunters/SOP_Program_Extinction_Check
+	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Toolkit
+	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_GP_Matrix_Construction
+	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_Preset
+	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_5D_method
+	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_6D_method
+	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_Extinction_Check
+
+	# Setup Python Module Environments For YSO Hunter Programs
+	setenv PYTHONPATH ${PYTHONPATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_Path
     ```
 2. Revise Locations of Some Programs if **No such file** error happens.
-  - e.g. Some Locations May be needed to Revised
-    - Location where multi-D Galaxy Probability Array stored
-    
+  - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
+  - Then , change some path or file that may be needed to revised
+    - e.g. location where multi-D galaxy probability array stored
+
 3. Standard Sequence for Execution:
-    1. SOP_Execution_Preset.py
-    2. SOP_Execution_5D_method.py
-    3. SOP_Execution_6D_method.py
-    4. SOP_Execution_Extinction_check.py
+	1. SOP_Execution_GPM_Construct.py
+    2. SOP_Execution_Preset.py
+    3. SOP_Execution_5D_method.py
+    4. SOP_Execution_6D_method.py
+    5. SOP_Execution_Extinction_check.py
         - **Note This Command Must Execute inside Specific Binsize Directory**
-  
+
 ## **VI.Data Location**
 - **Catalog from c2d & SWIRE :**
   - Molecular Clouds HREL catalog :
@@ -55,7 +61,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 - **Programs from Inchone Hsieh :**
   - Make multi-D space:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_IR1-MP1
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_J-MP1    
+    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_J-MP1
   - Galaxy Probability:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed
   - Galaxy Probability (p):
@@ -64,7 +70,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/New_version/
   - Saturate Check:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus
-  - Get IR Image:  
+  - Get IR Image:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/multi-dim_version/Saturate_and_Band_fill_correct/Chamaleon/Saturate_no_count/getfits.py
   - Image Check:
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus/YSO_Selection/notPSF1_check
