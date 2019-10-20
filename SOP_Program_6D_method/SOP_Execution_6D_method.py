@@ -10,6 +10,7 @@ latest update : 2019/07/30 Jordan Wu'''
 #======================================================================================
 from os import system, path, chdir
 from sys import argv, exit
+import SOP_Program_Path as spp
 
 if len(argv) != 6:
     exit('\n\tError: Wrong Arguments\
@@ -31,7 +32,8 @@ if sort_ref == 'Default':
     #=======================================================================
     # Default Setting
     #=======================================================================
-    ref_path = '/home/ken/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/'
+    #ref_path = '/home/ken/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/'
+    ref_path  = spp.Hsieh_YSO_List_path
     ref_table = ref_path + 'all_candidates.tbl'
     #=======================================================================
 else:
@@ -60,7 +62,7 @@ if sort_option == 'True':
 
     # (3) Check
     system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
-    
+
     # (4) Sort and Compare
     chdir('YSO_5D6D/5D')
     system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_YSO.tbl' + ' ' + ref_table + ' 5D HSIEH 7 yes no')
@@ -79,8 +81,8 @@ else:
     # (1) Calculate 6D Gal_Prob
     chdir(cloud + '_6D_BS_' + bin_size)
     system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type + ' new ' + bin_size + ' argv')
-    
+
     # (2) Sort and Compare
     system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
-    
+
 print('End of calculating 6D galaxy probability ...')
