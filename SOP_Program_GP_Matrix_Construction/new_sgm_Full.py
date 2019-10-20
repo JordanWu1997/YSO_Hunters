@@ -6,18 +6,18 @@ from sys import argv
 dim  = int(argv[1])       # Dimension of multi-D method
 cube = float(argv[2])     # Beamsize for each cube
 sigma = int(argv[3])      # STD for Gaussian Smooth
-ref = float(argv[4])      # Reference Beam Dimension
+ref = int(argv[4])      # Reference Beam Dimension
 
-posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube)
-beam_dir = 'GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref)
-out_dir  = 'GPV_grid_' + str(dim) + 'D_' + 'bin' + str(cube) + '_sigma' + str(sigma) + '_refD' + str(ref)
+posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube) + '/'
+beam_dir = 'GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref) + '/'
+out_dir  = 'GPV_grid_' + str(dim) + 'D_' + 'bin' + str(cube) + '_sigma' + str(sigma) + '_refD' + str(ref) + '/'
 
 print("Loading ...")
-Gal_pos  = load(posv_dir + "/Gal_Position_vectors.npy")
-six_beam = load(beam_dir + "/6d_beam_sigma2.npy")
-fi_beam  = load(beam_dir + "/5d_beam_sigma2.npy")
-fo_beam  = load(beam_dir + "/4d_beam_sigma2.npy")
-th_beam  = load(beam_dir + "/3d_beam_sigma2.npy")
+Gal_pos  = load(posv_dir + "Gal_Position_vectors.npy")
+six_beam = load(beam_dir + "6d_beam_sigma" + str(sigma) + ".npy")
+fi_beam  = load(beam_dir + "5d_beam_sigma" + str(sigma) + ".npy")
+fo_beam  = load(beam_dir + "4d_beam_sigma" + str(sigma) + ".npy")
+th_beam  = load(beam_dir + "3d_beam_sigma" + str(sigma) + ".npy")
 shape    = list(load(posv_dir + "Shape.npy"))
 
 print("Start Calculation ...")

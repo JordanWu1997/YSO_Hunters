@@ -1,5 +1,4 @@
 #!/usr/bin/ipython
-from pylab import *
 from numpy import *
 from sys import argv
 from os import system, chdir
@@ -99,6 +98,8 @@ save('4d_beam_sigma' + str(sigma), four_band_beam)
 save('3d_beam_sigma' + str(sigma), three_band_beam)
 
 # Plot Figures
+from pylab import *
+
 fig0 = []
 for i in range(len(six_band_beam)):
     if six_band_beam[i][0] == 0 and six_band_beam[i][1] == 0 and six_band_beam[i][2] == 0 and six_band_beam[i][3] == 0 and six_band_beam[i][4] == 0:

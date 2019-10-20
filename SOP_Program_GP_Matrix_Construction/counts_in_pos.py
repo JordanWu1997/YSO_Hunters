@@ -1,7 +1,6 @@
 #!/usr/bin/ipython
 
-from pylab import *
-from numpy import *
+import numpy as np
 from sys import argv
 from os import chdir, system
 
@@ -143,13 +142,13 @@ while True:
 
 system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 chdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
-save('Gal_Position_vectors', new_pos_vec)
-save('Bright', bright)
-save('Faint', faint)
+np.save('Gal_Position_vectors', new_pos_vec)
+np.save('Bright', bright)
+np.save('Faint', faint)
 
 if dim == 6:
-    save('Shape', array([binsa, bins1, bins2, bins3, bins4, bins5]))
+    np.save('Shape', np.array([binsa, bins1, bins2, bins3, bins4, bins5]))
 elif dim == 5:
-    save('Shape', array([bins1, bins2, bins3, bins4, bins5]))
+    np.save('Shape', np.array([bins1, bins2, bins3, bins4, bins5]))
 
 chdir('../')
