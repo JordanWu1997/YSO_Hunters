@@ -4,9 +4,9 @@ from numpy import *
 from sys import argv
 from os import system, chdir
 
-sigma = 2 # STD for Gaussian Smooth
+sigma = int(argv[1]) #2 # STD for Gaussian Smooth
+ref = float(argv[2]) #6.0 # Reference Beam Dimension
 bond = 7  # Max Smooth Radius
-ref = 6.0 # Reference Beam Dimension
 
 # 6band Gaussian Beam for Smooth
 six_band_beam = []
@@ -59,8 +59,8 @@ for i in range(-bond, 1+bond):
                 three_band_beam.append(vec)
 
 # Save Gaussian Beam
-system('mkdir GPV_smooth_sigma' + str(sigma))
-chdir('GPV_smooth_sigma' + str(sigma))
+system('mkdir GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
+chdir('GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
 save('6d_beam_sigma' + str(sigma), six_band_beam)
 save('5d_beam_sigma' + str(sigma), five_band_beam)
 save('4d_beam_sigma' + str(sigma), four_band_beam)
@@ -93,6 +93,7 @@ plot(XX, fig2, ls='steps')
 plot(XX, fig3, ls='steps')
 xlabel("cube: cube_size mag")
 ylabel("counts")
-system('mkdir ND_Beam_sigma' + str(sigma))
-chdir('ND_Beam_sigma' + str(sigma))
+system('mkdir ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
+chdir('ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
 savefig("Beam_in_diff_dim.png")
+chdir('../../')

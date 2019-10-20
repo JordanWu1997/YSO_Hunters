@@ -6,7 +6,7 @@ from sys import argv
 from os import chdir, system
 
 # Set parameters
-dim  = int(argv[2]) 
+dim  = int(argv[2])
 cube = float(argv[3])
 
 print('cube =' + str(cube))
@@ -25,7 +25,7 @@ bins2 = int((IR2axlim[1] - IR2axlim[0]) / cube) + 1
 bins3 = int((IR3axlim[1] - IR3axlim[0]) / cube) + 1
 bins4 = int((IR4axlim[1] - IR4axlim[0]) / cube) + 1
 bins5 = int((MP1axlim[1] - MP1axlim[0]) / cube) + 1
-print(binsa, binsb, bin1, bins2, bin3, bins4, bins5)
+print(binsa, binsb, bins1, bins2, bins3, bins4, bins5)
 
 #=======================================================================================================================
 # Functions
@@ -38,17 +38,17 @@ def magnitudelist(x):
     x = x.split()
     mag = [float(x[35]),float(x[77]),float(x[98]),float(x[119]),float(x[140]),float(x[161]),float(x[182])]
     mag_list = []
-    for i in range(len(flux_list)):
+    for i in range(len(mag)):
         if float(mag[i]) > 0:
             mag_list.append(float(mag[i]))
         elif float(mag[i]) <= 0:
             mag_list.append('no')
     return mag_list
 
-def index(X,Y,a,b): 
+def index(X,Y,a,b):
     '''
     # a,b are transition point, X,Y are input color and mag (data)
-    ''' 
+    '''
     if X < a[0]:
         cutY = b[0]
     elif X > a[len(a)-1]:
@@ -81,7 +81,7 @@ for i in range(len(catalog)):
     # Percentage Indicator
     if i%100==0:
         print(float(i)/len(catalog))
-    
+
     line = catalog[i]
     lines = line.split()
     mag_list = magnitudelist(line)
@@ -97,7 +97,7 @@ for i in range(len(catalog)):
         Y35 = magIR3-magMP1
         if index(X23,Y35,[0,0,2,5],[-1,0,2,2])<0:
             AGB = 1
-    
+
     # Make grids
     if AGB != 1:
         seqa = seq(magJ,Jaxlim)
@@ -106,39 +106,39 @@ for i in range(len(catalog)):
         seq3 = seq(magIR3,IR3axlim)
         seq4 = seq(magIR4,IR4axlim)
         seq5 = seq(magMP1,MP1axlim)
-        
+
         if dim == 6:
             SEQ = [seqa,seq1,seq2,seq3,seq4,seq5] #For six bands
         elif dim == 5:
             SEQ=[seq1,seq2,seq3,seq4,seq5] #For five bands
         pos_vec.append(SEQ)
-    
-    # Find Bright Objects 
+
+    # Find Bright Objects
     if SEQ.count("Bright")>0:
         print(SEQ)
         bright.append([mag_list_origin, flux_list_origin, i])
-    
+
 new_pos_vec, faint= [], []
 while True:
     if len(pos_vec) == 0:
         break
-    
+
     # Filiter out Bright/Faint Sources
     first = list(pos_vec[0])
     if first.count("Bright") > 0:
         print(first)
         bright.append(first)
     elif first.count("Faint") > 0:
-       faint.append(first) 
-    
-    # Calculate the number of objects in same position 
+       faint.append(first)
+
+    # Calculate the number of objects in same position
     number = 0
     print(len(pos_vec))
     for n in pos_vec:
         if n == first:
             number += 1
             pos_vec.remove(n)
-    
+
     first.append(number)
     new_pos_vec.append(first)
 
@@ -152,3 +152,5 @@ if dim == 6:
     save('Shape', array([binsa, bins1, bins2, bins3, bins4, bins5]))
 elif dim == 5:
     save('Shape', array([bins1, bins2, bins3, bins4, bins5]))
+
+chdir('../')

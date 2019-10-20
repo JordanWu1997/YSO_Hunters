@@ -2,9 +2,14 @@
 from numpy import *
 from os import system, chdir
 
-posv_dir = 'GPV_6Dposvec_bin0.4'
-beam_dir = 'GPV_smooth_sigma2'
-out_dir  = 'GPV_grid_bin0.4_sigma2'
+dim  = int(argv[1])       # Dimension of multi-D method
+cube = float(argv[2])     # Beamsize for each cube
+sigma = int(argv[3])      # STD for Gaussian Smooth
+ref = float(argv[4])      # Reference Beam Dimension
+
+posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube)
+beam_dir = 'GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref)
+out_dir  = 'GPV_grid_' + str(dim) + 'D_' + 'bin' + str(cube) + '_sigma' + sigma + '_refD' +ref
 
 print("Loading ...")
 Gal_pos  = load(posv_dir + "/Gal_Position_vectors.npy")
@@ -27,16 +32,16 @@ for li in range(len(Gal_pos)):
     # Find 6bands sources
     #===================================================================================================================================
     if gal.count("Lack")==0 and gal.count("Faint")==0:
-    
+
         # Apply to six bands
         new_gal = list(gal)
         i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2]); l = int(new_gal[3]); m = int(new_gal[4]); n = int(new_gal[5])
 
-        # Do 6band Gaussian Smooth  
+        # Do 6band Gaussian Smooth
         for v in range(len(six_beam)):
             vec = list(six_beam[v])
             vec[0] = int(vec[0]); vec[1] = int(vec[1]); vec[2] = int(vec[2]); vec[3] = int(vec[3]); vec[4] = int(vec[4]); vec[5] = int(vec[5])
-            
+
             # Start from boundary and end till reaching the other side
             if 0 <= i+vec[0] < shape[0] and 0 <= j+vec[1] < shape[1] and 0 <= k+vec[2] < shape[2] and 0 <= l+vec[3] < shape[3] and 0 <= m+vec[4] < shape[4] and 0 <= n+vec[5] < shape[5]:
                 try:
@@ -44,13 +49,13 @@ for li in range(len(Gal_pos)):
                 except KeyError:
                     d6.update({str((i+vec[0], j+vec[1], k+vec[2], l+vec[3], m+vec[4], n+vec[5])).strip("( )"): vec[6] * int(new_gal[6])})
 
-        # Apply to five bands    
+        # Apply to five bands
         for dia in range(6):
             new_gal = list(gal)
             del new_gal[dia]
             new_shape = list(shape)
             del new_shape[dia]
-            
+
             i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2]); l = int(new_gal[3]); m = int(new_gal[4])
             for v in range(len(fi_beam)):
                 vec = list(fi_beam[v])
@@ -70,7 +75,7 @@ for li in range(len(Gal_pos)):
                 del new_gal[B], new_gal[A-1]
                 new_shape = list(shape)
                 del new_shape[B], new_shape[A-1]
-                
+
                 i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2]); l = int(new_gal[3])
                 for v in range(len(fo_beam)):
                     vec = list(fo_beam[v])
@@ -91,7 +96,7 @@ for li in range(len(Gal_pos)):
                     del new_gal[C], new_gal[B-1], new_gal[A-2]
                     new_shape = list(shape)
                     del new_shape[C], new_shape[B-1], new_shape[A-2]
-                    
+
                     i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2])
                     for v in range(len(th_beam)):
                         vec = list(th_beam[v])
@@ -108,14 +113,14 @@ for li in range(len(Gal_pos)):
     # Find 5bands sources
     #===================================================================================================================================
     elif gal.count("Lack")==1 and gal.count("Faint")==0:
-        
+
         # Apply to five bands
         new_gal = list(gal)
         L1 = new_gal.index("Lack")
         del new_gal[L1]
         new_shape = list(shape)
         del new_shape[L1]
-        
+
         i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2]); l = int(new_gal[3]); m = int(new_gal[4])
         for v in range(len(fi_beam)):
             vec = list(fi_beam[v])
@@ -147,7 +152,7 @@ for li in range(len(Gal_pos)):
                                 d4[key_n] += vec[4] * int(new_gal[4])
                             except KeyError:
                                 d4.update({key_n: vec[4] * int(new_gal[4])})
-   
+
         # Apply to three bands
         for A in range(6):
             for B in range(A):
@@ -157,7 +162,7 @@ for li in range(len(Gal_pos)):
                         del new_gal[C], new_gal[B-1], new_gal[A-2]
                         new_shape = list(shape)
                         del new_shape[C], new_shape[B-1], new_shape[A-2]
-                        
+
                         i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2])
                         for v in range(len(th_beam)):
                             vec = list(th_beam[v])
@@ -174,7 +179,7 @@ for li in range(len(Gal_pos)):
     # Find 4bands sources
     #===================================================================================================================================
     elif gal.count("Lack")==2 and gal.count("Faint")==0:
-	
+
         # Apply to four bands
         new_gal = list(gal)
 	L1 = new_gal.index("Lack")
@@ -206,7 +211,7 @@ for li in range(len(Gal_pos)):
                         del new_gal[C], new_gal[B-1], new_gal[A-2]
                         new_shape = list(shape)
                         del new_shape[C], new_shape[B-1], new_shape[A-2]
-                        
+
                         i = int(new_gal[0]); j = int(new_gal[1]); k = int(new_gal[2])
                         for v in range(len(th_beam)):
                             vec = list(th_beam[v])
@@ -223,7 +228,7 @@ for li in range(len(Gal_pos)):
     # Find 3bands sources
     #===================================================================================================================================
     elif gal.count("Lack")==3 and gal.count("Faint")==0:
-        
+
         # Apply to three bands
         new_gal = list(gal)
         L1 = new_gal.index("Lack")
