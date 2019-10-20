@@ -1,6 +1,7 @@
 #!/usr/bin/ipython
 from numpy import *
 from os import system, chdir
+from sys import argv
 
 dim  = int(argv[1])       # Dimension of multi-D method
 cube = float(argv[2])     # Beamsize for each cube
@@ -9,7 +10,7 @@ ref = float(argv[4])      # Reference Beam Dimension
 
 posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube)
 beam_dir = 'GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref)
-out_dir  = 'GPV_grid_' + str(dim) + 'D_' + 'bin' + str(cube) + '_sigma' + sigma + '_refD' +ref
+out_dir  = 'GPV_grid_' + str(dim) + 'D_' + 'bin' + str(cube) + '_sigma' + str(sigma) + '_refD' + str(ref)
 
 print("Loading ...")
 Gal_pos  = load(posv_dir + "/Gal_Position_vectors.npy")
@@ -26,12 +27,12 @@ for li in range(len(Gal_pos)):
     if li % 100 == 0:
         print('Now: ' + str(float(li)/len(Gal_pos) * 100) + '%')
 
-    gal = list(Gal_pos[li]
+    gal = list(Gal_pos[li])
 
     #===================================================================================================================================
     # Find 6bands sources
     #===================================================================================================================================
-    if gal.count("Lack")==0 and gal.count("Faint")==0:
+    if gal.count("Lack") == 0 and gal.count("Faint") == 0:
 
         # Apply to six bands
         new_gal = list(gal)
@@ -112,7 +113,7 @@ for li in range(len(Gal_pos)):
     #===================================================================================================================================
     # Find 5bands sources
     #===================================================================================================================================
-    elif gal.count("Lack")==1 and gal.count("Faint")==0:
+    elif gal.count("Lack") == 1 and gal.count("Faint") == 0:
 
         # Apply to five bands
         new_gal = list(gal)
@@ -178,7 +179,7 @@ for li in range(len(Gal_pos)):
     #===================================================================================================================================
     # Find 4bands sources
     #===================================================================================================================================
-    elif gal.count("Lack")==2 and gal.count("Faint")==0:
+    elif gal.count("Lack") == 2 and gal.count("Faint") == 0:
 
         # Apply to four bands
         new_gal = list(gal)
@@ -227,7 +228,7 @@ for li in range(len(Gal_pos)):
     #===================================================================================================================================
     # Find 3bands sources
     #===================================================================================================================================
-    elif gal.count("Lack")==3 and gal.count("Faint")==0:
+    elif gal.count("Lack") == 3 and gal.count("Faint") == 0:
 
         # Apply to three bands
         new_gal = list(gal)
