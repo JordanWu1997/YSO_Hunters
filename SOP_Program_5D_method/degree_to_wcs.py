@@ -24,7 +24,7 @@ cloud = str(argv[-2])
 option = str(argv[-1])
 
 catalog = open(argv[-3],'r')
-catalog=catalog.readlines()
+catalog = catalog.readlines()
 
 new=[]
 for line in catalog:
@@ -35,7 +35,7 @@ for line in catalog:
     imtype = [line[102], line[123], line[144], line[165], line[186]]
     ra = str("%02d"%int(ra_degree/360*24))+":"+str("%02d"%int(ra_degree/360*24%1*60))+":"+str("%05.2f"%(ra_degree/360*24*60%1*60))
     dec = str("%02d"%int(dec_degree))+":"+str("%02d"%int(abs(dec_degree)%1*60))+":"+str("%05.2f"%(abs(dec_degree)*60%1*60))
-	
+
     new_line = str(ra_degree) + " " + str(dec_degree) + "\t" + ra + " " + dec + "\t" + ",".join(Qua) + '_' + ",".join(imtype) + "\n"
     new.append(new_line)
     print(new_line)

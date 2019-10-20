@@ -9,9 +9,11 @@ Lastest Change: (1) Change value of Gal_Prob for case (GP=0)
 '''
 from numpy import *
 from sys import argv
+import SOP_Program_Path as spp
 
-path="/cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_J-MP1/"
+# path="/cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_J-MP1/"
 
+path = spp.Hsieh_5D_GP1_Array_path
 print "Loading array"
 fid_smooth_array=load(path+"All_grid/all_detect_grid.npy")
 array_matrix=[[0 for i in range(5)] for i in range(5)]
@@ -154,4 +156,3 @@ for i in range(len(catalog)):
 out="\n".join(out) + "\n"
 out_ca=open("step","w")
 out_ca.write(out)
-

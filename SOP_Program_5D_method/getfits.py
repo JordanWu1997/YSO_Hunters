@@ -11,6 +11,7 @@ latest update : 2019/10/18'''
 
 from os import system, path
 from sys import argv, exit
+import SOP_Program_Path as spp
 
 if len(argv) != 4:
     print('Eample: python [catalog] [cloud\'s name] [option]')
@@ -26,7 +27,6 @@ option = str(argv[3])
 if path.isdir(cloud + "_" + option + "_Fits_and_shape"):
     system("rm -r " + cloud + "_" + option + "_Fits_and_shape")
 
-
 #=======================================
 if cloud == 'PER':
     MOSAIC_li = ["PER_ALL_COMB_IRAC1_mosaic.fits","PER_ALL_COMB_IRAC2_mosaic.fits","PER_ALL_COMB_IRAC3_mosaic.fits","PER_ALL_COMB_IRAC4_mosaic.fits","PER_ALL_A_MIPS1_mosaic.fits"]
@@ -40,15 +40,14 @@ else:
         MOSAIC_li.append(cloud+element)
 
 if 'LUP' in cloud:
-    path = '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/LUP/MOSAICS/'
+    path = spp.Mosaic_path + '/LUP/MOSAICS/'
 else:
-    path = '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/'+cloud+'/MOSAICS/'
-#======================================== 
+    path = spp.MOsaic_path + '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/' + cloud + '/MOSAICS/'
+#========================================
 
-
-if option == 'Saturate':    
+if option == 'Saturate':
     system("mkdir " + cloud + "_" + option + "_Fits_and_shape")
-elif option == 'Image_Check':  
+elif option == 'Image_Check':
     system("mkdir " + cloud + "_" + option + "_Fits_and_shape")
 elif option == 'IR1_Check':
     system("mkdir " + cloud + "_" + option + "_Fits_and_shape")
@@ -63,7 +62,7 @@ for i in range(len(coor)):
 
     # Percentage Indicator
     print(str(i+1) + '/' + str(len(coor)))
-    
+
     # Assuming i+1 always less than 1000
     if i+1 < 10:
         index = '00' + str(i+1)
@@ -71,8 +70,8 @@ for i in range(len(coor)):
         index = '0' + str(i+1)
     elif i+1 < 1000:
         index = str(i+1)
-    
-    # Get Fits from Images 
+
+    # Get Fits from Images
     Qua = "_" + coor[i].split()[4]
     system("mkdir " + index + Qua)
     for j in range(len(MOSAIC_li)):
