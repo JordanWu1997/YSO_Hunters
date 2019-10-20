@@ -77,10 +77,9 @@ with open(str(argv[1]), 'r') as catalogs:
 print("\ngalaxy position...")
 bright, pos_vec = [], []
 for i in range(len(catalog)):
-
     # Percentage Indicator
     if i%100==0:
-        print(float(i)/len(catalog))
+        print(str(float(i)/len(catalog)*100) + '%')
 
     line = catalog[i]
     lines = line.split()
@@ -143,7 +142,7 @@ while True:
     new_pos_vec.append(first)
 
 system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
-chdir('GPV_' + str(dim) + 'dposvec_bin' + str(cube))
+chdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 save('Gal_Position_vectors', new_pos_vec)
 save('Bright', bright)
 save('Faint', faint)
