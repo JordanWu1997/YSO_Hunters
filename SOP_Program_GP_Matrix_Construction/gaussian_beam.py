@@ -5,7 +5,7 @@ from sys import argv
 from os import system, chdir
 
 sigma = int(argv[1]) #2 # STD for Gaussian Smooth
-ref = float(argv[2]) #6.0 # Reference Beam Dimension
+ref = int(argv[2]) #6.0 # Reference Beam Dimension
 bond = 7  # Max Smooth Radius
 
 # 6band Gaussian Beam for Smooth
@@ -16,8 +16,16 @@ for i in range(-bond, 1+bond):
             for l in range(-bond, 1+bond):
                 for m in range(-bond, 1+bond):
                     for n in range(-bond, 1+bond):
+
+                        # Dimension Effect Correction Factor
+                        if float(ref) >= 6.0:
+                            Mfactor = (6.0/ref)**0.5
+                        else:
+                            Mfactor = 1/((6.0/ref)**0.5)
+
+                        # Gaussian Factor
                         r_sqa = float(i**2+j**2+k**2+l**2+m**2+n**2)
-                        G = exp(-(r_sqa/(2*(sigma*(6.0/ref)**0.5)**2)))
+                        G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
                         if r_sqa <= bond**2:
                             vec = [i, j, k, l, m, n, G]
                             six_band_beam.append(vec)
@@ -29,11 +37,19 @@ for i in range(-bond, 1+bond):
       for k in range(-bond, 1+bond):
          for l in range(-bond, 1+bond):
             for m in range(-bond, 1+bond):
-               r_sqa = float(i**2+j**2+k**2+l**2+m**2)
-               G = exp(-(r_sqa/(2*(sigma*(5.0/ref)**0.5)**2)))
-               if r_sqa <= bond**2:
-                  vec = [i, j, k, l, m, G]
-                  five_band_beam.append(vec)
+
+                # Dimension Effect Correction Factor
+                if float(ref) >= 5.0:
+                    Mfactor = (5.0/ref)**0.5
+                else:
+                    Mfactor = 1/((5.0/ref)**0.5)
+
+                # Gaussian Factor
+                r_sqa = float(i**2+j**2+k**2+l**2+m**2)
+                G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
+                if r_sqa <= bond**2:
+                    vec = [i, j, k, l, m, G]
+                    five_band_beam.append(vec)
 
 # 4band Gaussian Beam for Smooth
 four_band_beam=[]
@@ -41,8 +57,16 @@ for i in range(-bond, 1+bond):
    for j in range(-bond, 1+bond):
       for k in range(-bond, 1+bond):
          for l in range(-bond, 1+bond):
+
+            # Dimension Effect Correction Factor
+            if float(ref) >= 4.0:
+                Mfactor = (4.0/ref)**0.5
+            else:
+                Mfactor = 1/((4.0/ref)**0.5)
+
+            # Gaussian Factor
             r_sqa = float(i**2+j**2+k**2+l**2)
-            G = exp(-(r_sqa/(2*(sigma*(4.0/ref)**0.5)**2)))
+            G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
             if r_sqa <= bond**2:
                 vec = [i,j,k,l,G]
                 four_band_beam.append(vec)
@@ -52,11 +76,19 @@ three_band_beam=[]
 for i in range(-bond, 1+bond):
    for j in range(-bond, 1+bond):
       for k in range(-bond, 1+bond):
-            r_sqa = float(i**2+j**2+k**2)
-            G = exp(-(r_sqa/(2*(sigma*(3.0/ref)**0.5)**2)))
-            if r_sqa <= bond**2:
-                vec = [i,j,k,G]
-                three_band_beam.append(vec)
+
+        # Dimension Effect Correction Factor
+        if float(ref) >= 3.0:
+            Mfactor = (3.0/ref)**0.5
+        else:
+            Mfactor = 1/((3.0/ref)**0.5)
+
+        # Gaussian Factor
+        r_sqa = float(i**2+j**2+k**2)
+        G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
+        if r_sqa <= bond**2:
+            vec = [i,j,k,G]
+            three_band_beam.append(vec)
 
 # Save Gaussian Beam
 system('mkdir GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
