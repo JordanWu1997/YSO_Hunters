@@ -98,8 +98,6 @@ save('4d_beam_sigma' + str(sigma), four_band_beam)
 save('3d_beam_sigma' + str(sigma), three_band_beam)
 
 # Plot Figures
-from pylab import *
-
 fig0 = []
 for i in range(len(six_band_beam)):
     if six_band_beam[i][0] == 0 and six_band_beam[i][1] == 0 and six_band_beam[i][2] == 0 and six_band_beam[i][3] == 0 and six_band_beam[i][4] == 0:
@@ -116,17 +114,18 @@ fig3 = []
 for i in range(len(three_band_beam)):
     if three_band_beam[i][0] == 0 and three_band_beam[i][1] == 0:
         fig3.append(three_band_beam[i][3])
-
 XX = []
 for i in range(-bond, 1+bond):
     XX.append(float(i+0.5))
-plot(XX, fig0, ls='steps')
-plot(XX, fig1, ls='steps')
-plot(XX, fig2, ls='steps')
-plot(XX, fig3, ls='steps')
-xlabel("cube: cube_size mag")
-ylabel("counts")
+
+import matplotlib.pyplot as plt
+plt.plot(XX, fig0, ls='steps')
+plt.plot(XX, fig1, ls='steps')
+plt.plot(XX, fig2, ls='steps')
+plt.plot(XX, fig3, ls='steps')
+plt.xlabel("cube: cube_size mag")
+plt.ylabel("counts")
 system('mkdir ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
 chdir('ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
-savefig("Beam_in_diff_dim.png")
+plt.savefig("Beam_in_diff_dim.png")
 chdir('../../')
