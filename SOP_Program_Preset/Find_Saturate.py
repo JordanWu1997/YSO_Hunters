@@ -10,7 +10,7 @@ Output : catalog with (1)quality == 'U', source that are not saturate but undete
                       (2)quality == 'S', source that might be saturate or undetected
                                          still need to image check
 
-Note : add +"\n" to avoid row number -1 problem 
+Note : add +"\n" to avoid row number -1 problem
 -------------------------------------------------------------------
 latest update : 2019/04/11
 '''
@@ -19,7 +19,7 @@ from os import system
 from sys import argv
 from sys import exit
 import pyfits
-
+import SOP_Program_Path as spp
 
 if len(argv) != 3:
     print('Error: Wrong Usage')
@@ -31,19 +31,19 @@ cloud = argv[-1]
 catalog = catalog.readlines()
 
 if "LUP" in cloud:
-    mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + "LUP" + "/MOSAICS/"
+    mosaic_path = spp.Mosaic_path + "LUP" + "/MOSAICS/"
     mosaic_band_li = ["_COMB_IRAC1_mosaic.fits","_COMB_IRAC2_mosaic.fits","_COMB_IRAC3_mosaic.fits","_COMB_IRAC4_mosaic.fits","_A_MIPS1_mosaic.fits"]
 
 elif cloud == "PER":
-    mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + "PER" + "/MOSAICS/"
+    mosaic_path = spp.Mosaic_path + "PER" + "/MOSAICS/"
     mosaic_band_li = ["_ALL_COMB_IRAC1_mosaic.fits","_ALL_COMB_IRAC2_mosaic.fits","_ALL_COMB_IRAC3_mosaic.fits","_ALL_COMB_IRAC4_mosaic.fits","_ALL_A_MIPS1_mosaic.fits"]
 
 elif cloud == "OPH":
-    mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + "OPH" + "/MOSAICS/"
+    mosaic_path = spp.Mosaic_path + "OPH" + "/MOSAICS/"
     mosaic_band_li = ["_ALL_COMB_IRAC1_mosaic.fits","_ALL_COMB_IRAC2_mosaic.fits","_ALL_COMB_IRAC3_mosaic.fits","_ALL_COMB_IRAC4_mosaic.fits","_ALL_A_MIPS1_mosaic.fits"]
 
 else:
-    mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/" + str(cloud) + "/MOSAICS/"
+    mosaic_path = spp.Mosaic_path + str(cloud) + "/MOSAICS/"
     mosaic_band_li = ["_COMB_IRAC1_mosaic.fits","_COMB_IRAC2_mosaic.fits","_COMB_IRAC3_mosaic.fits","_COMB_IRAC4_mosaic.fits","_A_MIPS1_mosaic.fits"]
 
 name = " "
@@ -89,7 +89,7 @@ new_catalog = []
 for i in range(len(catalog)):
     line = catalog[i]
     line = line.split()
-        
+
     # Remove sources only detected in 2mass
     if line[16] != '2mass':
         # save cats with ra and dec in new_catalog
@@ -102,19 +102,19 @@ for i in range(len(mosaic_li)):
     system('sky2xy '+ mosaic_path + mosaic_name_li[i] + ' @step > ' + band_li[i] + '_sources_pix')
     cats = open(band_li[i] + '_sources_pix','r')
     cats = cats.readlines()
-	
+
     for j in range(len(cats)):
 	pos_line = cats[j].split()
-	
+
         if len(pos_line) == 8:
 	    break
-	
+
         pos_pix = [round(float(pos_line[4])),round(float(pos_line[5]))]
 	for k in range(len(SatR_li[i])):
 	    vec = SatR_li[i][k]
-	    
+
             if new_catalog[j][Qua_in[i]] == "U" or new_catalog[j][Qua_in[i]] == "N":
-	        
+
                 if mosaic_li[i][int(pos_pix[1] + vec[1])][int(pos_pix[0] + vec[0])] > band_cut_li[i]:
 		    new_catalog[j][Qua_in[i]] = "S"
 
