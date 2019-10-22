@@ -58,20 +58,20 @@ if sort_option == 'True':
 
     # (2) Calculate 6D Gal_Prob
     chdir(cloud + '_6D_BS_' + bin_size)
-    system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type + ' new ' + bin_size + ' argv')
+    system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type + ' ' + bin_size + ' argv')
 
     # (3) Check
     system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)
 
     # (4) Sort and Compare
     chdir('YSO_5D6D/5D')
-    system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_YSO.tbl' + ' ' + ref_table + ' 5D HSIEH 7 yes no')
+    system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_Hsieh_5D/' + cloud + '_YSO.tbl' + ' ' + ref_table + ' 5D HSIEH 7 yes no')
     chdir('../6D')
     system('Comparator_SWIRE_format.py ' + '../../' + cloud + '_6D_YSO.tbl' + ' ' + ref_table + ' 6D HSIEH 7 yes no')
     chdir('../5D_6D')
     system('Comparator_SWIRE_format.py ' + '../6D/' + '6D_and_HSIEH.tbl' + ' ' + '../5D/' + '5D_and_HSIEH.tbl ' + ' 6D 5D 7 yes no')
     chdir('../../IC_5D6D/5D_HSIEH')
-    system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_GP_to_image_check.tbl' + ' ' + ref_table + ' 5D HSIEH  7 yes no')
+    system('Comparator_SWIRE_format.py ' + '../../../' + cloud + '_Hsieh_5D/' + cloud + '_GP_to_image_check.tbl' + ' ' + ref_table + ' 5D HSIEH  7 yes no')
     chdir('../6D_HSIEH')
     system('Comparator_SWIRE_format.py ' + '../../' + cloud + '_6D_GP_to_image_check.tbl' + ' ' + ref_table + ' 6D HSIEH 7 yes no')
     chdir('../5D_6D')
@@ -80,7 +80,7 @@ if sort_option == 'True':
 else:
     # (1) Calculate 6D Gal_Prob
     chdir(cloud + '_6D_BS_' + bin_size)
-    system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type + ' new ' + bin_size + ' argv')
+    system('new_dict_6D_method.py ' + '../catalog-' + cloud  + '_Gal_Prob_All.tbl' + ' '  + cloud + ' ' + data_type + ' ' + bin_size + ' argv')
 
     # (2) Sort and Compare
     system('Check_6D_Gal_Prob.py ' + cloud + '_6D_GP_all_out_catalog.tbl' + ' ' + cloud)

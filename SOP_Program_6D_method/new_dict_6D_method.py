@@ -31,35 +31,36 @@ from sys import argv, exit
 from Hsieh_Functions import *
 import SOP_Program_Path as spp
 
-if len(argv) == 5 or len(argv) == 7:
+if len(argv) == 4 or len(argv) == 6:
     print('Start 6D Galaxy Prob calculating ...')
 else:
     exit('Error: Wrong Usage!\n \
-          Exmaple: python [program] [catalog] [cloud\'s name] [data_type] [model]\n \
-          data_type: flux or mag (default=flux)\n\
-          model_set: old/new/latest: full/conditional/conditional_wi_new_limit UKIDSS catalog')
+          Exmaple: python [program] [catalog] [cloud\'s name] [data_type]\n \
+          data_type: flux or mag (default=flux)\n')
 
 #======================================================================================
 # Start loading Galaxy probabilty dictionary
 #======================================================================================
-tStart = time.time()
-
 if str(argv[-1]) == 'argv':
     Binsize = str(argv[-2])
 else:
     Binsize = str(input('binsize = '))
-print('Loading arrays ...')
 
-if str(argv[4]) == 'old':
-    #path = '/home/ken/new_mg/GPV_SOP_Program/result' + Binsize + '/'
-    path = spp.Selfmade_6D_GP_Dict_path + '/result' + Binsize + '/'
-elif str(argv[4]) == 'new':
-    path = spp.Selfmade_6D_GP_Dict_path + '/result_condition_' + Binsize + '/'
-elif str(argv[4]) == 'latest':
-    path = spp.Selfmade_6D_GP_Dict_path ###################### TO BE CONTINUED ...
-else:
-    exit('Wrong model selection ...')
-print('Array path: ' + path)
+#if str(argv[4]) == 'old':
+#    #path = '/home/ken/new_mg/GPV_SOP_Program/result' + Binsize + '/'
+#    path = spp.Selfmade_6D_GP_Dict_path + '/result' + Binsize + '/'
+#elif str(argv[4]) == 'new':
+#    path = spp.Selfmade_6D_GP_Dict_path + '/result_condition_' + Binsize + '/'
+#elif str(argv[4]) == 'latest':
+#    path = spp.Selfmade_6D_GP_Dict_path ###################### TO BE CONTINUED ...
+#else:
+#    exit('Wrong model selection ...')
+#print('Array path: ' + path)
+
+tStart = time.time()
+path = spp.Selfmade_6D_GP_Dict_path
+print('Array: ' + path)
+print('Loading arrays ...')
 
 # New type galaxy position in dictionary
 Fu_Dict = np.load(path + 'all_detect_grid_Full_6d.npy').item()
@@ -84,21 +85,21 @@ data_type = str(argv[3])
 
 #parameter
 cube = float(Binsize)
-if str(argv[4]) != 'latest':
-    Jaxlim =   [4.0, 18.0]
-    IR1axlim = [8.0, 18.0]
-    IR2axlim = [7.0, 18.0]
-    IR3axlim = [5.0, 18.0]
-    IR4axlim = [5.0, 18.0]
-    MP1axlim = [3.5, 11.0]
-else:
+#if str(argv[4]) != 'latest':
+#    Jaxlim =   [4.0, 18.0]
+#    IR1axlim = [8.0, 18.0]
+#    IR2axlim = [7.0, 18.0]
+#    IR3axlim = [5.0, 18.0]
+#    IR4axlim = [5.0, 18.0]
+#    MP1axlim = [3.5, 11.0]
+#else:
     # NEW BOUNDARY WI UKIDSS CATALOG
-    Jaxlim =   [3.5, 22.0]
-    IR1axlim = [8.0, 20.0]
-    IR2axlim = [7.0, 19.0]
-    IR3axlim = [5.0, 18.0]
-    IR4axlim = [5.0, 18.0]
-    MP1axlim = [3.5, 12.0]
+Jaxlim =   [3.5, 22.0]
+IR1axlim = [8.0, 20.0]
+IR2axlim = [7.0, 19.0]
+IR3axlim = [5.0, 18.0]
+IR4axlim = [5.0, 18.0]
+MP1axlim = [3.5, 12.0]
 
 band_name = ['J','IR1','IR2','IR3','IR4','MP1']
 
