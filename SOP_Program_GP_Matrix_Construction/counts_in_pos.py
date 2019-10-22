@@ -1,7 +1,7 @@
 #!/usr/bin/ipython
 
 import numpy as np
-from sys import argv
+from sys import argv, exit
 from os import chdir, system, path
 
 # Set parameters
@@ -28,7 +28,8 @@ print(binsa, binsb, bins1, bins2, bins3, bins4, bins5)
 
 # Directory Check
 if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
-    exit('\n\tDirectory has been established ...\n')
+    exit('\n\tDirectory has been established ... \
+        \n\tPass to next procedure ...\n')
 else:
     system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 

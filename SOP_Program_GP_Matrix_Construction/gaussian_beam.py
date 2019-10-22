@@ -1,7 +1,7 @@
 #!/usr/bin/ipython
 from numpy import *
-from sys import argv
-from os import system, chdir
+from sys import argv, exit
+from os import system, chdir, path
 
 sigma = int(argv[1]) #2 # STD for Gaussian Smooth
 ref = int(argv[2]) #6.0 # Reference Beam Dimension
@@ -9,7 +9,8 @@ bond = 7  # Max Smooth Radius
 
 # Directory Check
 if path.isdir('GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref)):
-    exit('\n\tDirectory has been established ...\n')
+    exit('\n\tDirectory has been established ...\
+        \n\tPass to next procedure ...\n')
 else:
     system('mkdir GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
 
