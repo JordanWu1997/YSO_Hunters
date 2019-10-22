@@ -85,22 +85,6 @@ data_type = str(argv[3])
 
 #parameter
 cube = float(Binsize)
-#if str(argv[4]) != 'latest':
-#    Jaxlim =   [4.0, 18.0]
-#    IR1axlim = [8.0, 18.0]
-#    IR2axlim = [7.0, 18.0]
-#    IR3axlim = [5.0, 18.0]
-#    IR4axlim = [5.0, 18.0]
-#    MP1axlim = [3.5, 11.0]
-#else:
-    # NEW BOUNDARY WI UKIDSS CATALOG
-Jaxlim =   [3.5, 22.0]
-IR1axlim = [8.0, 20.0]
-IR2axlim = [7.0, 19.0]
-IR3axlim = [5.0, 18.0]
-IR4axlim = [5.0, 18.0]
-MP1axlim = [3.5, 12.0]
-
 band_name = ['J','IR1','IR2','IR3','IR4','MP1']
 
 #======================================================================================
@@ -160,6 +144,7 @@ for i in range(len(catalog)):
         if SEQ.count('Faint') > 0:
             count = 99999
             ob_type += 'Faint'
+
         elif SEQ.count('Bright') > 0:
             count = 1e-4
             ob_type += 'Bright'
@@ -200,11 +185,12 @@ for i in range(len(catalog)):
                 ob_type += "Lack_" + band_name[int(index_array[0])] + band_name[int(index_array[1])] + band_name[int(index_array[2])]
                 ob_type += '_3D_NOGALAXY_'
 
+        # Avoid log(0)
         if count == 0.0:
-            count = 10**-9
+            count = 1e-9
 
     if line[184] == "S":
-        count = 10**-4
+        count = 1e-4
 
     ob_type += "bandfill=" + str(PSF_list.count("-2"))
 
@@ -287,7 +273,7 @@ for i in range(len(catalog)):
     if num >= 3 and de != "AGB":
 
         # Set up parameters for searching lack bands
-        KEY = str([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube),seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])
+        KEY = str([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube),seq(magIR2,IR2axlim,cube), seq(magIR3,IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])
         KEY = KEY.strip('[')
         KEY = KEY.strip(']')
         key_array = np.array([seq(magJ,Jaxlim,cube), seq(magIR1,IR1axlim,cube), seq(magIR2,IR2axlim,cube), seq(magIR3, IR3axlim,cube), seq(magIR4,IR4axlim,cube), seq(magMP1,MP1axlim,cube)])
@@ -337,11 +323,12 @@ for i in range(len(catalog)):
                 ob_type += "Lack_" + band_name[int(index_array[0])] + band_name[int(index_array[1])] + band_name[int(index_array[2])]
                 ob_type += '_3D_NOGALAXY_'
 
+        # Avoid log(0)
         if count == 0.0:
-            count = 10**-9
+            count = 1e-9
 
     if line[184] == "S":
-        count = 10**-4
+        count = 1e-4
 
     ob_type += "bandfill=" + str(PSF_list.count("-2"))
     line[243] = ob_type
