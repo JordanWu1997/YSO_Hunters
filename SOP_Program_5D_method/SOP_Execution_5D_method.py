@@ -32,7 +32,7 @@ if filename == 'Default':
 else:
     os.system('Gal_Prob_Execution.py ' + filename + '  ' + cloud)
 
-# Step1: Image Check for 
+# Step1: Image Check for
 # 1. Gal Prob Irreliable candidates
 # 2. Saturate source in YSO candidates
 # 3. Final YSO candidates's IR1 check (which exclude (2))
@@ -58,6 +58,15 @@ os.system('getfits.py ' + cloud + '_cans_to_wcs_IR1_check.tbl ' + cloud + ' IR1_
 os.system('rm '+ cloud + '_cans_to_wcs_image_check.tbl')
 os.system('rm '+ cloud + '_cans_to_wcs_saturate.tbl')
 os.system('rm '+ cloud + '_cans_to_wcs_IR1_check.tbl')
+
+#====================================
+# Initialize directories to storage
+#====================================
+if os.path.isdir('./' + cloud + '_Hsieh_5D'):
+    os.system('rm -r ' + cloud + '_Hsieh_5D')
+os.system('mkdir ' + cloud + '_Hsieh_5D')
+os.system('mv ./* ' + cloud + '_Hsieh_5D/')
+os.system('cp ' + cloud + '_Hsieh_5D/catalog-' + cloud +  '_Gal_Prob_All.tbl' + ' ./')
 
 tEnd = time.time()
 print("Whole 5D calculation process took %f sec" % (tEnd - tStart))
