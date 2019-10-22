@@ -2,7 +2,7 @@
 
 import numpy as np
 from sys import argv
-from os import chdir, system
+from os import chdir, system, path
 
 # Set parameters
 dim  = int(argv[2])
@@ -25,6 +25,12 @@ bins3 = int((IR3axlim[1] - IR3axlim[0]) / cube) + 1
 bins4 = int((IR4axlim[1] - IR4axlim[0]) / cube) + 1
 bins5 = int((MP1axlim[1] - MP1axlim[0]) / cube) + 1
 print(binsa, binsb, bins1, bins2, bins3, bins4, bins5)
+
+# Directory Check
+if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
+    exit('\n\tDirectory has been established ...\n')
+else:
+    system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 
 #=======================================================================================================================
 # Functions
@@ -140,15 +146,13 @@ while True:
     first.append(number)
     new_pos_vec.append(first)
 
-system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
+# Save Galaxy Position Vector, Bright, Faint
 chdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 np.save('Gal_Position_vectors', new_pos_vec)
 np.save('Bright', bright)
 np.save('Faint', faint)
-
 if dim == 6:
     np.save('Shape', np.array([binsa, bins1, bins2, bins3, bins4, bins5]))
 elif dim == 5:
     np.save('Shape', np.array([bins1, bins2, bins3, bins4, bins5]))
-
 chdir('../')

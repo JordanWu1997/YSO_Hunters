@@ -7,6 +7,12 @@ sigma = int(argv[1]) #2 # STD for Gaussian Smooth
 ref = int(argv[2]) #6.0 # Reference Beam Dimension
 bond = 7  # Max Smooth Radius
 
+# Directory Check
+if path.isdir('GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref)):
+    exit('\n\tDirectory has been established ...\n')
+else:
+    system('mkdir GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
+
 # 6band Gaussian Beam for Smooth
 six_band_beam = []
 for i in range(-bond, 1+bond):
@@ -90,7 +96,6 @@ for i in range(-bond, 1+bond):
             three_band_beam.append(vec)
 
 # Save Gaussian Beam
-system('mkdir GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
 chdir('GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
 save('6d_beam_sigma' + str(sigma), six_band_beam)
 save('5d_beam_sigma' + str(sigma), five_band_beam)
