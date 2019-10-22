@@ -37,7 +37,7 @@ system('awk \'$18>' + str(float(Av_bound)) + '\'' + ' 6D_ALGO_YSOc.tbl > 6D_ALGO
 # (2) Run GP Check For Candidates Passed Tests
 Pass = open('6D_ALGO_YSOc_PASS_test.tbl', 'r').readlines()
 if len(Pass) != 0:
-    system('new_dict_6D_method.py ' + '6D_ALGO_YSOc_PASS_test.tbl ' + cloud + '_YSOc_PASS_test' + ' mag new ' + binsize + ' argv')
+    system('new_dict_6D_method.py ' + '6D_ALGO_YSOc_PASS_test.tbl ' + cloud + '_YSOc_PASS_test ' + 'mag ' + binsize + ' argv')
     system('Check_6D_Gal_Prob.py ' + cloud + '_YSOc_PASS_test_6D_GP_all_out_catalog.tbl' + ' ' + cloud + '_YSOc_PASS_test')
 
     system('degree_to_wcs.py ' + cloud + '_YSOc_PASS_test_6D_GP_to_image_check.tbl ' + cloud + ' Image_Check')
@@ -65,7 +65,7 @@ else:
 chdir('../' + cloud + '_YSOc_FAIL_Extinction_Test')
 system('cp ' + '../../6D_ALGO_YSOc.tbl ' + './')
 system('awk \'$18<=' + str(float(Av_bound)) + '\'' + ' 6D_ALGO_YSOc.tbl > 6D_ALGO_YSOc_FAIL_test.tbl')
-system('new_dict_6D_method.py ' + '6D_ALGO_YSOc_FAIL_test.tbl ' + cloud + '_YSOc_FAIL_test' + ' mag new ' + binsize + ' argv')
+system('new_dict_6D_method.py ' + '6D_ALGO_YSOc_FAIL_test.tbl ' + cloud + '_YSOc_FAIL_test ' + 'mag ' + binsize + ' argv')
 system('Check_6D_Gal_Prob.py ' + cloud + '_YSOc_FAIL_test_6D_GP_all_out_catalog.tbl' + ' ' + cloud + '_YSOc_FAIL_test')
 # (2) Get Image
 system('degree_to_wcs.py ' + cloud + '_YSOc_FAIL_test_6D_GP_to_image_check.tbl ' + cloud + ' Image_Check')
