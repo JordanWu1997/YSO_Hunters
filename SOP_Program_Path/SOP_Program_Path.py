@@ -1,7 +1,7 @@
 
 # SOP_Program_Preset/SOP_Execution_Preset.py
-Hsieh_Av_table = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinction_Table/Tables_From_Hsieh/"
-Selfmade_Av_table = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinction_Table/Tables_Self_Made/"
+Hsieh_Av_Table_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinction_Table/Tables_From_Hsieh/"
+Selfmade_Av_Table_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinction_Table/Tables_Self_Made/"
 
 # SOP_Program_Preset/Find_Saturate.py
 # SOP_Program_5D_method/getfits.py
