@@ -42,7 +42,7 @@ else:
 if 'LUP' in cloud:
     path = spp.Mosaic_path + '/LUP/MOSAICS/'
 else:
-    path = spp.MOsaic_path + '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/' + cloud + '/MOSAICS/'
+    path = spp.Mosaic_path + cloud + '/MOSAICS/'
 #========================================
 
 if option == 'Saturate':
