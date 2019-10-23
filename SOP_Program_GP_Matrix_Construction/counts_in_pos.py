@@ -3,19 +3,22 @@
 import numpy as np
 from sys import argv, exit
 from os import chdir, system, path
+from Hsieh_Functions import *
 
 # Set parameters
 dim  = int(argv[2])
 cube = float(argv[3])
 
 print('cube =' + str(cube))
-Jaxlim   = [3.5, 22.0]
-Ksaxlim  = [4.0, 18.0]
-IR1axlim = [8.0, 20.0]
-IR2axlim = [7.0, 19.0]
-IR3axlim = [5.0, 18.0]
-IR4axlim = [5.0, 18.0]
-MP1axlim = [3.5, 12.0]
+
+# Use Limit Stored in Hsieh_Functions
+Jaxlim   = Jaxlim
+Ksaxlim  = Ksaxlim
+IR1axlim = IR1axlim
+IR2axlim = IR2axlim
+IR3axlim = IR3axlim
+IR4axlim = IR4axlim
+MP1axlim = MP1axlim
 
 binsa = int((  Jaxlim[1] -   Jaxlim[0]) / cube) + 1
 binsb = int(( Ksaxlim[1] -  Ksaxlim[0]) / cube) + 1
