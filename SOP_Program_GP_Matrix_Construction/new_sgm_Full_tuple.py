@@ -49,7 +49,7 @@ for li in range(len(Gal_pos)):
                 try:
                     d6[key_tuple] += vec[6] * int(new_gal[6])
                 except KeyError:
-                    d6.update(key_tuple: vec[6] * int(new_gal[6])})
+                    d6.update({key_tuple: vec[6] * int(new_gal[6])})
 
         # Apply to five bands
         for dia in range(6):
