@@ -18,6 +18,7 @@ import numpy as np
 
 # HSIEH'S BOUNDARY
 Hsieh_Jaxlim   = [4.0, 18.0]
+Hsieh_Ksaxlim  = [8.0, 18.0]
 Hsieh_IR1axlim = [8.0, 18.0]
 Hsieh_IR2axlim = [7.0, 18.0]
 Hsieh_IR3axlim = [5.0, 18.0]
@@ -26,6 +27,7 @@ Hsieh_MP1axlim = [3.5, 11.0]
 
 # NEW BOUNDARY WI UKIDSS CATALOG
 Jaxlim   = [3.5, 22.0]
+Ksaxlim  = [8.0, 18.0]
 IR1axlim = [8.0, 20.0]
 IR2axlim = [7.0, 19.0]
 IR3axlim = [5.0, 18.0]
