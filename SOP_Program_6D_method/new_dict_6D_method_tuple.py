@@ -87,6 +87,23 @@ data_type = str(argv[3])
 cube = float(Binsize)
 band_name = ['J','IR1','IR2','IR3','IR4','MP1']
 
+# Use Limit Stored in Hsieh_Functions
+Jaxlim   = Hsieh_Jaxlim
+Ksaxlim  = Hsieh_Ksaxlim
+IR1axlim = Hsieh_IR1axlim
+IR2axlim = Hsieh_IR2axlim
+IR3axlim = Hsieh_IR3axlim
+IR4axlim = Hsieh_IR4axlim
+MP1axlim = Hsieh_MP1axlim
+
+#Jaxlim   = Jaxlim
+#Ksaxlim  = Ksaxlim
+#IR1axlim = IR1axlim
+#IR2axlim = IR2axlim
+#IR3axlim = IR3axlim
+#IR4axlim = IR4axlim
+#MP1axlim = MP1axlim
+
 #======================================================================================
 # Start calculating 6-D Galaxy probabilty
 #======================================================================================
@@ -120,7 +137,7 @@ for i in range(len(catalog)):
     num = 6 - SEQ.count('Lack')
     ob_type = str(num) + "bands_"
     count = 'no_count'
-    KEY = '_'
+    KEY = 'NO_KEY'
 
     # Remove AGB
     de="unknown"
@@ -196,11 +213,9 @@ for i in range(len(catalog)):
     if len(line) < 246:
         while len(line) <= 246:
             line.append('z')
-        line[241] = ob_type
-        line[242] = str(count)
-    else:
-        line[241] = ob_type
-        line[242] = str(count)
+    line[241] = ob_type
+    line[242] = str(count)
+    line[245] = str(KEY)
 
     out.append("\t".join(line))
 

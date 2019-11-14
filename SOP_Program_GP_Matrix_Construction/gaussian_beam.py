@@ -1,11 +1,11 @@
 #!/usr/bin/ipython
-from numpy import *
+import numpy as np
 from sys import argv, exit
 from os import system, chdir, path
 
-sigma = int(argv[1]) #2 # STD for Gaussian Smooth
-ref = int(argv[2]) #6.0 # Reference Beam Dimension
-bond = 7  # Max Smooth Radius
+sigma = int(argv[1]) # 2 # STD for Gaussian Smooth
+ref   = int(argv[2]) # 6.0 # Reference Beam Dimension
+bond  = 7            # Max Smooth Radius
 
 # Directory Check
 if path.isdir('GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref)):
@@ -30,8 +30,8 @@ for i in range(-bond, 1+bond):
                             Mfactor = 1/((6.0/ref)**0.5)
 
                         # Gaussian Factor
-                        r_sqa = float(i**2+j**2+k**2+l**2+m**2+n**2)
-                        G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
+                        r_sqa = float(i**2 + j**2 + k**2 + l**2 + m**2 + n**2)
+                        G = np.exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
                         if r_sqa <= bond**2:
                             vec = [i, j, k, l, m, n, G]
                             six_band_beam.append(vec)
@@ -51,14 +51,14 @@ for i in range(-bond, 1+bond):
                     Mfactor = 1/((5.0/ref)**0.5)
 
                 # Gaussian Factor
-                r_sqa = float(i**2+j**2+k**2+l**2+m**2)
-                G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
+                r_sqa = float(i**2 + j**2 + k**2 + l**2 + m**2)
+                G = np.exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
                 if r_sqa <= bond**2:
                     vec = [i, j, k, l, m, G]
                     five_band_beam.append(vec)
 
 # 4band Gaussian Beam for Smooth
-four_band_beam=[]
+four_band_beam = []
 for i in range(-bond, 1+bond):
    for j in range(-bond, 1+bond):
       for k in range(-bond, 1+bond):
@@ -71,14 +71,14 @@ for i in range(-bond, 1+bond):
                 Mfactor = 1/((4.0/ref)**0.5)
 
             # Gaussian Factor
-            r_sqa = float(i**2+j**2+k**2+l**2)
-            G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
+            r_sqa = float(i**2 + j**2 + k**2 + l**2)
+            G = np.exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
             if r_sqa <= bond**2:
-                vec = [i,j,k,l,G]
+                vec = [i, j, k, l, G]
                 four_band_beam.append(vec)
 
 # 3band Gaussian Beam for Smooth
-three_band_beam=[]
+three_band_beam = []
 for i in range(-bond, 1+bond):
    for j in range(-bond, 1+bond):
       for k in range(-bond, 1+bond):
@@ -90,18 +90,18 @@ for i in range(-bond, 1+bond):
             Mfactor = 1/((3.0/ref)**0.5)
 
         # Gaussian Factor
-        r_sqa = float(i**2+j**2+k**2)
-        G = exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
+        r_sqa = float(i**2 + j**2 + k**2)
+        G = np.exp(-(r_sqa/(2*(sigma * Mfactor)**2)))
         if r_sqa <= bond**2:
-            vec = [i,j,k,G]
+            vec = [i, j, k, G]
             three_band_beam.append(vec)
 
 # Save Gaussian Beam
 chdir('GPV_smooth_sigma' + str(sigma) + '_refD' + str(ref))
-save('6d_beam_sigma' + str(sigma), six_band_beam)
-save('5d_beam_sigma' + str(sigma), five_band_beam)
-save('4d_beam_sigma' + str(sigma), four_band_beam)
-save('3d_beam_sigma' + str(sigma), three_band_beam)
+np.save('6d_beam_sigma' + str(sigma), six_band_beam)
+np.save('5d_beam_sigma' + str(sigma), five_band_beam)
+np.save('4d_beam_sigma' + str(sigma), four_band_beam)
+np.save('3d_beam_sigma' + str(sigma), three_band_beam)
 
 # Plot Figures
 fig0 = []

@@ -9,17 +9,26 @@ from Hsieh_Functions import *
 dim  = int(argv[2])
 cube = float(argv[3])
 
-print('cube =' + str(cube))
+print('cube = ' + str(cube))
 
 # Use Limit Stored in Hsieh_Functions
-Jaxlim   = Jaxlim
-Ksaxlim  = Ksaxlim
-IR1axlim = IR1axlim
-IR2axlim = IR2axlim
-IR3axlim = IR3axlim
-IR4axlim = IR4axlim
-MP1axlim = MP1axlim
+Jaxlim   = Hsieh_Jaxlim
+Ksaxlim  = Hsieh_Ksaxlim
+IR1axlim = Hsieh_IR1axlim
+IR2axlim = Hsieh_IR2axlim
+IR3axlim = Hsieh_IR3axlim
+IR4axlim = Hsieh_IR4axlim
+MP1axlim = Hsieh_MP1axlim
 
+#Jaxlim   = Jaxlim
+#Ksaxlim  = Ksaxlim
+#IR1axlim = IR1axlim
+#IR2axlim = IR2axlim
+#IR3axlim = IR3axlim
+#IR4axlim = IR4axlim
+#MP1axlim = MP1axlim
+
+# Count shape of each dim
 binsa = int((  Jaxlim[1] -   Jaxlim[0]) / cube) + 1
 binsb = int(( Ksaxlim[1] -  Ksaxlim[0]) / cube) + 1
 bins1 = int((IR1axlim[1] - IR1axlim[0]) / cube) + 1
@@ -48,9 +57,9 @@ def magnitudelist(x):
     mag = [float(x[35]),float(x[77]),float(x[98]),float(x[119]),float(x[140]),float(x[161]),float(x[182])]
     mag_list = []
     for i in range(len(mag)):
-        if float(mag[i]) > 0:
+        if float(mag[i]) > 0.0:
             mag_list.append(float(mag[i]))
-        elif float(mag[i]) <= 0:
+        elif float(mag[i]) <= 0.0:
             mag_list.append('no')
     return mag_list
 
