@@ -104,8 +104,10 @@ for i in range(len(catalog)):
     mag_list = magnitudelist(line)
     magJ, magKs, magIR1, magIR2, magIR3, magIR4, magMP1 = mag_list
 
-    flux_list_origin = [lines[33],lines[75],lines[96],lines[117],lines[138],lines[159],lines[180]]
-    mag_list_origin  = [lines[35],lines[77],lines[98],lines[119],lines[140],lines[161],lines[182]]
+    # flux_list_origin = [lines[33],lines[75],lines[96],lines[117],lines[138],lines[159],lines[180]]
+    #===================================================================================================
+    mag_list_origin  = [lines[35], lines[77], lines[98], lines[119], lines[140], lines[161], lines[182]]
+    #===================================================================================================
 
     # Remove AGB sources
     AGB = 0
