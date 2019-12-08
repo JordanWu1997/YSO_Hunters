@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # SOP_Program_Preset/SOP_Execution_Preset.py
 Hsieh_Av_Table_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinction_Table/Tables_From_Hsieh/"
 Selfmade_Av_Table_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinction_Table/Tables_Self_Made/"
@@ -23,5 +25,9 @@ Selfmade_6D_GP_Dict_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Gala
 # SOP_Program_6D_method/SOP_Execution_6D_method.py
 Hsieh_YSO_List_path = '/home/jordan/YSO_Project/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/'
 
-# ONly RA, DEC
+# Only RA, DEC
 Hsieh_YSO_Coor_path = '/home/jordan/YSO_Project/C2D-SWIRE_20180710/Table_to_Compare/HL_YSOs_2013/'
+
+# SEIP catalog from Jacob
+# J, Ks, H, IR1, IR2, IR3, IR4, MP1
+SEIP_catalog_path = '/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog/SEIP_pred_catalog'

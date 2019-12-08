@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''----------------------------------------------------------------
 This program is for packing all functions needed for calculating galaxy probability (P)
 
@@ -117,7 +117,7 @@ def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="two
     select_mag_list = []
     if Qua:
         for i in range(len(mag_list)):
-            # J band
+            # Ignore J band
             if i == 0:
                 if mag_list[i] > 0.0:
                     select_mag_list.append(mag_list[i])
