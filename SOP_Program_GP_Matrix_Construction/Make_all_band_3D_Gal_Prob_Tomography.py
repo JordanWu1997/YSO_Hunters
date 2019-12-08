@@ -22,7 +22,12 @@ sigma   = int(argv[3])
 bond    = int(argv[4])
 refD    = int(argv[5])
 program = 'Make_3D_Gal_Prob_Tomography.py'
+
+# Initialize Storage Directory
 storage = 'Tomography_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
+if path.isdir(storage):
+    system('rm -fr {}'.format(storage))
+system('mkdir {}'.format(storage))
 
 # Initialize Storage Directory
 chdir(storage)
