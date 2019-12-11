@@ -43,8 +43,8 @@ else:
 
 # Make Fake Source Grid
 x_axis = np.linspace(0, space_shape[band[0]]-1, space_shape[band[0]], endpoint=True)
-y_axis = np.linspace(0, space_shape[band[1]]-1, space_shape[band[0]], endpoint=True)
-z_axis = np.linspace(0, space_shape[band[2]]-1, space_shape[band[0]], endpoint=True)
+y_axis = np.linspace(0, space_shape[band[1]]-1, space_shape[band[1]], endpoint=True)
+z_axis = np.linspace(0, space_shape[band[2]]-1, space_shape[band[2]], endpoint=True)
 
 chdir(image_dir)
 t_start = time.time()
