@@ -1,4 +1,5 @@
 # Execute Program Sequence
+0. ## All Program Must Run Under *Demo* Directory
 1. ## Construct_Gaussian_Bin.py
 	- [program] [sigma] [bond] [ref-D]
 2. ## Count_Gal_Pos_Vec.py
