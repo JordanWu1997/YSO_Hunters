@@ -17,30 +17,111 @@
 
 # Output File Structure
 ```bash
-GPV_after_smooth_6D_bin1.0_sigma2_bond0_refD5/
-\u251c\u2500\u2500 3d_after_smooth.npy
-\u251c\u2500\u2500 4d_after_smooth.npy
-\u251c\u2500\u2500 5d_after_smooth.npy
-\u251c\u2500\u2500 6d_after_smooth.npy
-\u251c\u2500\u2500 tmp_L0
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 000_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 000_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 001_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 001_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 002_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 002_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 003_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 003_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 004_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 004_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 005_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 005_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 006_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 006_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 007_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 007_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 008_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 008_tmp_cat.npy
-\u2502\u00a0\u00a0 \u251c\u2500\u2500 009_6d_after_smooth.npy
-\u2502\u00a0\u00a0 \u2514\u2500\u2500 009_tmp_cat.npy
+Demo/
+├── GPV_6Dposvec_bin1.0
+│   ├── Bright.npy
+│   ├── Faint.npy
+│   ├── Gal_Position_vectors.npy
+│   ├── Lack_0band_sources.npy
+│   ├── Lack_1band_sources.npy
+│   ├── Lack_2band_sources.npy
+│   ├── Lack_3band_sources.npy
+│   └── Shape.npy
+├── GPV_after_smooth_6D_bin1.0_sigma2_bond0_refD5
+│   ├── 3d_after_smooth.npy
+│   ├── 4d_after_smooth.npy
+│   ├── 5d_after_smooth.npy
+│   ├── 6d_after_smooth.npy
+│   ├── tmp_L0
+│   │   ├── 000_6d_after_smooth.npy
+│   │   ├── 000_tmp_cat.npy
+│   │   ├── 001_6d_after_smooth.npy
+│   │   ├── 001_tmp_cat.npy
+│   │   ├── 002_6d_after_smooth.npy
+│   │   ├── 002_tmp_cat.npy
+│   │   ├── 003_6d_after_smooth.npy
+│   │   ├── 003_tmp_cat.npy
+│   │   ├── 004_6d_after_smooth.npy
+│   │   ├── 004_tmp_cat.npy
+│   │   ├── 005_6d_after_smooth.npy
+│   │   ├── 005_tmp_cat.npy
+│   │   ├── 006_6d_after_smooth.npy
+│   │   ├── 006_tmp_cat.npy
+│   │   ├── 007_6d_after_smooth.npy
+│   │   ├── 007_tmp_cat.npy
+│   │   ├── 008_6d_after_smooth.npy
+│   │   ├── 008_tmp_cat.npy
+│   │   ├── 009_6d_after_smooth.npy
+│   │   └── 009_tmp_cat.npy
+│   ├── tmp_L1
+│   │   ├── 000_5d_after_smooth.npy
+│   │   ├── 000_tmp_cat.npy
+│   │   ├── 001_5d_after_smooth.npy
+│   │   ├── 001_tmp_cat.npy
+│   │   ├── 002_5d_after_smooth.npy
+│   │   ├── 002_tmp_cat.npy
+│   │   ├── 003_5d_after_smooth.npy
+│   │   ├── 003_tmp_cat.npy
+│   │   ├── 004_5d_after_smooth.npy
+│   │   ├── 004_tmp_cat.npy
+│   │   ├── 005_5d_after_smooth.npy
+│   │   ├── 005_tmp_cat.npy
+│   │   ├── 006_5d_after_smooth.npy
+│   │   ├── 006_tmp_cat.npy
+│   │   ├── 007_5d_after_smooth.npy
+│   │   ├── 007_tmp_cat.npy
+│   │   ├── 008_5d_after_smooth.npy
+│   │   ├── 008_tmp_cat.npy
+│   │   ├── 009_5d_after_smooth.npy
+│   │   └── 009_tmp_cat.npy
+│   ├── tmp_L2
+│   │   ├── 000_4d_after_smooth.npy
+│   │   ├── 000_tmp_cat.npy
+│   │   ├── 001_4d_after_smooth.npy
+│   │   ├── 001_tmp_cat.npy
+│   │   ├── 002_4d_after_smooth.npy
+│   │   ├── 002_tmp_cat.npy
+│   │   ├── 003_4d_after_smooth.npy
+│   │   ├── 003_tmp_cat.npy
+│   │   ├── 004_4d_after_smooth.npy
+│   │   ├── 004_tmp_cat.npy
+│   │   ├── 005_4d_after_smooth.npy
+│   │   ├── 005_tmp_cat.npy
+│   │   ├── 006_4d_after_smooth.npy
+│   │   ├── 006_tmp_cat.npy
+│   │   ├── 007_4d_after_smooth.npy
+│   │   ├── 007_tmp_cat.npy
+│   │   ├── 008_4d_after_smooth.npy
+│   │   ├── 008_tmp_cat.npy
+│   │   ├── 009_4d_after_smooth.npy
+│   │   └── 009_tmp_cat.npy
+│   └── tmp_L3
+│       ├── 000_3d_after_smooth.npy
+│       ├── 000_tmp_cat.npy
+│       ├── 001_3d_after_smooth.npy
+│       ├── 001_tmp_cat.npy
+│       ├── 002_3d_after_smooth.npy
+│       ├── 002_tmp_cat.npy
+│       ├── 003_3d_after_smooth.npy
+│       ├── 003_tmp_cat.npy
+│       ├── 004_3d_after_smooth.npy
+│       ├── 004_tmp_cat.npy
+│       ├── 005_3d_after_smooth.npy
+│       ├── 005_tmp_cat.npy
+│       ├── 006_3d_after_smooth.npy
+│       ├── 006_tmp_cat.npy
+│       ├── 007_3d_after_smooth.npy
+│       ├── 007_tmp_cat.npy
+│       ├── 008_3d_after_smooth.npy
+│       ├── 008_tmp_cat.npy
+│       ├── 009_3d_after_smooth.npy
+│       └── 009_tmp_cat.npy
+└── GPV_smooth_sigma2_bond0_refD5
+    ├── 3d_beam_sigma2.npy
+    ├── 4d_beam_sigma2.npy
+    ├── 5d_beam_sigma2.npy
+    ├── 6d_beam_sigma2.npy
+    └── ND_Beam_sigma2_refD5
+        └── Beam_in_diff_dim.png
+
 ```
