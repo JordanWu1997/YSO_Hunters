@@ -37,7 +37,7 @@ for i, sub in enumerate(sub_dir):
     pieces = sorted(glob('*_{:d}d_after_smooth.npy'.format(dim-lack_inp[i])))
     out_dict = dict()
     for j, piece in enumerate(pieces):
-        print(i, j)
+        print('Now {:d}_dir, {:d}/{:d}'.format(i, j, len(pieces)))
         ld_dict = np.load(piece).item()
         for key in ld_dict.keys():
             if key not in out_dict.keys():
