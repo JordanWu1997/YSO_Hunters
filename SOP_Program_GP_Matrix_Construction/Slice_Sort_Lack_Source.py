@@ -13,8 +13,13 @@ if len(argv) < 8:
     \n\t[cube size]: length of multi-d cube in magnitude unit\
     \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
     \n\t[bond]: boundary radius of gaussian beam unit in cell\
-    \n\t[ref-D]: reference dimension which to modulus other dimension to\n')
+    \n\t[ref-D]: reference dimension which to modulus other dimension to\
+    \n\t[num_TH]: number to slice input galaxy position vector dictionary\
+    \n\t[lack_inp]: number of lack band of input source dictionary (0 1 2 3)\n')
 
+
+#==============================================================================================================
+# Input variables
 dim        = int(argv[1])       # Dimension of position vector
 cube       = float(argv[2])     # Beamsize for each cube
 sigma      = int(argv[3])       # STD for Gaussian Smooth
@@ -27,9 +32,11 @@ inp_dict   = [posv_dir + "Lack_{:d}band_sources.npy".format(lack) for lack in la
 out_dir    = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
 sub_dir    = ['tmp_L{:d}/'.format(lack) for lack in lack_inp]
 
+#==============================================================================================================
 # Main Program
 t_start = time()
 for i in range(len(lack_inp)):
+
     #==============================================
     # Initialize output directory
     if (not path.isdir(out_dir)):
@@ -46,10 +53,12 @@ for i in range(len(lack_inp)):
     else:
         print("Sub-Directory exists ...")
         print("Use exist one ...\n")
+
     #==============================================
     # Load input dictionary
     ld_dict = np.load(inp_dict[i]).item()
     key_len = len(ld_dict.keys())
+
     #==============================================
     # Start slicing
     for j in range(num_th):
@@ -66,6 +75,8 @@ for i in range(len(lack_inp)):
                 sv_dict[ld_dict.keys()[l]] = ld_dict[ld_dict.keys()[l]]
         np.save('{:0>3d}_tmp_cat'.format(j), sv_dict)
         chdir('../../')
-    #==============================================
+
+#==============================================
+# Report time
 t_end = time()
 print('Whole Process took {:.3f} secs'.format(t_end - t_start))
