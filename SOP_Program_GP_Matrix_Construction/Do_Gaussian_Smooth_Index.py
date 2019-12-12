@@ -37,25 +37,39 @@ for lack in lack_list:
     start  = time.time()
     after_smooth = dict()
     for i, key in enumerate(source.keys()):
+        #=========================================================
         # Percentage Indicator
         if i % 100 == 0:
             print('Now: ' + str(float(i)/len(source) * 100) + '%')
+        #=========================================================
         # Do Gaussian Smooth
-        gal = list(key)
-        if gal.count("Lack") <= (len(shape)-3):
-            pos_array = np.array(gal, dtype=object)
-            pos_array[pos_array == "Lack"] = 0
+        gal_pos = list(key)
+        if gal_pos.count("Lack") <= (len(shape)-3):
             for pos in beam:
+                #=========================================================
+                # Make New Key from Relative Position
+                rel_pos = pos[:-1]
+                gal_pos = np.array(gal_pos)
+                no_lack_ind = list(np.argwhere(gal_pos != "Lack"))
+                new_key = ['Lack'] * dim
+                for i, ind in enumerate(no_lack_ind):
+                    new_key[int(ind)] = int(gal_pos[ind]) + int(rel_pos[i])
+                new_key = tuple(new_key)
+                #=========================================================
+                # Check New Position Vector
+                # Note: upper is from shape which is total num of cube in each dim (index+1)
                 lower = np.array([0] * (len(shape)))
                 upper = np.array(shape)
-                # Note: upper is from shape which is total num of cube in each dim (index+1)
-                if all(pos_array < upper) and all(pos_array >= lower):
-                    value  = float(source[key])
-                    weight = float(pos[-1])
-                    if key not in after_smooth.keys():
-                        after_smooth.update({key: value * weight})
+                pos_check = np.array(new_key, dtype=object)
+                pos_check[pos_check == 'Lack'] = 0
+
+                if all(pos_check < upper) and all(pos_check >= lower):
+                    value   = float(source[key])
+                    weight  = float(pos[-1])
+                    if new_key not in after_smooth.keys():
+                        after_smooth.update({new_key: value * weight})
                     else:
-                        after_smooth[key] += value * weight
+                        after_smooth[new_key] += value * weight
     end   = time.time()
     print("Saving result ...\n")
     chdir(out_dir + sub_dir)
