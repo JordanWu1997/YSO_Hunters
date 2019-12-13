@@ -14,22 +14,24 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 - Add 1 more band to multi-D galaxy probability
 - Add new extinction test (application for selecting reliable YSO candidates)
 
-## **IV.Step**
-<img src='Templates_and_Charts/Steps.png'/>
-
-## **V. How To Use SOP Programs**
+## **IV. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
   - e.g. In .cshrc file:
     ```
-	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Toolkit
-	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_GP_Matrix_Construction
-	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_Preset
-	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_5D_method
-	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_6D_method
-	setenv PATH ${PATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_Extinction_Check
+	set Storage = **where_you_store_YSO_Hunter**
+
+	# Setup Working Environments For YSO Hunter Programs
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/bin
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/lib
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_Preset
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_5D_method
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_03_6D_method
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_04_Av_Check
+	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_05_Image_Check
 
 	# Setup Python Module Environments For YSO Hunter Programs
-	setenv PYTHONPATH ${PYTHONPATH}:/home/jordan/YSO_Project/YSO_Hunters/SOP_Program_Path
+	setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/SOP_Program_Path
     ```
 2. Revise Locations of Some Programs if **No such file** error happens.
   - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
@@ -37,48 +39,9 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
     - e.g. location where multi-D galaxy probability array stored
 
 3. Standard Sequence for Execution:
-	1. SOP_Execution_GPM_Construct.py
+	1. SOP_Execution_GPM_Construct.py (Still working ...)
     2. SOP_Execution_Preset.py
     3. SOP_Execution_5D_method.py
     4. SOP_Execution_6D_method.py
     5. SOP_Execution_Extinction_check.py
         - **Note This Command Must Execute inside Specific Binsize Directory**
-
-## **VI.Data Location**
-- **Catalog from c2d & SWIRE :**
-  - Molecular Clouds HREL catalog :
-    - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1
-  - Extinction Map (Av table) :
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/New_version/Backup_Av_table
-  - Mosaic for Saturate Check
-    - from Hsieh:
-      - /data/users/inchone/Perseus/oldold/mosaic
-    - from spitzer database:
-      - /data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/CHA_II/MOSAICS
-- **Data for new alogorithm :**
-    - new binsize galaxy probability
-      - /home/ken/new_mg/GPV_SOP_Program
-- **Programs from Inchone Hsieh :**
-  - Make multi-D space:
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_IR1-MP1
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/c2d_SWIRE_J-MP1
-  - Galaxy Probability:
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed
-  - Galaxy Probability (p):
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Chamaeleon/YSO_Selection
-  - Remove Av:
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/New_version/
-  - Saturate Check:
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus
-  - Get IR Image:
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/Old/multi-dim_version/Saturate_and_Band_fill_correct/Chamaleon/Saturate_no_count/getfits.py
-  - Image Check:
-    - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus/YSO_Selection/notPSF1_check
-
-## **VII.Reference**
-**Hsieh and Lai's Result vs Evan's Result :**
-<img src='Templates_and_Charts/Hsiehs_Result.png'/>
-**Hsieh and Lai's missing YSOs :**
-<img src='Templates_and_Charts/Hsiehs_missing_YSO.png'/>
-**Catalog Classification from c2d legacy project :**
-<img src='Templates_and_Charts/c2d_obtype.png'/>
