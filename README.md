@@ -16,10 +16,10 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 ## **IV. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
-  - e.g. In .cshrc file:
-    ```
+	- e.g. In .cshrc file:
+    	```
 	set Storage = **where_you_store_YSO_Hunter**
-
+	
 	# Setup Working Environments For YSO Hunter Programs
 	setenv PATH ${PATH}:$Storage/YSO_Hunters/bin
 	setenv PATH ${PATH}:$Storage/YSO_Hunters/lib
@@ -32,16 +32,16 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 	# Setup Python Module Environments For YSO Hunter Programs
 	setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/SOP_Program_Path
-    ```
+    	```
 2. Revise Locations of Some Programs if **No such file** error happens.
-  - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
-  - Then , change some path or file that may be needed to revised
-    - e.g. location where multi-D galaxy probability array stored
+	- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
+	- Then , change some path or file that may be needed to revised
+		- e.g. location where multi-D galaxy probability array stored
 
 3. Standard Sequence for Execution:
 	1. SOP_Execution_GPM_Construct.py (Still working ...)
-    2. SOP_Execution_Preset.py
-    3. SOP_Execution_5D_method.py
-    4. SOP_Execution_6D_method.py
-    5. SOP_Execution_Extinction_check.py
-        - **Note This Command Must Execute inside Specific Binsize Directory**
+	2. SOP_Execution_Preset.py
+	3. SOP_Execution_5D_method.py
+	4. SOP_Execution_6D_method.py
+	5. SOP_Execution_Extinction_check.py
+		- **Note This Command Must Execute inside Specific Binsize Directory**
