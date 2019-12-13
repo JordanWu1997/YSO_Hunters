@@ -1,7 +1,8 @@
 # **Documentation**
 
-## **I.Step**                                                                                                                               <
-<img src='Templates_and_Charts/Steps.png'/>
+## **I.Step**                                                                                            <
+<img src='Templates_and_Charts/Hsieh_Steps.png'/>
+<img src='Templates_and_Charts/Our_Steps.png'/>
 
 ## **II.Data Location**
 - **Catalog from c2d & SWIRE :**
