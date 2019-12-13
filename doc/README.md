@@ -1,9 +1,11 @@
 # **Documentation**
 
 ## **I.Step**
-### **Hsieh & Lai (2013) Steps**
+
+- ### **Hsieh & Lai (2013) Steps**
 <img src='Templates_and_Charts/Hsieh_Steps.png'/>
-### **This Work Steps**
+
+- ### **This Work Steps**
 <img src='Templates_and_Charts/Our_Steps.png'/>
 
 ## **II.Data Location**
@@ -38,9 +40,9 @@
     - /cosmo/users/inchone/Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_process2_multi-dim_version/J_MP1_plus_IR1_MP1_methed/Perseus/YSO_Selection/notPSF1_check
 
 ## **III.Reference**
-### **Hsieh and Lai's Result vs Evan's Result :**
+- ### **Hsieh and Lai's Result vs Evan's Result :**
 <img src='Templates_and_Charts/Hsiehs_Result.png'/>
-### **Hsieh and Lai's missing YSOs :**
+- ### **Hsieh and Lai's missing YSOs :**
 <img src='Templates_and_Charts/Hsiehs_missing_YSO.png'/>
-### **Catalog Classification from c2d legacy project :**
+- ### **Catalog Classification from c2d legacy project :**
 <img src='Templates_and_Charts/c2d_obtype.png'/>
