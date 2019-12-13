@@ -18,22 +18,45 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 1. Add Directories started with SOP to current working environments
 	- e.g. In .cshrc file:
 ```
-	
-	set Storage = **where_you_store_YSO_Hunter**
-	
-	# Setup Working Environments For YSO Hunter Programs
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/bin
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/lib
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_Preset
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_5D_method
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_03_6D_method
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_04_Av_Check
-	setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_05_Image_Check
+#====================================================================
+# Set Storage Path (Directory where you store YSO_Hunter)
+set Storage = "/home/jordan/YSO_Project/"
 
-	# Setup Python Module Environments For YSO Hunter Programs
-	setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/SOP_Program_Path
+# Setup Working Environments For YSO Hunter Programs
+setenv PATH ${PATH}:$Storage/YSO_Hunters/bin
+setenv PATH ${PATH}:$Storage/YSO_Hunters/lib
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_Preset
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_5D_method
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_03_6D_method
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_04_Av_Check
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_05_Image_Check
+
+# Setup Python Module Environments For YSO Hunter Programs
+setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/SOP_Program_Path
+#====================================================================
 ```
+	- e.g. In .bashrc file:
+```
+#====================================================================
+# Set Storage Path (Directory where you store YSO_Hunter)
+export Storage="/home/jordan/YSO_Project/"
+
+# Setup Working Environments For YSO Hunter Programs
+export PATH="$Storage/YSO_Hunter/bin:$PATH"
+export PATH="$Storage/YSO_Hunter/lib
+export PATH="$Storage/YSO_Hunter/SOP_00_Gal_Prob
+export PATH="$Storage/YSO_Hunter/SOP_01_Preset
+export PATH="$Storage/YSO_Hunter/SOP_02_5D_method
+export PATH="$Storage/YSO_Hunter/SOP_03_6D_method
+export PATH="$Storage/YSO_Hunter/SOP_04_Av_Check
+export PATH="$Storage/YSO_Hunter/SOP_05_Image_Check
+
+# Setup Python Module Environments For YSO Hunter Programs
+export PYTHONPATH="$Storage/YSO_Hunters/SOP_Program_Library:$PYTHONPATH"
+#====================================================================
+```
+
 2. Revise Locations of Some Programs if **No such file** error happens.
 	- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
 	- Then , change some path or file that may be needed to revised
