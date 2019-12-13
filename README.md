@@ -44,13 +44,13 @@ export Storage="/home/jordan/YSO_Project/"
 
 # Setup Working Environments For YSO Hunter Programs
 export PATH="$Storage/YSO_Hunter/bin:$PATH"
-export PATH="$Storage/YSO_Hunter/lib
-export PATH="$Storage/YSO_Hunter/SOP_00_Gal_Prob
-export PATH="$Storage/YSO_Hunter/SOP_01_Preset
-export PATH="$Storage/YSO_Hunter/SOP_02_5D_method
-export PATH="$Storage/YSO_Hunter/SOP_03_6D_method
-export PATH="$Storage/YSO_Hunter/SOP_04_Av_Check
-export PATH="$Storage/YSO_Hunter/SOP_05_Image_Check
+export PATH="$Storage/YSO_Hunter/lib:$PATH"
+export PATH="$Storage/YSO_Hunter/SOP_00_Gal_Prob:$PATH"
+export PATH="$Storage/YSO_Hunter/SOP_01_Preset:$PATH"
+export PATH="$Storage/YSO_Hunter/SOP_02_5D_method:$PATH"
+export PATH="$Storage/YSO_Hunter/SOP_03_6D_method:$PATH"
+export PATH="$Storage/YSO_Hunter/SOP_04_Av_Check:$PATH"
+export PATH="$Storage/YSO_Hunter/SOP_05_Image_Check:$PATH"
 
 # Setup Python Module Environments For YSO Hunter Programs
 export PYTHONPATH="$Storage/YSO_Hunters/SOP_Program_Library:$PYTHONPATH"
