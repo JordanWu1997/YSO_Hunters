@@ -26,9 +26,8 @@ sigma    = int(argv[3])
 bond     = int(argv[4])
 refD     = int(argv[5])
 lack_inp = [int(inp) for inp in (argv[6:])]    # List of number of lack band of input sources
-
-out_dir    = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
-sub_dir    = ['tmp_L{:d}/'.format(lack) for lack in lack_inp]
+out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
+sub_dir  = ['tmp_L{:d}/'.format(lack) for lack in lack_inp]
 
 
 for i, sub in enumerate(sub_dir):
