@@ -22,20 +22,26 @@ if len(argv) != 5:
     \n\t[Table Format] old/new : Hsieh\'s style/new style\n')
 
 # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
-parameter=[['J', 33, 35, 0.2741],
-          [ 'H', 54, 56, 0.1622],
-          [ 'K', 75, 77, 0.1119],
-          ['IR1', 96, 98, 0.0671],
-          ['IR2', 117, 119, 0.0543],
-          ['IR3', 138, 140, 0.0444],
-          ['IR4', 159, 161, 0.0463],
-          ['MP1', 180, 182, 0.0259],
-          ['MP2', 201, 203, 0]]
+parameter = [['J',  0.2741],
+            [ 'H',  0.1622],
+            [ 'K',  0.1119],
+            ['IR1', 0.0671],
+            ['IR2', 0.0543],
+            ['IR3', 0.0444],
+            ['IR4', 0.0463],
+            ['MP1', 0.0259],
+            ['MP2', 0]]
+
+Av_coor_ID = [0, 1]  # RA, Dec on extinction table
+Av_ID      = [17]
+coor_ID    = [0, 2]  # RA, Dec on input table
+mag_ID     = [33, 54, 75, 96, 117, 138, 159, 180, 201]
+flux_ID    = [35, 56, 77, 98, 119, 140, 161, 182, 203]
 
 # Set up input table and catalogs
 Av_table = open(str(argv[1]), 'r')
 catalogs = open(str(argv[2]), 'r')
-cloud = str(argv[3])
+cloud    = str(argv[3])
 
 # Set up input table format
 tbl_format, Av_col = str(argv[4]), 0
@@ -63,8 +69,8 @@ not_found = []
 for objects in catalog:
     print(str(num)+'/'+str(object_num)); num+=1
 
-    Ra_catalog_degree = float(objects.split()[0])
-    Dec_catalog_degree = float(objects.split()[2])
+    Ra_catalog_degree = float(objects.split()[coor_ID[0]])
+    Dec_catalog_degree = float(objects.split()[coor_ID[1]])
 
     Ra_catalog_rad = Ra_catalog_degree/360*2*pi
     Dec_catalog_rad = Dec_catalog_degree/360*2*pi
@@ -76,7 +82,7 @@ for objects in catalog:
 
     for line in Av_table_lines:
 
-        if -tolerance < Ra_catalog_degree-float(line.split()[0]) < tolerance and -tolerance < Dec_catalog_degree-float(line.split()[1]) < tolerance:
+        if -tolerance < Ra_catalog_degree-float(line.split()[Av_coor_ID[0]]) < tolerance and -tolerance < Dec_catalog_degree-float(line.split()[Av_coor_ID[1]]) < tolerance:
 
             Ra_table_rad = float(line.split()[0])/360*2*pi
 	    Dec_table_rad =float(line.split()[1])/360*2*pi
@@ -102,13 +108,13 @@ for objects in catalog:
         Av = correct_line.split()[Av_col]
 
         # Store Av value on catalog
-        far_line[17] = Av
+        far_line[Av_ID[0]] = Av
 
-        for band in parameter:
+        for i, band in enumerate(parameter):
 
-            flux = float(far_line[band[1]])
-            mag = float(far_line[band[2]])
-            C_av = float(band[3])
+            flux = float(far_line[flux_ID[i]])
+            mag  = float(far_line[mag_ID[i]])
+            C_av = float(band[1])
 
             #=============================
             # Flux Correction
@@ -116,9 +122,9 @@ for objects in catalog:
             if flux < 0.0:
                 new_far_flux = str(flux)
             else:
-                Av=float(Av)
+                Av = float(Av)
                 new_far_flux = str(flux*10**(Av*C_av/2.5))
-            far_line[band[1]] = new_far_flux
+            far_line[flux_ID[i]] = new_far_flux
 
             #=============================
             # Magnitude Correction
@@ -128,14 +134,15 @@ for objects in catalog:
                 new_far_mag = str(mag - C_av*Av) #from def of Av, Cv
             else:
                 new_far_mag = str(mag)
-            far_line[band[2]] = new_far_mag
+            far_line[mag_ID[i]] = new_far_mag
+
         new_far_line = "\t".join(far_line) + "\n"
 
     else:
-        for band in parameter:
-            far_line[band[2]] =  'NOT_FOUND'
+        for j, band in enumerate(parameter):
+            far_line[mag_ID[j]] = 'NOT_FOUND'
         not_found.append("\t".join(far_line))
-        print('RA:{}, DEC:{} Not on this extinction map'.format(object_data[0], object_data[2]))
+        print('RA:{}, DEC:{} Not on this extinction map'.format(object_data[coor_ID[0]], object_data[coor_ID[1]]))
 
     out_Avfar.write(new_far_line)
 out_Avfar.close()
