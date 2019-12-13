@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 
 '''
 -------------------------------------------------------------------
@@ -63,13 +63,13 @@ for i in range(len(mosaic_name_li)):
     mosaic_li.append(fits)
 
 # Indice
-imtype_in = [102,123,144,165,186]
-Qua_in = [100,121,142,163,184]
+imtype_in = [102, 123, 144, 165, 186]
+Qua_in    = [100, 121, 142, 163, 184]
 
 # Source's pixel value larger than that is classified 'saturate'
-band_cut_li=[50,50,300,300,800]
+band_cut_li = [50, 50, 300, 300, 800]
 
-FWHM_in = [1.66,1.72,1.88,1.98,6] #arcsec
+FWHM_in = [1.66, 1.72, 1.88, 1.98, 6] #arcsec
 pixel_size = 1.22 #arcsec
 
 # Saturae Radius 3sigma

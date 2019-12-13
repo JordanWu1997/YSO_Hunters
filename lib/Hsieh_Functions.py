@@ -15,6 +15,22 @@ latest update : 2019/02/20 Jordan Wu'''
 import math as mh
 import numpy as np
 
+#==============================================================================
+
+# Flux ID: J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
+flux_ID = [33, 96, 117, 138, 159, 180]
+# Mag ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS/UKIDSS + Spitzer)
+mag_ID  = [35, 98, 119, 140, 161, 182]
+# Qua ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
+qua_ID  = [0, 100, 121, 142, 163, 184]
+# PSF_ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
+psf_ID  = [0, 102, 123, 144, 165, 186]
+# F0 (mJy): J, IR1, IR2, IR3, IR4, MP1
+f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]  # H: 1024000
+f0_UKIDSS_Spitzer = [1530000, 280900, 179700, 115000, 64130, 7140] # H: 1019000
+
+#==============================================================================
+
 # HSIEH'S BOUNDARY
 Hsieh_Jaxlim   = [4.0, 18.0]
 Hsieh_Ksaxlim  = [8.0, 18.0]
@@ -23,7 +39,6 @@ Hsieh_IR2axlim = [7.0, 18.0]
 Hsieh_IR3axlim = [5.0, 18.0]
 Hsieh_IR4axlim = [5.0, 18.0]
 Hsieh_MP1axlim = [3.5, 11.0]
-
 # NEW BOUNDARY WI UKIDSS CATALOG
 Jaxlim   = [3.5, 22.0]
 Ksaxlim  = [8.0, 18.0]
@@ -33,17 +48,7 @@ IR3axlim = [5.0, 18.0]
 IR4axlim = [5.0, 18.0]
 MP1axlim = [3.5, 12.0]
 
-# Flux ID: J, IR1, IR2, IR3, IR4, MP1
-flux_ID = [33, 96, 117, 138, 159, 180]
-# F0 (mJy): J, IR1, IR2, IR3, IR4, MP1
-f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]
-f0_UKIDSS_Spitzer = [1545000, 280900, 179700, 115000, 64130, 7140]
-# Mag ID: J, IR1, IR2, IR3, IR4, MP1
-mag_ID  = [35, 98, 119, 140, 161, 182]
-# Qua ID: J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
-qua_ID  = [0, 100, 121, 142, 163, 184]
-# PSF_ID: J, IR1, IR2, IR3, IR4, MP1
-psf_ID  = [0, 102, 123, 144, 165, 186]
+#==============================================================================
 
 def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="twomass"):
     """
