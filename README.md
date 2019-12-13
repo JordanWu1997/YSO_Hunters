@@ -8,11 +8,13 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 - Make the program construct mroe dimension space at same time
 
 ## **III.Improvement**
-- Make all processions be automatic (SOP Program)
 - ~~Reduce the errors about extinction correction~~
 - ~~Use marginal curved surface instead of the marginal plane (position support vector)~~
+- Make all processions be automatic (SOP Program)
 - Add 1 more band to multi-D galaxy probability
 - Add new extinction test (application for selecting reliable YSO candidates)
+- **TODO**
+	- Try to make all programs more flexiable (catalog column indice independence)
 
 ## **IV. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
