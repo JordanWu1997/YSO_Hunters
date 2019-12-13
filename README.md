@@ -17,7 +17,8 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 ## **IV. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
 	- e.g. In .cshrc file:
-    ```
+```
+	
 	set Storage = **where_you_store_YSO_Hunter**
 	
 	# Setup Working Environments For YSO Hunter Programs
@@ -32,7 +33,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 	# Setup Python Module Environments For YSO Hunter Programs
 	setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/SOP_Program_Path
-    ```
+```
 2. Revise Locations of Some Programs if **No such file** error happens.
 	- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
 	- Then , change some path or file that may be needed to revised
