@@ -16,7 +16,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 ## **IV. How To Use SOP Programs**
 1. Add Directories started with SOP to current working environments
-	- e.g. In .cshrc file:
+- e.g. In .cshrc file:
 ```
 #====================================================================
 # Set Storage Path (Directory where you store YSO_Hunter)
@@ -36,7 +36,7 @@ setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_05_Image_Check
 setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/SOP_Program_Path
 #====================================================================
 ```
-	- e.g. In .bashrc file:
+- e.g. In .bashrc file:
 ```
 #====================================================================
 # Set Storage Path (Directory where you store YSO_Hunter)
