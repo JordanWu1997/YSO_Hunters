@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''
 -------------------------------------------------------------------
 This program is for step2 (extinction_correction)

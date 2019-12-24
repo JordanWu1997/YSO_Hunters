@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 
 '''-------------------------------------------------------------------
 This program is for step1 (star_removal)
