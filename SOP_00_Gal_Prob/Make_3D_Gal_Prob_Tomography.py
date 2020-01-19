@@ -56,7 +56,7 @@ for i, z in enumerate(z_axis):
     for y in y_axis:
         for x in x_axis:
             # Make Key for Each Fake Source
-            key = ['Lack'] * len(axlim_list)
+            key = [-999] * len(axlim_list)
             key[band[0]] = int(x)
             key[band[1]] = int(y)
             key[band[2]] = int(z)

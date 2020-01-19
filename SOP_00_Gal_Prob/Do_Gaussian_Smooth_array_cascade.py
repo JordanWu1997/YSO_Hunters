@@ -41,19 +41,30 @@ for lack in lack_list:
     l_start = time.time()
     GPV_array  = np.load(out_dir + "{:d}d_after_smooth_array.npy".format(dim-lack))
     value      = GPV_array[:, -1]
-    position   = [GPV_array[:, i] for i in range(dim)]
-    sort_prior = [GPV_array[:, dim-i-1] for i in range(dim)]
+    position   = np.transpose(GPV_array[:, :dim])
+    sort_prior = np.flip(position, axis=0)
+
     l_end   = time.time()
     print("Lack {:d} Load took {:.3f} secs\n".format(lack, l_end-l_start))
-
     #================================================
     # Sort Input Galaxy Position/Probability array
     s_start = time.time()
     sort_ind = np.lexsort(tuple(sort_prior))
+    print(sort_ind)
+
     sort_value, sort_position = [], []
-    for ind in sort_ind:
-        sort_value.append(value[ind])
-        sort_position.append([position[j][ind] for j in range(dim)])
+
+    #TODO check if this is right
+    sort_value = value[sort_ind]
+    position = np.transpose(position)
+    #sort_position = position[sort_ind, :]
+    sort_position = list(position[sort_ind, :])
+
+
+    #for ind in sort_ind:
+    #    sort_value.append(value[ind])
+    #    sort_position.append(position[ind])
+    print(position)
     s_end   = time.time()
     print("Lack {:d} Sort took {:.3f} secs\n".format(lack, s_end-s_start))
 
@@ -67,14 +78,21 @@ for lack in lack_list:
         # Get reference and target
         tar, tar_val = np.array(sort_position[0], dtype=int), sort_value[0]
         ref, ref_val = np.array(sort_position[1], dtype=int), sort_value[1]
-        del sort_position[0], sort_value[0]
+
+
+        sort_position = sort_position[1:]
+        sort_value = sort_value[1:]
+
+        #del sort_position[0], sort_value[0]
 
         # Determine repeated or not
         if all(np.equal(tar, ref)):
             after_cascade[tuple(tar)] = tar_val + ref_val
+        # Else if for sort_value == 1
         elif (not all(np.equal(tar, ref))) and (len(sort_value) == 1):
             after_cascade[tuple(tar)] = tar_val
             after_cascade[tuple(ref)] = ref_val
+        # Else for sort_value > 1
         else:
             after_cascade[tuple(tar)] = tar_val
 

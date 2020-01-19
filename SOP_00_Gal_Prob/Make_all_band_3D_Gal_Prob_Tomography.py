@@ -42,8 +42,9 @@ if __name__ == '__main__':
         for j in range(k):
             for i in range(j):
                 print(i, j, k)
+                #3d_after_smooth_casacade_dict.npy
                 system('{} {:d} {:d} {:d} {:.1f}\
-                        ../GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/3d_after_smooth.npy \
+                        ../GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/3d_after_smooth_casacade_dict.npy \
                         ../GPV_{:d}Dposvec_bin{:.1f}/Shape.npy y'.format(program, i, j, k, cube, dim, cube, sigma, bond, refD, dim, cube))
                 chdir(glob('{:d}{:d}{:d}*'.format(i, j, k))[0])
                 system('convert -delay 20 -loop 0 *.png {:d}{:d}{:d}.gif'.format(i, j, k))
