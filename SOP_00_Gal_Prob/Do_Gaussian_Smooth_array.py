@@ -17,12 +17,12 @@ if len(argv) < 7:
     \n\t[ref-D]: reference dimension which to modulus other dimension to\
     \n\t[lack]: number of lack band of input sources\n')
 
-dim    = int(argv[1])       # Dimension of position vector
-cube   = float(argv[2])     # Beamsize for each cube
-sigma  = int(argv[3])       # STD for Gaussian Smooth
-bond   = int(argv[4])
-refD   = int(argv[5])       # Reference Beam Dimension
-lack   = [int(arg) for arg in argv[6:]]
+dim       = int(argv[1])       # Dimension of position vector
+cube      = float(argv[2])     # Beamsize for each cube
+sigma     = int(argv[3])       # STD for Gaussian Smooth
+bond      = int(argv[4])
+refD      = int(argv[5])       # Reference Beam Dimension
+lack_list = [int(arg) for arg in argv[6:]]
 
 posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
@@ -34,7 +34,6 @@ if not path.isdir(out_dir):
 
 #=========================================================================================
 # Main Program
-lack_list = lack
 for lack in lack_list:
 
     #=========================================================================================
@@ -48,7 +47,7 @@ for lack in lack_list:
     after_smooth = []
     #=========================================================================================
     # Start Calculation
-    start    = time.time()
+    start = time.time()
     for i, key in enumerate(source.keys()):
 
         #=========================================================
@@ -81,15 +80,17 @@ for lack in lack_list:
                 if all(np.less(pos_check, upper)) and all(np.greater_equal(pos_check, lower)):
                     value  = float(source[key])
                     weight = float(pos[-1])
-                    #new_key_flt = np.array(new_key, dtype=float)
                     new_key_int = np.array(new_key, dtype=int)
                     after_smooth.append(list(new_key_int) + [value*weight])
-
+            break
  #=========================================================================================
     # Save results
-    end      = time.time()
+    end   = time.time()
     print("Lack {:d} Gaussian Smooth took {:.3f} secs\n".format(lack, end-start))
     print("Saving result ...\n")
     chdir(out_dir)
+    start = time.time()
     np.save("{:d}d_after_smooth_array".format(int(dim-lack)), np.array(after_smooth, dtype=object))
+    end   = time.time()
+    print("Save Lack {:d} Gaussian Smooth took {:.3f} secs\n".format(lack, end-start))
     chdir('../')
