@@ -20,8 +20,8 @@ cube     = float(argv[4])
 print('cube = ' + str(cube))
 
 # J, K, IR1, IR2, IR3, IR4, MP1
-flux_ID = [0, 3, 4, 5, 6, 7]
-mag_ID  = [0, 3, 4, 5, 6, 7]
+flux_ID = flux_ID
+mag_ID  = mag_ID
 
 # Use Limit Stored in Hsieh_Functions
 Jaxlim   = Hsieh_Jaxlim
@@ -82,7 +82,7 @@ for i in range(len(catalog)):
         if index_AGB(X23, Y35, [0,0,2,5], [-1,0,2,2]) < 0:
             AGB = 1
     if AGB != 1:
-        SEQ = [sort_up(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
+        SEQ = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
         pos_vec.append(SEQ)
 
 bright, faint = [], []

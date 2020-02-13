@@ -84,6 +84,7 @@ for i in range(len(catalog)):
     #if AGB != 1:
     #    SEQ = [sort_up(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
     #    pos_vec.append(SEQ)
+
     SEQ = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
     pos_vec.append(SEQ)
 
