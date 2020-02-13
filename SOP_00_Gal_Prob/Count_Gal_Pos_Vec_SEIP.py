@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from __future__ import print_function
+import time
 import numpy as np
 from sys import argv, exit
 from os import chdir, system, path
@@ -12,6 +14,7 @@ if len(argv) != 5:
     \n\t[dimension]: dim of magnitude space (for now only "6")\
     \n\t[cube size]: length of multi-d cube in magnitude unit\n')
 
+#======================================================
 # Set parameters
 inpcat   = str(argv[1])
 datatype = str(argv[2])
@@ -45,6 +48,7 @@ bins4 = int(round((IR4axlim[1] - IR4axlim[0]) / cube)) + 1
 bins5 = int(round((MP1axlim[1] - MP1axlim[0]) / cube)) + 1
 print(binsa, binsb, bins1, bins2, bins3, bins4, bins5)
 
+#======================================================
 # Check Directory
 if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
     exit('\nDirectory has been established ... \
@@ -52,18 +56,22 @@ if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
 else:
     system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 
+#======================================================
 # Load Galaxy Catalog
 print("\ngalaxy position...")
 with open(str(argv[1]), 'r') as catalogs:
     catalog = catalogs.readlines()
 
-# Calculate
+#======================================================
+# Calculate Galaxy Position Vector
+c_start = time.time()
 bright, pos_vec = [], []
 for i in range(len(catalog)):
+    #======================================================
     # Percentage Indicator
     if i%100==0:
         print(str(float(i)/len(catalog)*100) + '%')
-
+    #======================================================
     line = catalog[i]
     lines = line.split()
     if datatype == 'flux':
@@ -74,6 +82,7 @@ for i in range(len(catalog)):
         print('Input type error')
     magJ, magIR1, magIR2, magIR3, magIR4, magMP1 = mag_list
 
+    #======================================================
     # Remove AGB sources (NOT considered in SEIP catalog)
     #AGB = 0
     #if magIR2 != 'no' and magIR3 != 'no' and magMP1 != 'no':
@@ -84,10 +93,12 @@ for i in range(len(catalog)):
     #if AGB != 1:
     #    SEQ = [sort_up(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
     #    pos_vec.append(SEQ)
+    #======================================================
 
     SEQ = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
     pos_vec.append(SEQ)
-
+#======================================================
+# Galaxy filter
 bright, faint = [], []
 new_pos_vec = dict()
 for i, pos in enumerate(pos_vec):
@@ -103,11 +114,16 @@ for i, pos in enumerate(pos_vec):
             new_pos_vec[tuple(pos)] += 1
         else:
             new_pos_vec[tuple(pos)] = 1
-
+c_end   = time.time()
+print("Calculating Galaxy Position took {:.3f} secs\n".format(lack, c_end-c_start))
+#======================================================
 # Save Galaxy Position Vector, Bright, Faint
+s_start = time.time()
 chdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 np.save('Gal_Position_vectors', new_pos_vec)
 np.save('Bright', bright)
 np.save('Faint',  faint)
 np.save('Shape',  np.array([binsa, bins1, bins2, bins3, bins4, bins5]))
 chdir('../')
+s_end   = time.time()
+print("Saving Galaxy Position took {:.3f} secs\n".format(lack, c_end-c_start))
