@@ -1,10 +1,11 @@
 #!/usr/bin/python
+from __future__ import print_function
 import time
+import copy
 import numpy as np
 from sys import argv, exit
 from os import chdir, path, system
 from numba import jit
-from __future__ import print_function
 
 #=========================================================================================
 # Input variables
@@ -36,29 +37,30 @@ if not path.isdir(out_dir):
 #=========================================================================================
 # Main Functions
 @jit(nopython=True)
-def cal_smooth_beam(beam, no_lack_ind, galaxy_num):
+def cal_smooth_beam(beam, gal_pos_array, no_lack_ind, galaxy_num):
     '''
     Calculate and smooth every point within a gaussian beam
     '''
     after_beam_smooth = []
     for i in range(len(beam)):
-        pos = beam[i]
+        #=========================================================
+        # Indicator
+        #if i % 10000 == 0 and i>9999:
+        #    print(i/len(beam))
         #=========================================================
         # Make New Key from Relative Position
+        pos = beam[i]
         rel_pos = pos[:-1]
         new_key = -999 * np.ones(dim)
-        for ind in no_lack_ind:
-            new_key[ind] = int(gal_pos_array[ind])
-        for j in range(len(rel_pos)):
-            new_key[j] += int(rel_pos[j])
+        for j in range(len(no_lack_ind)):
+            new_key[no_lack_ind[j]] = int(gal_pos_array[no_lack_ind[j]]) + int(rel_pos[j])
         #=========================================================
         # Check if New Position Vector within multi-D space
         # Note: upper is from shape which is total num of cube in each dim (index+1)
-        pos_check = new_key[:]
+        pos_check = np.array([int(ele) for ele in new_key])
         pos_check[pos_check == -999] = 0
         if np.all(np.less(pos_check, upper)) and np.all(np.greater_equal(pos_check, lower)):
             weight = float(pos[-1])
-            storage = list(new_key) + [galaxy_num * weight]
             after_beam_smooth.append(list(new_key) + [galaxy_num * weight])
     return after_beam_smooth
 
@@ -68,8 +70,8 @@ for lack in lack_list:
     #=========================================================================================
     # Initialization
     print(lack, lack_list)
-    lower        = np.zeros(len(shape))
-    upper        = np.array(shape)
+    lower        = np.zeros(len(shape), dtype=int)
+    upper        = np.array(shape, dtype=int)
     source       = np.load(posv_dir + "Lack_{:d}band_sources.npy".format(lack)).item()
     beam         = np.load(beam_dir + "{:d}d_beam_sigma{:d}.npy".format(int(dim-lack), sigma))
     after_smooth = []
@@ -83,18 +85,15 @@ for lack in lack_list:
             print('Now: ' + str(float(i)/len(source) * 100) + '%')
         #=========================================================
         # Do Gaussian Smooth
-        gal_pos = list(key)
-        if gal_pos.count("Lack") <= (len(shape)-3):
-            gal_pos_array = np.array(gal_pos, dtype=int)
-            gal_pos_array_str = np.array(gal_pos_array, dtype=str)
-            no_lack_ind = np.where(gal_pos_array_str != "Lack")[0]
-            source_galaxy_num = source[key]
-            beam_smooth_result = cal_smooth_beam(beam, no_lack_ind, source_galaxy_num)
-            after_smooth.append(beam_smooth_result)
+        gal_pos_array = np.array(key, dtype=int)
+        no_lack_ind = np.where(gal_pos_array != -999)[0]
+        source_galaxy_num = source[key]
+        beam_smooth_result = cal_smooth_beam(beam, gal_pos_array, no_lack_ind, source_galaxy_num)
+        after_smooth.extend(beam_smooth_result)
     end   = time.time()
     print("Lack {:d} Gaussian Smooth took {:.3f} secs\n".format(lack, end-start))
     #=========================================================================================
-    # Save results
+    # Save Results
     print("Saving result ...\n")
     chdir(out_dir)
     start = time.time()
