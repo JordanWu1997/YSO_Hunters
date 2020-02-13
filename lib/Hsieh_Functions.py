@@ -186,3 +186,19 @@ def sort_up(X, lim, cube=0.2):
         #reu = int((float(X)-lim[0])/cube)
         reu = int(round((float(X)-lim[0])/cube))
     return reu
+
+def sort_up_lack999(X, lim, cube=0.2):
+    '''
+    This function is to put criterions we set for multi-d spaces onto the object
+    This one doesn't have 'lack' label but -999
+    '''
+    if X == 'no':
+        reu = -999
+    elif float(X) < lim[0]:
+        reu = "Bright"
+    elif float(X) > lim[1]:
+        reu = "Faint"
+    else:
+        #reu = int((float(X)-lim[0])/cube)
+        reu = int(round((float(X)-lim[0])/cube))
+    return reu
