@@ -1,9 +1,10 @@
 #!/usr/bin/python
 from __future__ import print_function
+import sys
 import time
 import numpy as np
 from numba import jit
-from sys import argv, exit
+from sys import argv, exit, stdout
 from os import chdir, system, path
 from Hsieh_Functions import *
 
@@ -65,6 +66,12 @@ else:
 
 #======================================================
 # Main Functions
+def drawProgressBar(percent, barLen = 50):
+    # percent float from 0 to 1.
+    sys.stdout.write("\r")
+    sys.stdout.write("[{:<{}}] {:.3f}%".format("=" * int(barLen * percent), barLen, percent * 100))
+    sys.stdout.flush()
+
 @jit(nopython=True)
 def filter_bright_faint(pos_vec_array):
     '''
@@ -129,8 +136,7 @@ def update_dict(pos, value):
     for i in range(len(value)):
         #================================================
         # Indicator
-        if i % 1000 == 0 and i>999:
-            print('{:.6f} %'.format(float(i+1) / len(_value) * 100))
+        drawProgressBar(float(i)/len(value))
         #================================================
         # Update dictionary
         key = tuple(pos[i])
@@ -153,8 +159,7 @@ pos_vec = []
 for i in range(len(catalog)):
     #======================================================
     # Percentage Indicator
-    if i%100==0:
-        print(str(float(i)/len(catalog)*100) + '%')
+    drawProgressBar(float(i)/len(catalog))
     #======================================================
     # Unit transformation
     line = catalog[i]
@@ -183,7 +188,7 @@ for i in range(len(catalog)):
     #======================================================
 
 c_end   = time.time()
-print("\nCalculate all sources position in n-dim space took {:.3f} secs\n".format(c_end-c_start))
+print("\n\nCalculate all sources position in n-dim space took {:.3f} secs\n".format(c_end-c_start))
 
 #======================================================
 # Galaxy filter
