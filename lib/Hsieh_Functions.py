@@ -193,11 +193,17 @@ def sort_up_lack999(X, lim, cube=0.2):
     This one doesn't have 'lack' label but -999
     '''
     if X == 'no':
+        #=================
         reu = -999
+        #=================
     elif float(X) < lim[0]:
-        reu = "Bright"
+        #=================
+        reu = -9999
+        #=================
     elif float(X) > lim[1]:
-        reu = "Faint"
+        #=================
+        reu = -99999
+        #=================
     else:
         #reu = int((float(X)-lim[0])/cube)
         reu = int(round((float(X)-lim[0])/cube))
