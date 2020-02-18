@@ -97,6 +97,7 @@ for lack in lack_list:
     position_t = np.transpose(GPV_array[:, :dim])
     l_end   = time.time()
     print("Lack {:d} Load took {:.3f} secs\n".format(lack, l_end-l_start))
+
     #================================================
     # Sort Input Galaxy Position/Probability array
     s_start = time.time()
@@ -106,6 +107,7 @@ for lack in lack_list:
     sort_position = np.array(position_int[sort_ind], dtype=int)
     s_end   = time.time()
     print("Lack {:d} Sort took {:.3f} secs\n".format(lack, s_end-s_start))
+
     #================================================
     # Cascade Repeated Position
     c_start = time.time()
@@ -115,6 +117,7 @@ for lack in lack_list:
     print("\n# of point: {:d} (before cascade)".format(len(sort_value)))
     print("# of point: {:d} (after cascade)\n".format(len(after_cascade_value)))
     print("Lack {:d} Cascade took {:.3f} secs\n".format(lack, c_end-c_start))
+
     #================================================
     # Save result
     print("Saving result ...\n")
