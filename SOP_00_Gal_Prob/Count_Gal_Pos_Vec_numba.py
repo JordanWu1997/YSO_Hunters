@@ -210,7 +210,7 @@ uni_pos_array = np.array(uni_pos)
 uni_num_array = np.array(uni_num)
 # new_pos_vec_dict = update_dict(uni_pos, uni_num)
 u_end   = time.time()
-print("Sort and write to dictionary took {:.3f} secs\n".format(c_end-c_start))
+print("Sort and write to dictionary took {:.3f} secs\n".format(u_end-u_start))
 
 #======================================================
 # Save Galaxy Position Vector, Bright, Faint
@@ -223,4 +223,4 @@ np.save('Faint',  faint)
 np.save('Shape',  np.array([binsa, bins1, bins2, bins3, bins4, bins5]))
 chdir('../')
 s_end   = time.time()
-print("Saving Galaxy Position took {:.3f} secs\n".format(c_end-c_start))
+print("Saving Galaxy Position took {:.3f} secs\n".format(s_end-s_start))
