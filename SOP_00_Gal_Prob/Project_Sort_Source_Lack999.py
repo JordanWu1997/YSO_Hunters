@@ -15,9 +15,9 @@ if len(argv) != 3:
 
 #=======================================================
 # Input
-print("Loading ...")
+print("\nLoading ...\n")
 dim      = int(argv[1])       # Dimension of multi-D method
-lack_lim = dim - 3
+lack_lim = dim - 3 + 1        # Note: start from 0
 cube     = float(argv[2])     # Beamsize for each cube
 posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube) + '/'
 shape    = list(np.load(posv_dir + "Shape.npy"))
@@ -43,10 +43,10 @@ def find_no_lack(lst):
 #=======================================================
 # Main Program
 p_start = time.time()
-print("Start Calculation ...")
-for i in range(lack_lim+1):
+print("Start Calculation ...\n")
+for i in range(lack_lim):
     for j in range(i):
-        print(j, i)
+        print('L{:d} -> L{:d}'.format(j, i))
         s_start = time.time()
         project_pos, project_num = [], []
         lack_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, j))
@@ -63,7 +63,6 @@ for i in range(lack_lim+1):
                 project_pos.append(new_pos)
                 project_num.append(num)
         chdir(posv_dir)
-        print(np.array(project_pos))
         np.save('Lack_{:d}{:d}_pos'.format(j, i), np.array(project_pos))
         np.save('Lack_{:d}{:d}_num'.format(j, i), np.array(project_num))
         chdir('../')
