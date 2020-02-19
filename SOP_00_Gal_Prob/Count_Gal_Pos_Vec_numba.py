@@ -69,7 +69,7 @@ else:
 def drawProgressBar(percent, barLen = 50):
     # percent float from 0 to 1.
     sys.stdout.write("\r")
-    sys.stdout.write("[{:<{}}] {:.3f}%".format("=" * int(barLen * percent), barLen, percent * 100))
+    sys.stdout.write("[{:<{}}] {:.3f}%".format("=" * int(barLen * percent), barLen, (percent * 100)))
     sys.stdout.flush()
 
 @jit(nopython=True)
@@ -126,22 +126,22 @@ def cascade_array(sort_position):
     after_cascade_value.append(len(sort_position)-start)
     return after_cascade_pos, after_cascade_value
 
-def update_dict(pos, value):
-    '''
-    This is to update dictionary with key [position] and its value
-    '''
-    #================================================
-    # Input
-    out_dict = dict()
-    for i in range(len(value)):
-        #================================================
-        # Indicator
-        drawProgressBar(float(i)/len(value))
-        #================================================
-        # Update dictionary
-        key = tuple(pos[i])
-        out_dict[key] = float(value[i])
-    return out_dict
+#def update_dict(pos, value):
+#    '''
+#    This is to update dictionary with key [position] and its value
+#    '''
+#    #================================================
+#    # Input
+#    out_dict = dict()
+#    for i in range(len(value)):
+#        #================================================
+#        # Indicator
+#        drawProgressBar(float(i)/len(value))
+#        #================================================
+#        # Update dictionary
+#        key = tuple(pos[i])
+#        out_dict[key] = float(value[i])
+#    return out_dict
 
 #======================================================
 # Load Galaxy Catalog
@@ -159,7 +159,7 @@ pos_vec = []
 for i in range(len(catalog)):
     #======================================================
     # Percentage Indicator
-    drawProgressBar(float(i)/len(catalog))
+    drawProgressBar(float(i+1)/len(catalog))
     #======================================================
     # Unit transformation
     line = catalog[i]
@@ -206,7 +206,9 @@ position_t = np.transpose(source_array)
 sort_ind = np.lexsort(tuple(position_t))
 sort_position = np.array(source_array[sort_ind], dtype=int)
 uni_pos, uni_num = cascade_array(sort_position)
-new_pos_vec_dict = update_dict(uni_pos, uni_num)
+uni_pos_array = np.array(uni_pos)
+uni_num_array = np.array(uni_pos)
+# new_pos_vec_dict = update_dict(uni_pos, uni_num)
 u_end   = time.time()
 print("Sort and write to dictionary took {:.3f} secs\n".format(c_end-c_start))
 
@@ -214,7 +216,8 @@ print("Sort and write to dictionary took {:.3f} secs\n".format(c_end-c_start))
 # Save Galaxy Position Vector, Bright, Faint
 s_start = time.time()
 chdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
-np.save('Gal_Position_vectors', new_pos_vec_dict)
+np.save('Gal_Position_vectors', uni_pos_array)
+np.save('Gal_Position_numbers', uni_num_array)
 np.save('Bright', bright)
 np.save('Faint',  faint)
 np.save('Shape',  np.array([binsa, bins1, bins2, bins3, bins4, bins5]))
