@@ -25,12 +25,12 @@ cube     = float(argv[4])
 print('\ncube = ' + str(cube))
 
 # J, K, IR1, IR2, IR3, IR4, MP1
+flux_ID = [0, 3, 4, 5, 6, 7]
+mag_ID  = [0, 3, 4, 5, 6, 7]
 print('flux_ID')
 print(flux_ID)
 print('mag_ID')
 print(mag_ID)
-flux_ID = [0, 3, 4, 5, 6, 7]
-mag_ID  = [0, 3, 4, 5, 6, 7]
 
 # Use Limit Stored in Hsieh_Functions
 Jaxlim   = Hsieh_Jaxlim
@@ -108,8 +108,8 @@ def cascade_array(sort_position):
     for i in range(len(sort_position)-1):
         #================================================
         # Indicator
-        if i % 1000 == 0 and i>999:
-            print(float(i+1)/len(sort_position))
+        #if i % 1000 == 0 and i>999:
+        #    print(float(i+1)/len(sort_position))
         #================================================
         # Get reference and target
         tar, ref = sort_position[i], sort_position[i+1]
@@ -207,7 +207,7 @@ sort_ind = np.lexsort(tuple(position_t))
 sort_position = np.array(source_array[sort_ind], dtype=int)
 uni_pos, uni_num = cascade_array(sort_position)
 uni_pos_array = np.array(uni_pos)
-uni_num_array = np.array(uni_pos)
+uni_num_array = np.array(uni_num)
 # new_pos_vec_dict = update_dict(uni_pos, uni_num)
 u_end   = time.time()
 print("Sort and write to dictionary took {:.3f} secs\n".format(c_end-c_start))
