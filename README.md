@@ -36,6 +36,7 @@ setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_05_Image_Check
 
 # Setup Python Module Environments For YSO Hunter Programs
 setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/lib
+setenv PYTHONPYCACHEPREFIX $HOME/.cache/cpython
 #====================================================================
 ```
 - e.g. In .bashrc file:
@@ -56,6 +57,7 @@ export PATH="$Storage/YSO_Hunters/SOP_05_Image_Check:$PATH"
 
 # Setup Python Module Environments For YSO Hunter Programs
 export PYTHONPATH="$Storage/YSO_Hunters/lib:$PYTHONPATH"
+export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 #====================================================================
 ```
 
