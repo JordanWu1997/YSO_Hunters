@@ -62,25 +62,29 @@ def cascade_array(sort_position, sort_value):
 p_start = time.time()
 print("Start Calculation ...\n")
 
-# Lack 0 case
-chdir(posv_dir)
-if path.isfile('Lack_00_pos.npy') and path.isfile('Lack_00_num.npy'):
-    system('cp Lack_00_pos.npy Lack_000_pos.npy')
-    system('cp Lack_00_num.npy Lack_000_num.npy')
-chdir('../')
-
+#================================================
 # Lack n case
-for i in range(1, lack_lim):
+for i in range(lack_lim):
     s_start = time.time()
-    # Load projected pos & num
     all_lack_pos, all_lack_num = [], []
+    #================================================
+    # Load projected pos & num
     for j in range(i):
-        lack_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, i))
-        lack_num = np.load(posv_dir + 'Lack_{:d}{:d}_num.npy'.format(j, i))
-        print('# of pos in Lack_{:d}{:d}_pos.npy: {:d}'.format(j, i, len(lack_pos)))
-        for k in range(len(lack_pos)):
-            all_lack_pos.append(lack_pos[k])
-            all_lack_num.append(lack_num[k])
+        project_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, i))
+        project_num = np.load(posv_dir + 'Lack_{:d}{:d}_num.npy'.format(j, i))
+        print('# of pos in Lack_{:d}{:d}_pos.npy: {:d}'.format(j, i, len(project_pos)))
+        for k in range(len(project_pos)):
+            all_lack_pos.append(project_pos[k])
+            all_lack_num.append(project_num[k])
+    #================================================
+    # Non-projected pos & num
+    lack_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(i, i))
+    lack_num = np.load(posv_dir + 'Lack_{:d}{:d}_num.npy'.format(i, i))
+    print('# of pos in Lack_{:d}{:d}_pos.npy: {:d}'.format(i, i, len(lack_pos)))
+    for l in range(len(lack_pos)):
+        all_lack_pos.append(lack_pos[l])
+        all_lack_num.append(lack_num[l])
+    #================================================
     # Sort explictly
     all_lack_pos_array = np.array(all_lack_pos)
     all_lack_pos_array_t = np.transpose(all_lack_pos_array)
@@ -88,10 +92,13 @@ for i in range(1, lack_lim):
     sort_ind = np.lexsort(tuple(all_lack_pos_array_t))
     sort_pos = np.array(all_lack_pos_array[sort_ind], dtype=int)
     sort_num = np.array(all_lack_num_array[sort_ind], dtype=int)
+    #================================================
     # Cascade pos & num
     print('\nbefore cascade: {:d}'.format(len(sort_pos)))
     after_cascade_pos, after_cascade_num = cascade_array(sort_pos, sort_num)
     print('after  cascade: {:d}'.format(len(after_cascade_pos)))
+    #================================================
+    # Save results
     chdir(posv_dir)
     np.save('Lack_{:d}{:d}{:d}_pos'.format(i, i, i), np.array(sort_pos))
     np.save('Lack_{:d}{:d}{:d}_num'.format(i, i, i), np.array(sort_num))
