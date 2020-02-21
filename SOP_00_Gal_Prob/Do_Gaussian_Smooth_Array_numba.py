@@ -36,10 +36,7 @@ out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.forma
 beam_dir = 'GPV_smooth_sigma{:d}_bond{:d}_refD{:d}/'.format(sigma, bond, refD)
 shape    = list(np.load(posv_dir + "Shape.npy"))
 
-if path.isdir(out_dir):
-    system('rm -r {}'.format(out_dir))
-    system('mkdir {}'.format(out_dir))
-else:
+if not path.isdir(out_dir):
     system('mkdir {}'.format(out_dir))
 
 #=========================================================================================
@@ -68,16 +65,15 @@ def cal_smooth_beam(pos_array, num_array, no_lack_ind, beam):
         rel_pos = pos[:-1]
         new_pos = -999 * np.ones(dim)
         for j in range(len(no_lack_ind)):
-            new_pos[no_lack_ind[j]] = int(pos_array[no_lack_ind[j]]) + int(rel_pos[j])
+            new_pos[no_lack_ind[j]] = pos_array[no_lack_ind[j]] + rel_pos[j]
+        #print(new_pos)
         #=========================================================
         # Check if New Position Vector within multi-D space
         # Note: upper is from shape which is total num of cube in each dim (index+1)
-
         pos_check = np.zeros(dim)
         for k in range(len(new_pos)):
-            if new_pos[k] != -999:
+            if new_pos[k] != -999.:
                 pos_check[k] = new_pos[k]
-
         if np.all(np.less(pos_check, upper)) and np.all(np.greater_equal(pos_check, lower)):
             weight = float(pos[-1])
             after_beam_smooth_pos.append(new_pos)
@@ -93,8 +89,8 @@ def run_smooth(input_pos, input_num, beam):
         drawProgressBar(float(i+1)/len(input_pos))
         #=========================================================
         # Do Gaussian Smooth
-        no_lack_ind = np.where(input_pos != -999)[0]
-        smooth_pos, smooth_num = cal_smooth_beam(input_pos, input_num, no_lack_ind, beam)
+        no_lack_ind = np.where(input_pos[i] != -999)[0]
+        smooth_pos, smooth_num = cal_smooth_beam(input_pos[i], input_num[i], no_lack_ind, beam)
         after_smooth_pos.extend(smooth_pos)
         after_smooth_num.extend(smooth_num)
     return after_smooth_pos, after_smooth_num
@@ -115,14 +111,16 @@ for lack in lack_list:
     # Start Calculation
     start = time.time()
     all_after_smooth_pos, all_after_smooth_num = run_smooth(input_pos, input_num, beam)
+    all_after_smooth_pos_array = np.array(all_after_smooth_pos, int)
+    all_after_smooth_num_array = np.array(all_after_smooth_num, float)
     end   = time.time()
     print("\nCalculate Lack {:d} Gaussian Smooth took {:.3f} secs".format(lack, end-start))
     #=========================================================================================
     # Save Results
     chdir(out_dir)
     start = time.time()
-    np.save("{:d}d_after_smooth_pos_array".format(int(dim-lack)), np.array(all_after_smooth_pos))
-    np.save("{:d}d_after_smooth_num_array".format(int(dim-lack)), np.array(all_after_smooth_num))
+    np.save("{:d}d_after_smooth_pos_array".format(int(dim-lack)), all_after_smooth_pos_array)
+    np.save("{:d}d_after_smooth_num_array".format(int(dim-lack)), all_after_smooth_num_array)
     end   = time.time()
     print("Save Lack {:d} Gaussian Smooth took {:.3f} secs\n".format(lack, end-start))
     chdir('../')
