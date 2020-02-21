@@ -51,11 +51,12 @@ def drawProgressBar(percent, barLen = 50):
     sys.stdout.flush()
 
 @jit(nopython=True)
-def cal_smooth_beam(gal_pos_array, gal_num_array, no_lack_ind, beam):
+def cal_smooth_beam(pos_array, num_array, no_lack_ind, beam):
     '''
     Calculate and smooth every point within a gaussian beam
     '''
-    after_beam_smooth = []
+    after_beam_smooth_pos = []
+    after_beam_smooth_num = []
     for i in range(len(beam)):
         #=========================================================
         # Indicator
@@ -65,18 +66,38 @@ def cal_smooth_beam(gal_pos_array, gal_num_array, no_lack_ind, beam):
         # Make New Key from Relative Position
         pos = beam[i]
         rel_pos = pos[:-1]
-        new_key = -999 * np.ones(dim)
+        new_pos = -999 * np.ones(dim)
         for j in range(len(no_lack_ind)):
-            new_key[no_lack_ind[j]] = int(gal_pos_array[no_lack_ind[j]]) + int(rel_pos[j])
+            new_pos[no_lack_ind[j]] = int(pos_array[no_lack_ind[j]]) + int(rel_pos[j])
         #=========================================================
         # Check if New Position Vector within multi-D space
         # Note: upper is from shape which is total num of cube in each dim (index+1)
-        pos_check = np.array([int(ele) for ele in new_key])
-        pos_check[pos_check == -999] = 0
+
+        pos_check = np.zeros(dim)
+        for k in range(len(new_pos)):
+            if new_pos[k] != -999:
+                pos_check[k] = new_pos[k]
+
         if np.all(np.less(pos_check, upper)) and np.all(np.greater_equal(pos_check, lower)):
             weight = float(pos[-1])
-            after_beam_smooth.append(list(new_key) + [float(gal_num_array[0]) * weight])
-    return after_beam_smooth
+            after_beam_smooth_pos.append(new_pos)
+            after_beam_smooth_num.append(float(num_array[0]) * weight)
+    return after_beam_smooth_pos, after_beam_smooth_num
+
+def run_smooth(input_pos, input_num, beam):
+    after_smooth_pos = []
+    after_smooth_num = []
+    for i in range(len(input_pos)):
+        #=========================================================
+        # Percentage Indicator
+        drawProgressBar(float(i+1)/len(input_pos))
+        #=========================================================
+        # Do Gaussian Smooth
+        no_lack_ind = np.where(input_pos != -999)[0]
+        smooth_pos, smooth_num = cal_smooth_beam(input_pos, input_num, no_lack_ind, beam)
+        after_smooth_pos.extend(smooth_pos)
+        after_smooth_num.extend(smooth_num)
+    return after_smooth_pos, after_smooth_num
 
 #=========================================================================================
 # Main Program
@@ -93,25 +114,15 @@ for lack in lack_list:
     #=========================================================================================
     # Start Calculation
     start = time.time()
-    after_smooth = []
-    for i in range(len(input_pos)):
-        #=========================================================
-        # Percentage Indicator
-        drawProgressBar(float(i+1)/len(input_pos))
-        #=========================================================
-        # Do Gaussian Smooth
-        gal_pos_array = np.array(input_pos[i], dtype=int)
-        no_lack_ind = np.where(gal_pos_array != -999)[0]
-        gal_num_array = np.array(input_num[i], dtype=int)
-        beam_smooth_result = cal_smooth_beam(gal_pos_array, gal_num_array, no_lack_ind, beam)
-        after_smooth.extend(beam_smooth_result)
+    all_after_smooth_pos, all_after_smooth_num = run_smooth(input_pos, input_num, beam)
     end   = time.time()
     print("\nCalculate Lack {:d} Gaussian Smooth took {:.3f} secs".format(lack, end-start))
     #=========================================================================================
     # Save Results
     chdir(out_dir)
     start = time.time()
-    np.save("{:d}d_after_smooth_array".format(int(dim-lack)), np.array(after_smooth, dtype=object))
+    np.save("{:d}d_after_smooth_pos_array".format(int(dim-lack)), np.array(all_after_smooth_pos))
+    np.save("{:d}d_after_smooth_num_array".format(int(dim-lack)), np.array(all_after_smooth_num))
     end   = time.time()
     print("Save Lack {:d} Gaussian Smooth took {:.3f} secs\n".format(lack, end-start))
     chdir('../')
