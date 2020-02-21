@@ -106,7 +106,7 @@ for lack in lack_list:
     input_pos    = np.load(posv_dir + "Lack_{:d}{:d}{:d}_pos.npy".format(lack, lack, lack))
     input_num    = np.load(posv_dir + "Lack_{:d}{:d}{:d}_pos.npy".format(lack, lack, lack))
     beam         = np.load(beam_dir + "{:d}d_beam_sigma{:d}.npy".format(int(dim-lack), sigma))
-    print(lack, lack_list, len(input_pos))
+    print(lack, lack_list, len(input_pos), len(beam))
     #=========================================================================================
     # Start Calculation
     start = time.time()
