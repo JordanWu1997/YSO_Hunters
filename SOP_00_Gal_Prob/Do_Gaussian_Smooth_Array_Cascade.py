@@ -126,7 +126,7 @@ for lack in lack_list:
     print('Update pos & num to dictionary ...')
     after_cascade_dict = update_dict(after_cascade_pos, after_cascade_num)
     c_end   = time.time()
-    print("\nCascading Lack {:d} took {:.3f} secs\n".format(lack, c_end-c_start))
+    print("\nWhole cascading Lack {:d} took {:.3f} secs\n".format(lack, c_end-c_start))
     #================================================
     # Save result
     print("Saving result ...")
