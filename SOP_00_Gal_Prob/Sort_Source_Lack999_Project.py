@@ -15,12 +15,11 @@ if len(argv) != 3:
 
 #=======================================================
 # Input
-print("\nLoading ...\n")
 dim      = int(argv[1])       # Dimension of multi-D method
 lack_lim = dim - 3 + 1        # Note: start from 0
 cube     = float(argv[2])     # Beamsize for each cube
 posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube) + '/'
-shape    = list(np.load(posv_dir + "Shape.npy"))
+lack_dir = posv_dir + 'Lack_pos_num/'
 
 #=======================================================
 # Main Function
@@ -43,14 +42,14 @@ def find_no_lack(lst):
 #=======================================================
 # Main Program
 p_start = time.time()
-print("Start Calculation ...\n")
+print("\nStart projecting ...\n")
 for i in range(lack_lim):
     for j in range(i):
         print('L{:d} -> L{:d}'.format(j, i))
         s_start = time.time()
         project_pos, project_num = [], []
-        lack_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, j))
-        lack_num = np.load(posv_dir + 'Lack_{:d}{:d}_num.npy'.format(j, j))
+        lack_pos = np.load(lack_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, j))
+        lack_num = np.load(lack_dir + 'Lack_{:d}{:d}_num.npy'.format(j, j))
         for k in range(len(lack_pos)):
             drawProgressBar(float(k+1)/len(lack_pos))
             pos = lack_pos[k]
@@ -62,11 +61,11 @@ for i in range(lack_lim):
                     new_pos[ind] = -999
                 project_pos.append(new_pos)
                 project_num.append(num)
-        chdir(posv_dir)
+        chdir(lack_dir)
         np.save('Lack_{:d}{:d}_pos'.format(j, i), np.array(project_pos))
         np.save('Lack_{:d}{:d}_num'.format(j, i), np.array(project_num))
-        chdir('../')
+        chdir('../../')
         s_end   = time.time()
         print('\nFrom lack {:d} to lack {:d} band took {:.3f} sec\n'.format(j, i, s_end-s_start))
 p_end   = time.time()
-print('\nWhole projection took {:.3f} sec\n'.format(p_end-p_start))
+print('Whole projection took {:.3f} sec\n'.format(p_end-p_start))

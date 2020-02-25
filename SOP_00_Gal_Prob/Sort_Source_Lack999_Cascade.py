@@ -15,12 +15,11 @@ if len(argv) != 3:
 
 #=======================================================
 # Input
-print("\nLoading ...\n")
 dim      = int(argv[1])       # Dimension of multi-D method
 lack_lim = dim - 3 + 1        # Note: start from 0
 cube     = float(argv[2])     # Beamsize for each cube
 posv_dir = 'GPV_' + str(dim) + 'Dposvec_bin' + str(cube) + '/'
-shape    = list(np.load(posv_dir + "Shape.npy"))
+lack_dir = posv_dir + 'Lack_pos_num/'
 
 #=======================================================
 # Main Function
@@ -60,8 +59,7 @@ def cascade_array(sort_position, sort_value):
 #=======================================================
 # Main Program
 p_start = time.time()
-print("Start Calculation ...\n")
-
+print("\nStart Cascading ...\n")
 #================================================
 # Lack n case
 for i in range(lack_lim):
@@ -70,16 +68,16 @@ for i in range(lack_lim):
     #================================================
     # Load projected pos & num
     for j in range(i):
-        project_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, i))
-        project_num = np.load(posv_dir + 'Lack_{:d}{:d}_num.npy'.format(j, i))
+        project_pos = np.load(lack_dir + 'Lack_{:d}{:d}_pos.npy'.format(j, i))
+        project_num = np.load(lack_dir + 'Lack_{:d}{:d}_num.npy'.format(j, i))
         print('# of pos in Lack_{:d}{:d}_pos.npy: {:d}'.format(j, i, len(project_pos)))
         for k in range(len(project_pos)):
             all_lack_pos.append(project_pos[k])
             all_lack_num.append(project_num[k])
     #================================================
     # Non-projected pos & num
-    lack_pos = np.load(posv_dir + 'Lack_{:d}{:d}_pos.npy'.format(i, i))
-    lack_num = np.load(posv_dir + 'Lack_{:d}{:d}_num.npy'.format(i, i))
+    lack_pos = np.load(lack_dir + 'Lack_{:d}{:d}_pos.npy'.format(i, i))
+    lack_num = np.load(lack_dir + 'Lack_{:d}{:d}_num.npy'.format(i, i))
     print('# of pos in Lack_{:d}{:d}_pos.npy: {:d}'.format(i, i, len(lack_pos)))
     for l in range(len(lack_pos)):
         all_lack_pos.append(lack_pos[l])
@@ -99,11 +97,11 @@ for i in range(lack_lim):
     print('after  cascade: {:d}'.format(len(after_cascade_pos)))
     #================================================
     # Save results
-    chdir(posv_dir)
+    chdir(lack_dir)
     np.save('Lack_{:d}{:d}{:d}_pos'.format(i, i, i), np.array(sort_pos))
     np.save('Lack_{:d}{:d}{:d}_num'.format(i, i, i), np.array(sort_num))
-    chdir('../')
+    chdir('../../')
     s_end   = time.time()
-    print('\nCascade lack {:d} took {:.3f} sec\n'.format(i, s_end-s_start))
+    print('Cascade lack {:d} took {:.3f} sec\n'.format(i, s_end-s_start))
 p_end   = time.time()
 print('Whole cascade process took {:.3f} sec\n'.format(p_end-p_start))
