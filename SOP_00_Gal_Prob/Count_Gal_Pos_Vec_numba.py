@@ -8,6 +8,7 @@ from sys import argv, exit, stdout
 from os import chdir, system, path
 from Hsieh_Functions import *
 
+#TODO Add input bands
 if len(argv) != 5:
     exit('\n\tError: Wrong Arguments\
     \n\tExample: [program] [input catalog] [mag/flux] [dimension] [cube size]\
@@ -53,7 +54,7 @@ bins3 = int(round((IR3axlim[1] - IR3axlim[0]) / cube)) + 1
 bins4 = int(round((IR4axlim[1] - IR4axlim[0]) / cube)) + 1
 bins5 = int(round((MP1axlim[1] - MP1axlim[0]) / cube)) + 1
 print('Shape')
-print(binsa, binsb, bins1, bins2, bins3, bins4, bins5)
+print(binsa, bins1, bins2, bins3, bins4, bins5)
 
 # Check Directory
 if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
@@ -76,18 +77,18 @@ def drawProgressBar(percent, barLen = 50):
 def filter_bright_faint(pos_vec_array):
     '''
     This is to filter out bright, faint and sources we want
+    Note: np.any can't do well
     '''
     bright = []
     faint  = []
     source = []
     for i in range(len(pos_vec_array)):
-        #print(float(i)/len(pos_vec_array))
         pos_vec_array_sub = pos_vec_array[i]
     #================================================
     # Filiter out Bright/Faint Sources
-        if np.any(np.where(pos_vec_array_sub == -9999)):
+        if np.shape(np.where(pos_vec_array_sub == -9999)[0])[0] > 0:
             bright.append(pos_vec_array_sub)
-        elif np.any(np.where(pos_vec_array_sub == -99999)):
+        elif np.shape(np.where(pos_vec_array_sub == 9999)[0])[0] > 0:
             faint.append(pos_vec_array_sub)
         else:
             source.append(pos_vec_array_sub)
@@ -126,23 +127,6 @@ def cascade_array(sort_position):
     after_cascade_value.append(len(sort_position)-start)
     return after_cascade_pos, after_cascade_value
 
-#def update_dict(pos, value):
-#    '''
-#    This is to update dictionary with key [position] and its value
-#    '''
-#    #================================================
-#    # Input
-#    out_dict = dict()
-#    for i in range(len(value)):
-#        #================================================
-#        # Indicator
-#        drawProgressBar(float(i)/len(value))
-#        #================================================
-#        # Update dictionary
-#        key = tuple(pos[i])
-#        out_dict[key] = float(value[i])
-#    return out_dict
-
 #======================================================
 # Load Galaxy Catalog
 l_start = time.time()
@@ -150,7 +134,7 @@ print("\nLoading input catalog ...")
 with open(str(argv[1]), 'r') as catalogs:
     catalog = catalogs.readlines()
 l_end   = time.time()
-print("\nLoading catalog took {:.3f} secs\n".format(l_end-l_start))
+print("Loading catalog took {:.3f} secs\n".format(l_end-l_start))
 
 #======================================================
 # Calculate Galaxy Position Vector
@@ -194,6 +178,7 @@ print("\n\nCalculate all sources position in n-dim space took {:.3f} secs\n".for
 # Galaxy filter
 f_start = time.time()
 pos_vec_array = np.array(pos_vec)
+np.save('test', pos_vec_array)
 bright, faint, source = filter_bright_faint(pos_vec_array)
 source_array = np.array(source)
 f_end   = time.time()
@@ -208,9 +193,8 @@ sort_position = np.array(source_array[sort_ind], dtype=int)
 uni_pos, uni_num = cascade_array(sort_position)
 uni_pos_array = np.array(uni_pos)
 uni_num_array = np.array(uni_num)
-# new_pos_vec_dict = update_dict(uni_pos, uni_num)
 u_end   = time.time()
-print("Sort and write to dictionary took {:.3f} secs\n".format(u_end-u_start))
+print("Sort sources took {:.3f} secs\n".format(u_end-u_start))
 
 #======================================================
 # Save Galaxy Position Vector, Bright, Faint
