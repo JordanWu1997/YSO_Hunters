@@ -74,7 +74,7 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="t
             # Ignore J band
             if i == 0:
                 if flux_list[i] > 0.0:
-                    mag_list.append(-2.5*mh.log10(flux_list[i]/F0_list[i]))
+                    mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
                 else:
                     mag_list.append('no')
             # PSF Check activated
@@ -193,16 +193,16 @@ def sort_up_lack999(X, lim, cube=0.2):
     This one doesn't have 'lack' label but -999
     '''
     if X == 'no':
-        #=================
+        #=================LACK
         reu = -999
         #=================
     elif float(X) < lim[0]:
-        #=================
+        #=================BRIGHT
         reu = -9999
         #=================
     elif float(X) > lim[1]:
-        #=================
-        reu = -99999
+        #=================FAINT
+        reu = 9999
         #=================
     else:
         #reu = int((float(X)-lim[0])/cube)
