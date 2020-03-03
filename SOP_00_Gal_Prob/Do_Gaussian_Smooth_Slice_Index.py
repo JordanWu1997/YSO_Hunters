@@ -6,6 +6,7 @@ import numpy as np
 from sys import argv, exit
 from os import chdir, path, system
 from numba import jit
+from Useful_Functions import *
 
 #=========================================================================================
 # Input variables
@@ -40,7 +41,7 @@ posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 band_dir = posv_dir + 'Band_pos_num/'
 slic_dir = band_dir + 'Slice_{}_{:0>3d}/'.format(band_inp, slice_num)
 out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
-temp_dir = out_dir  + 'After_{}/'.format(band_inp)
+temp_dir = out_dir  + 'After_Smooth_{}/'.format(band_inp)
 beam_dir = 'GPV_smooth_sigma{:d}_bond{:d}_refD{:d}/'.format(sigma, bond, refD)
 shape    = list(np.load(posv_dir + "Shape.npy"))
 
@@ -49,16 +50,11 @@ if not path.isdir(temp_dir):
 
 #=========================================================================================
 # Main Functions
-def drawProgressBar(percent, barLen = 50):
-    # percent float from 0 to 1.
-    sys.stdout.write("\r")
-    sys.stdout.write("[{:<{}}] {:.3f}%".format("=" * int(barLen * percent), barLen, (percent * 100)))
-    sys.stdout.flush()
-
 @jit(nopython=True)
 def cal_smooth_beam(pos_array, num_array, no_lack_ind, beam):
     '''
     Calculate and smooth every point within a gaussian beam
+    This function somehow couldn't be imported
     '''
     after_beam_smooth_pos = []
     after_beam_smooth_num = []
@@ -114,6 +110,6 @@ all_after_smooth_num_array = np.array(all_after_smooth_num, float)
 #=========================================================================================
 # Save Results
 chdir(temp_dir)
-np.save("after_{}_{:0>3d}_pos".format(band_inp, slice_ind), all_after_smooth_pos_array)
-np.save("after_{}_{:0>3d}_num".format(band_inp, slice_ind), all_after_smooth_num_array)
+np.save("after_smooth_{}_{:0>3d}_pos".format(band_inp, slice_ind), all_after_smooth_pos_array)
+np.save("after_smooth_{}_{:0>3d}_num".format(band_inp, slice_ind), all_after_smooth_num_array)
 chdir('../../')

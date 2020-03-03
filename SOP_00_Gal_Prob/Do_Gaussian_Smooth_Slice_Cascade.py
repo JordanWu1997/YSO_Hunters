@@ -43,7 +43,7 @@ posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 band_dir = posv_dir + 'Band_pos_num/'
 slic_dir = band_dir + 'Slice_{}_{:0>3d}/'.format(band_inp, slice_num)
 out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
-temp_dir = out_dir  + 'After_{}/'.format(band_inp)
+temp_dir = out_dir  + 'After_Smooth_{}/'.format(band_inp)
 
 #================================================
 # Main Functions
@@ -85,8 +85,8 @@ def cascade_array(sort_position, sort_value):
 l_start = time.time()
 pos_list, num_list = [], []
 for i in range(len(slice_ind_list)):
-    pos = np.load(temp_dir + "after_{}_{:0>3d}_pos.npy".format(band_inp, slice_ind_list[i]))
-    num = np.load(temp_dir + "after_{}_{:0>3d}_num.npy".format(band_inp, slice_ind_list[i]))
+    pos = np.load(temp_dir + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp, slice_ind_list[i]))
+    num = np.load(temp_dir + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp, slice_ind_list[i]))
     pos_list.extend(pos)
     num_list.extend(num)
 
@@ -106,6 +106,8 @@ after_cascade_num_array = np.array(after_cascade_num)
 #================================================
 # Save result
 chdir(temp_dir)
-np.save("after_cas_{}_{:0>3d}_{:0>3d}_pos".format(band_inp, slice_ind_list[0], slice_ind_list[-1]), after_cascade_pos_array)
-np.save("after_cas_{}_{:0>3d}_{:0>3d}_num".format(band_inp, slice_ind_list[0], slice_ind_list[-1]), after_cascade_num_array)
+np.save("after_smooth_cas_{}_{:0>3d}_{:0>3d}_pos".format(\
+        band_inp, slice_ind_list[0], slice_ind_list[-1]), after_cascade_pos_array)
+np.save("after_smooth_cas_{}_{:0>3d}_{:0>3d}_num".format(\
+        band_inp, slice_ind_list[0], slice_ind_list[-1]), after_cascade_num_array)
 chdir('../../')
