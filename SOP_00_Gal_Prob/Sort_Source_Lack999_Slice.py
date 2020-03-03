@@ -37,7 +37,7 @@ def drawProgressBar(percent, barLen = 50):
 #==============================================================================================================
 # Main Program
 t_start = time.time()
-print('\nStart Slicing ...\n')
+#print('\nStart Slicing ...\n')
 for i in range(lack_lim):
     for comb in combinations(np.arange(dim), dim-i):
 
@@ -77,4 +77,4 @@ for i in range(lack_lim):
         s_end   = time.time()
         #print('\nSlicing took {:.3f} sec\n'.format(s_end-s_start))
 t_end = time.time()
-print('Whole slice process took {:.3f} sec\n'.format(t_end - t_start))
+#print('Whole slice process took {:.3f} sec\n'.format(t_end - t_start))
