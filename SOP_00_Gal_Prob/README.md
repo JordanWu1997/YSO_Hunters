@@ -16,3 +16,13 @@ Part2 - Do gaussian smooth
 	- Do_Gaussian_Smooth_Slice_Cascade.py
 
 # Output File Structure
+```
+GPV_6Dposvec_bin0.2/
+├── Band_pos_num
+├── Bright.npy
+├── Faint.npy
+├── Gal_Position_numbers.npy
+├── Gal_Position_vectors.npy
+├── Lack_pos_num
+└── Shape.npy
+```
