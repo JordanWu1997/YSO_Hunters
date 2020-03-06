@@ -11,7 +11,7 @@ Part 1 - Count and project input galaxy catalog
 Part2 - Do gaussian smooth
 - (1) Do_Gaussian_Smooth_Construct_Bin.py
 - (2) Do_Gaussian_Smooth_Execution_All.py
-	- Sort_Source_Lack999_Slice.py
+	- Do_Gaussian_Smooth_Slice.py
 	- Do_Gaussian_Smooth_Slice_Index.py
 	- Do_Gaussian_Smooth_Slice_Cascade.py
 
