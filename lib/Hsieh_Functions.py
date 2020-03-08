@@ -16,7 +16,6 @@ import math as mh
 import numpy as np
 
 #==============================================================================
-
 # Flux ID: J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
 flux_ID = [33, 96, 117, 138, 159, 180]
 # Mag ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS/UKIDSS + Spitzer)
@@ -28,7 +27,8 @@ psf_ID  = [0, 102, 123, 144, 165, 186]
 # F0 (mJy): J, IR1, IR2, IR3, IR4, MP1
 f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]  # H: 1024000
 f0_UKIDSS_Spitzer = [1530000, 280900, 179700, 115000, 64130, 7140] # H: 1019000
-
+# Band name
+band_name = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
 #==============================================================================
 
 # HSIEH'S BOUNDARY
