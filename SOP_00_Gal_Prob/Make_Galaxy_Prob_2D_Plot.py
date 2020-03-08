@@ -1,119 +1,196 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''----------------------------------------------------------------
-This program is origionally from Ken
-This program is for plotting projection of different dimensional GP arrays
 -------------------------------------------------------------------
-latest update : 2019/05/12 Jordan Wu'''
+latest update :  Jordan Wu'''
 
+from __future__ import print_function
+import time
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 from sys import argv, exit
 from os import system, chdir, path
-from os.path import isdir
+from itertools import combinations
+from Hsieh_Functions import *
+from Useful_Functions import *
 
-# Input Check
-if len(argv) == 2 or len(argv) == 6:
-    print('Input Check pass ...')
-else:
-    exit('Example:\n\
-            (1) [python] [program] [option]\n\
-            (2) [python] [program] [option] [binsize] [lower_lim] [upper_lim] [unit of lim]\n\
-            option: old/new/latest UKIDSS CATALOG: WO COND/WI COND/WI COND AND NEW BOUND\n\
-            unit of lim: std/value in standard deviation or in exact values')
+if len(argv) != 6:
+    exit('\n\tError: Wrong Arguments\
+    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D]\
+    \n\t[dim]: dimension for smooth (for now only "6")\
+    \n\t[cube size]: length of multi-d cube in magnitude unit\
+    \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
+    \n\t[bond]: boundary radius of gaussian beam unit in cell\
+    \n\t[ref-D]: reference dimension which to modulus other dimension to\n')
 
-# Select model, binsize, and bound of output images
-# Input W/I command line argv
-if str(argv[-1])=='argv':
-    Binsize = str(argv[2])
-    lower = float(argv[3])
-    upper = float(argv[4])
-    unit = str(argv[5])
-# Input W/I python input
-else:
-    Binsize = str(input('binsize = '))
-    lower = float(input('Lower limit of value = '))
-    upper = float(input('Upper limit of value = '))
-    unit = str(raw_input('bound unit (std/value) = '))
+#=======================================================
+# Input variables
+band_name  = band_name
+dim        = int(argv[1])       # Dimension of position vector
+cube       = float(argv[2])     # Beamsize for each cube
+sigma      = int(argv[3])       # STD for Gaussian Smooth
+bond       = int(argv[4])
+refD       = int(argv[5])       # Reference Beam Dimension
 
-if str(argv[1]) == 'old':
-    path = '/home/ken/new_mg/GPV_SOP_Program/result' + Binsize + '/'
-    title = 'UKIDSS catalog WO condition '
-elif str(argv[1]) == 'new':
-    path = '/home/ken/new_mg/GPV_SOP_Program/result_condition_' + Binsize + '/'
-    title = 'UKIDSS catalog WI condition '
-elif str(argv[1]) == 'latest':
-    path = '/home/ken/new_mg/GPV_SOP_Program/' ###################### TO BE CONTINUED ...
-    title = 'UKIDSS catalog WI condition, WI new_boundary '
-else:
-    exit('Wrong model selection ...')
-title += (';bs='+ Binsize + ' ;value: ' + str(lower) + '~' + str(upper) + ' ' + unit)
+shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
+smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
+output_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
+all_shape  = np.load(shape_dir + 'Shape.npy')
+print('\n', all_shape)
 
-# Load data
-print('Array path: ' + path)
-data = path + 'all_detect_grid_Full_6d.npy'
-sixd = np.load(data).item()
+# Check storage directory
+if not path.isdir(output_dir):
+    system('mkdir {}'.format(output_dir))
 
-# Parameter
-cube = float(Binsize)
-if str(argv[1]) != 'latest':
-    Jaxlim =   [4.0, 18.0]
-    IR1axlim = [8.0, 18.0]
-    IR2axlim = [7.0, 18.0]
-    IR3axlim = [5.0, 18.0]
-    IR4axlim = [5.0, 18.0]
-    MP1axlim = [3.5, 11.0]
-else:
-    # NEW BOUNDARY WI UKIDSS CATALOG
-    Jaxlim =   [3.5, 22.0]
-    IR1axlim = [8.0, 20.0]
-    IR2axlim = [7.0, 19.0]
-    IR3axlim = [5.0, 18.0]
-    IR4axlim = [5.0, 18.0]
-    MP1axlim = [3.5, 12.0]
+#=======================================================
+# Functions
+def update_num(gal_pos, gal_num):
+    '''
+    Update gal_num to a cube array with gal_pos
+    '''
+    bd1_pos, bd2_pos, bd3_pos = gal_pos[:, bd_ind[0]], gal_pos[:, bd_ind[1]], gal_pos[:, bd_ind[2]]
+    bd1_len, bd2_len, bd3_len = shape[0], shape[1], shape[2]
+    cube_array = np.zeros((bd1_len, bd2_len, bd3_len))
+    for i in range(len(gal_pos)):
+        if gal_num[i] > 1.:
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 2
+        elif gal_num[i] == 1.:
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 1
+        else:
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = gal_num[i]
+    return cube_array
 
-bands = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
-band_lim_list = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-bin_num_list = []
-for i in range(len(bands)):
-    bin_num_list.append(int((band_lim_list[i][1]-band_lim_list[i][0])/cube))
+def plot_along_bd1(cube_array, shape, bd_name):
 
-# Start choosing bands
-if isdir('6d_plot_' + str(Binsize)):
-    system('rm -fr ' + '6d_plot_' + str(Binsize))
-    system('mkdir 6d_plot_' + str(Binsize))
-else:
-    system('mkdir 6d_plot_' + str(Binsize))
+    '''
+    Plot 2D plot along band 1
+    '''
+    for i in range(cube_array.shape[0]):
+        drawProgressBar(float(i+1)/cube_array.shape[0])
+        plt.figure()
+        plt.imshow(cube_array[i, :, :], origin='lower')
+        plt.title('{} = {:d}'.format(bd_name[0], i))
+        plt.xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
+        plt.ylabel('{} ({:d})'.format(bd_name[1], shape[1]))
+        plt.xticks(np.arange(0-0.5, shape[2]+0.5, 1))
+        plt.yticks(np.arange(0-0.5, shape[1]+0.5, 1))
+        frame1 = plt.gca()
+        frame1.axes.xaxis.set_ticklabels([0])
+        frame1.axes.yaxis.set_ticklabels([0])
+        plt.tight_layout()
+        plt.grid()
+        plt.savefig('{}_{:0>3d}'.format(bd_name[0], i))
+        plt.clf()
 
-chdir('6d_plot_' + str(Binsize))
-for band1 in range(6):
-    for band2 in range(band1):
-        print(band2, band1)
-        z = np.zeros((bin_num_list[band2]+1, bin_num_list[band1]+1))
-        
-        # Get data
-        for key in sixd.keys():
-            inin = key.strip('( )')
-            g = inin.split(',')
-            z[int(g[band2])][int(g[band1])] += float(sixd[key])
-        
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        if unit == 'std':
-            plt.imshow(z, vmin = np.mean(z) + lower*np.std(z), vmax = np.mean(z) + upper*np.std(z))
-        elif unit == 'value':
-            plt.imshow(z, vmin = lower, vmax = upper)
+def plot_along_bd2(cube_array, shape, bd_name):
+    '''
+    Plot 2D plot along band 2
+    '''
+    for j in range(cube_array.shape[1]):
+        drawProgressBar(float(j+1)/cube_array.shape[1])
+        plt.figure()
+        plt.imshow(cube_array[:, j, :], origin='lower')
+        plt.title('{} = {:d}'.format(bd_name[1], j))
+        plt.xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
+        plt.ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
+        plt.xticks(np.arange(0-0.5, shape[2]+0.5, 1))
+        plt.yticks(np.arange(0-0.5, shape[0]+0.5, 1))
+        frame1 = plt.gca()
+        frame1.axes.xaxis.set_ticklabels([0])
+        frame1.axes.yaxis.set_ticklabels([0])
+        plt.tight_layout()
+        plt.grid()
+        plt.savefig('{}_{:0>3d}'.format(bd_name[1], j))
+        plt.clf()
 
-        ax.set_title(title)
-        ax.set_xlabel(str(bands[band1]))
-        ax.set_ylabel(str(bands[band2]))
-        ax.set_xticks(np.arange(0, bin_num_list[band1], 5))
-        ax.set_yticks(np.arange(0, bin_num_list[band2], 5))
-        ax.set_xticklabels(np.arange(1, bin_num_list[band1]+1, 5))
-        ax.set_yticklabels(np.arange(1, bin_num_list[band2]+1, 5))
-        ax.set_xticks(np.arange(-0.5, bin_num_list[band1], 1), minor=True);
-        ax.set_yticks(np.arange(-0.5, bin_num_list[band2], 1), minor=True);
-        ax.grid(which='minor', color='w', linestyle='-')
-        
-        plt.colorbar()
-        plt.savefig(str(bands[band2] + '-' + bands[band1]))
+def plot_along_bd3(cube_array, shape, bd_name):
+    '''
+    Plot 2D plot along band 3
+    '''
+    for k in range(cube_array.shape[2]):
+        drawProgressBar(float(k+1)/cube_array.shape[2])
+        plt.figure()
+        plt.imshow(cube_array[:, :, k], origin='lower')
+        plt.title('{} = {:d}'.format(bd_name[2], k))
+        plt.xlabel('{} ({:d})'.format(bd_name[1], shape[1]))
+        plt.ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
+        plt.xticks(np.arange(0-0.5, shape[1]+0.5, 1))
+        plt.yticks(np.arange(0-0.5, shape[0]+0.5, 1))
+        frame1 = plt.gca()
+        frame1.axes.xaxis.set_ticklabels([0])
+        frame1.axes.yaxis.set_ticklabels([0])
+        plt.tight_layout()
+        plt.grid()
+        plt.savefig('{}_{:0>3d}'.format(bd_name[2], k))
+        plt.clf()
+
+#=======================================================
+# Main Programs
+m_start = time.time()
+# Just for debugging test: band_ind_list = np.array([0, 1, 2])
+band_ind_list = np.arange(0, dim, 1)
+for comb in combinations(band_ind_list, 3):
+
+    #=======================================================
+    # Generate band input
+    band_ind = ''
+    for band in comb:
+        band_ind += str(band)
+    bd_ind, shape, bd_name = [], [], []
+    for ind in band_ind:
+        bd_ind.append(int(ind))
+        shape.append(all_shape[int(ind)])
+        bd_name.append(band_name[int(ind)])
+    print('\n# band: ' + band_ind)
+
+    #=======================================================
+    # Load galaxy pos/num
+    l_start = time.time()
+    gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
+    gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
+    cube_array = update_num(gal_pos, gal_num)
+    l_end   = time.time()
+    #print('Loading took {:.3f} secs'.format(l_end-l_start))
+
+    #=======================================================
+    # Start plotting
+    p_start = time.time()
+    chdir(output_dir)
+    tomo_dir = 'tomo_{}/'.format(band_ind)
+    if not path.isdir(tomo_dir):
+        system('mkdir {}'.format(tomo_dir))
+    chdir(tomo_dir)
+
+    axis_dir = 'axis_{}/'.format(bd_ind[0])
+    if not path.isdir(axis_dir):
+        system('mkdir {}'.format(axis_dir))
+    print('axis-0')
+    chdir(axis_dir)
+    plot_along_bd1(cube_array, shape, bd_name)
+    chdir('../')
+    system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[0]))
+
+    axis_dir = 'axis_{}/'.format(bd_ind[1])
+    if not path.isdir(axis_dir):
+        system('mkdir {}'.format(axis_dir))
+    chdir(axis_dir)
+    print('\naxis-1')
+    plot_along_bd2(cube_array, shape, bd_name)
+    chdir('../')
+    system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[1]))
+
+    axis_dir = 'axis_{}/'.format(bd_ind[2])
+    if not path.isdir(axis_dir):
+        system('mkdir {}'.format(axis_dir))
+    chdir(axis_dir)
+    print('\naxis-2')
+    plot_along_bd3(cube_array, shape, bd_name)
+    chdir('../')
+    system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[2]))
+
+    chdir('../')
+    p_end   = time.time()
+    print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
+
+#=======================================================
+m_end   = time.time()
+print('\nWhole Process took {:.3f} secs\n'.format(m_end-m_start))
