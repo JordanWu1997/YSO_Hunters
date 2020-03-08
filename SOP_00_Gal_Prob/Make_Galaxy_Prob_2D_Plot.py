@@ -6,12 +6,16 @@ latest update :  Jordan Wu'''
 from __future__ import print_function
 import time
 import numpy as np
-import matplotlib.pyplot as plt
 from sys import argv, exit
 from os import system, chdir, path
 from itertools import combinations
 from Hsieh_Functions import *
 from Useful_Functions import *
+
+# For non-interactive backend (No request for showing pictures)
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 if len(argv) != 6:
     exit('\n\tError: Wrong Arguments\
@@ -187,7 +191,7 @@ for comb in combinations(band_ind_list, 3):
     chdir('../')
     system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[2]))
 
-    chdir('../')
+    chdir('../../')
     p_end   = time.time()
     print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
 
