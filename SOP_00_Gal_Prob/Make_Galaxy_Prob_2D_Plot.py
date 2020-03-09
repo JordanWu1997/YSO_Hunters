@@ -15,6 +15,7 @@ from Useful_Functions import *
 # For non-interactive backend (No request for showing pictures)
 import matplotlib
 matplotlib.use('Agg')
+matplotlib.rc('figure', max_open_warning = 0)
 import matplotlib.pyplot as plt
 
 if len(argv) != 6:
@@ -60,7 +61,7 @@ def update_num(gal_pos, gal_num):
         elif gal_num[i] == 1.:
             cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 1
         else:
-            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = gal_num[i]
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 0.5 #gal_num[i]
     return cube_array
 
 def plot_along_bd1(cube_array, shape, bd_name):
@@ -71,7 +72,7 @@ def plot_along_bd1(cube_array, shape, bd_name):
     for i in range(cube_array.shape[0]):
         drawProgressBar(float(i+1)/cube_array.shape[0])
         plt.figure()
-        plt.imshow(cube_array[i, :, :], origin='lower')
+        plt.imshow(cube_array[i, :, :], origin='lower', vmin=0, vmax=2)
         plt.title('{} = {:d}'.format(bd_name[0], i))
         plt.xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
         plt.ylabel('{} ({:d})'.format(bd_name[1], shape[1]))
@@ -80,8 +81,9 @@ def plot_along_bd1(cube_array, shape, bd_name):
         frame1 = plt.gca()
         frame1.axes.xaxis.set_ticklabels([0])
         frame1.axes.yaxis.set_ticklabels([0])
-        plt.tight_layout()
+        plt.colorbar(label='galaxy probability')
         plt.grid()
+        plt.tight_layout()
         plt.savefig('{}_{:0>3d}'.format(bd_name[0], i))
         plt.clf()
 
@@ -92,7 +94,7 @@ def plot_along_bd2(cube_array, shape, bd_name):
     for j in range(cube_array.shape[1]):
         drawProgressBar(float(j+1)/cube_array.shape[1])
         plt.figure()
-        plt.imshow(cube_array[:, j, :], origin='lower')
+        plt.imshow(cube_array[:, j, :], origin='lower', vmin=0, vmax=2)
         plt.title('{} = {:d}'.format(bd_name[1], j))
         plt.xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
         plt.ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
@@ -101,8 +103,9 @@ def plot_along_bd2(cube_array, shape, bd_name):
         frame1 = plt.gca()
         frame1.axes.xaxis.set_ticklabels([0])
         frame1.axes.yaxis.set_ticklabels([0])
-        plt.tight_layout()
+        plt.colorbar(label='galaxy probability')
         plt.grid()
+        plt.tight_layout()
         plt.savefig('{}_{:0>3d}'.format(bd_name[1], j))
         plt.clf()
 
@@ -113,7 +116,7 @@ def plot_along_bd3(cube_array, shape, bd_name):
     for k in range(cube_array.shape[2]):
         drawProgressBar(float(k+1)/cube_array.shape[2])
         plt.figure()
-        plt.imshow(cube_array[:, :, k], origin='lower')
+        plt.imshow(cube_array[:, :, k], origin='lower', vmin=0, vmax=2)
         plt.title('{} = {:d}'.format(bd_name[2], k))
         plt.xlabel('{} ({:d})'.format(bd_name[1], shape[1]))
         plt.ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
@@ -122,8 +125,9 @@ def plot_along_bd3(cube_array, shape, bd_name):
         frame1 = plt.gca()
         frame1.axes.xaxis.set_ticklabels([0])
         frame1.axes.yaxis.set_ticklabels([0])
-        plt.tight_layout()
+        plt.colorbar(label='galaxy probability')
         plt.grid()
+        plt.tight_layout()
         plt.savefig('{}_{:0>3d}'.format(bd_name[2], k))
         plt.clf()
 
