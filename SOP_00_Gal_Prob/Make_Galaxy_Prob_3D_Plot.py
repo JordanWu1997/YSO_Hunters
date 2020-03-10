@@ -88,15 +88,15 @@ def plot_3d_scatter(pos_array, num_array, shape, bd_ind, bd_name, sl_num, incli)
         ax.w_yaxis.set_ticklabels([0])
         ax.w_zaxis.set_ticklabels([0])
         ax.view_init(incli, deg)
-        plt.axis('equal')
-        plt.tight_layout()
+        # plt.axis('equal')
+        # plt.tight_layout()
         plt.savefig('{}{}{}_{:0>3d}'.format(bd_name[0], bd_name[1], bd_name[2], i))
         plt.clf()
 
 #=======================================================
 # Main Programs
 m_start = time.time()
-# Just for debugging test: band_ind_list = np.array([0, 1, 2])
+# Just for debugging test: band_ind_list = np.array([0, 1, 2]) band_ind_list = np.array([3, 4, 5])
 band_ind_list = np.arange(0, dim, 1)
 for comb in combinations(band_ind_list, 3):
 
