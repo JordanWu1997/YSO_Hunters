@@ -113,13 +113,19 @@ for i in range(len(band_inp_list)):
         for j in range(slice_num):
             system('Do_Gaussian_Smooth_Slice_Index.py {:d} {:.1f} {:d} {:d} {:d} {:d} {} {:d} {:d}'.format(\
                 dim, cube, sigma, bond, refD, lack_inp_list[i], band_inp_list[i], slice_num, j))
-        for j in range(slice_num):
+        pos = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp_list[i], slice_ind_list[0]))
+        num = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp_list[i], slice_ind_list[0]))
+        print('\nConcatenate input sliced pos/num')
+        for j in range(1, slice_num):
+            system('Do_Gaussian_Smooth_Slice_Index.py {:d} {:.1f} {:d} {:d} {:d} {:d} {} {:d} {:d}'.format(\
+                dim, cube, sigma, bond, refD, lack_inp_list[i], band_inp_list[i], slice_num, j))
             new_pos  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp_list[i], slice_ind_list[j]))
             new_num  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp_list[i], slice_ind_list[j]))
             join_pos = np.concatenate((pos, new_pos), axis=0)
             join_num = np.concatenate((num, new_num), axis=0)
+            pos, num = np.array(new_pos), np.array(new_num)
+            drawProgressBar(float(j+1)/slice_num)
         cas_pos, cas_num = cascade_array(join_pos, join_num)
-        pos, num = np.array(cas_pos), np.array(cas_num)
 
     #================================================
     # Save all band result
