@@ -84,7 +84,7 @@ for i in range(len(band_inp_list)):
     # Slice input galaxy pos/num array
     if not path.isdir(slic_dir_list[i]):
         s_start = time.time()
-        system('\nSort_Source_Lack999_Slice.py {:d} {:.1f} {:d}'.format(dim, cube, slice_num))
+        system('\nDo_Gaussian_Smooth_Slice.py {:d} {:.1f} {:d}'.format(dim, cube, slice_num))
         s_end   = time.time()
         print('\nSlice {} took {:.3f} sec'.format(band_inp_list[i], s_end-s_start))
     else:
