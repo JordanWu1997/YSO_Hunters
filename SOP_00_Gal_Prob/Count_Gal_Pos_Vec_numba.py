@@ -25,14 +25,18 @@ dim      = int(argv[3])
 cube     = float(argv[4])
 print('\ncube = ' + str(cube))
 
-# J, K, IR1, IR2, IR3, IR4, MP1
-flux_ID = [0, 3, 4, 5, 6, 7]
-mag_ID  = [0, 3, 4, 5, 6, 7]
+# J, IR1, IR2, IR3, IR4, MP1
+# If input spizer catalog, just comment below 2 lines
+#flux_ID = [0, 3, 4, 5, 6, 7]
+#mag_ID  = [0, 3, 4, 5, 6, 7]
+
 print('flux_ID')
 print(flux_ID)
 print('mag_ID')
 print(mag_ID)
 
+#TODO Generalize this part to arbitary dimensions
+#======================================================================
 # Use Limit Stored in Hsieh_Functions
 Jaxlim   = Hsieh_Jaxlim
 Ksaxlim  = Hsieh_Ksaxlim
@@ -41,10 +45,8 @@ IR2axlim = Hsieh_IR2axlim
 IR3axlim = Hsieh_IR3axlim
 IR4axlim = Hsieh_IR4axlim
 MP1axlim = Hsieh_MP1axlim
-
 # For now, only 6 band
 axlim_list = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-
 # Count shape of each dim
 binsa = int(round((  Jaxlim[1] -   Jaxlim[0]) / cube)) + 1
 binsb = int(round(( Ksaxlim[1] -  Ksaxlim[0]) / cube)) + 1
@@ -55,6 +57,7 @@ bins4 = int(round((IR4axlim[1] - IR4axlim[0]) / cube)) + 1
 bins5 = int(round((MP1axlim[1] - MP1axlim[0]) / cube)) + 1
 print('Shape')
 print(binsa, bins1, bins2, bins3, bins4, bins5)
+#======================================================================
 
 # Check Directory
 if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
