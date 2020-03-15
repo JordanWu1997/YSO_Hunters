@@ -125,6 +125,9 @@ for i in range(len(band_inp_list)):
             join_num = np.concatenate((num, new_num), axis=0)
             pos, num = np.array(new_pos), np.array(new_num)
             drawProgressBar(float(j+1)/slice_num)
+        # If no slice needed
+        if slice_num <= 1:
+            join_pos, join_num = pos, num
         cas_pos, cas_num = cascade_array(join_pos, join_num)
 
     #================================================
