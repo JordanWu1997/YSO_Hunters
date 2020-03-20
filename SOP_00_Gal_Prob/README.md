@@ -3,10 +3,11 @@
 
 Part 1 - Count and project input galaxy catalog
 - (1) Count_Gal_Pos_Vec_numba.py
-- (2) Sort_Source_Lack999.py
-- (3) Sort_Source_Lack999_Project.py
-- (4) Sort_Source_Lack999_Cascade.py
-- (5) Sort_Source_Lack999_Band.py
+- (2) Sort_Source_Lack999_Execution_All.py
+	- Sort_Source_Lack999.py
+	- Sort_Source_Lack999_Project.py
+	- Sort_Source_Lack999_Cascade.py
+	- Sort_Source_Lack999_Band.py
 
 Part2 - Do gaussian smooth
 - (1) Do_Gaussian_Smooth_Construct_Bin.py
