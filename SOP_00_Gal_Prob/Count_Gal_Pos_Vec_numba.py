@@ -136,28 +136,27 @@ if __name__ == '__main__':
             mag_list = mag_to_mag(lines, mag_ID=mag_ID, Qua=qualabel, system=JHK_system)
         else:
             print('Input type error')
-    #magJ, magIR1, magIR2, magIR3, magIR4, magMP1 = mag_list
-    SEQ = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-    pos_vec.append(SEQ)
-    #======================================================
-    # Remove AGB sources (NOT considered in SEIP catalog)
-    #AGB = 0
-    #if magIR2 != 'no' and magIR3 != 'no' and magMP1 != 'no':
-    #    X23 = magIR2 - magIR3
-    #    Y35 = magIR3 - magMP1
-    #    if index_AGB(X23, Y35, [0,0,2,5], [-1,0,2,2]) < 0:
-    #        AGB = 1
-    #if AGB != 1:
-    #    SEQ = [sort_up(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-    #    pos_vec.append(SEQ)
-    #======================================================
+        #magJ, magIR1, magIR2, magIR3, magIR4, magMP1 = mag_list
+        SEQ = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
+        pos_vec.append(SEQ)
+        #======================================================
+        # Remove AGB sources (NOT considered in SEIP catalog)
+        #AGB = 0
+        #if magIR2 != 'no' and magIR3 != 'no' and magMP1 != 'no':
+        #    X23 = magIR2 - magIR3
+        #    Y35 = magIR3 - magMP1
+        #    if index_AGB(X23, Y35, [0,0,2,5], [-1,0,2,2]) < 0:
+        #        AGB = 1
+        #if AGB != 1:
+        #    SEQ = [sort_up(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
+        #    pos_vec.append(SEQ)
+        #======================================================
     c_end   = time.time()
     print("\n\nCalculate all sources position in n-dim space took {:.3f} secs\n".format(c_end-c_start))
 
     # Galaxy filter
     f_start = time.time()
     pos_vec_array = np.array(pos_vec)
-    np.save('test', pos_vec_array)
     bright, faint, source = filter_bright_faint(pos_vec_array)
     source_array = np.array(source)
     f_end   = time.time()
