@@ -128,7 +128,7 @@ for i in range(len(band_inp_list)):
         # If no slice needed
         if slice_num <= 1:
             join_pos, join_num = pos, num
-        cas_pos, cas_num = cascade_array(join_pos, join_num)
+        pos, num = cascade_array(join_pos, join_num)
 
     #================================================
     # Save all band result
