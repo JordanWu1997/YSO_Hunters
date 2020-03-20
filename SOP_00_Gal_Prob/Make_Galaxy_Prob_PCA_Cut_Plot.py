@@ -12,14 +12,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-if len(argv) != 8:
+if len(argv) != 9:
     exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [lack] [band_inp]\
+    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [tor] [lack] [band_inp]\
     \n\t[dim]: dimension for smooth (for now only "6")\
     \n\t[cube size]: length of multi-d cube in magnitude unit\
     \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
     \n\t[bond]: boundary radius of gaussian beam unit in cell\
     \n\t[ref-D]: reference dimension which to modulus other dimension to\
+    \n\t[tor]: tolerence radius unit in cell\
     \n\t[lack]: number of lack bands\
     \n\t[band_inp]: band used to do smooth in string e.g. 012345\n')
 
@@ -30,8 +31,9 @@ cube        = float(argv[2])     # Beamsize for each cube
 sigma       = int(argv[3])       # STD for Gaussian Smooth
 bond        = int(argv[4])
 refD        = int(argv[5])       # Reference Beam Dimension
-lack        = int(argv[6])
-band_inp    = str(argv[7])
+tor         = int(argv[6])
+lack        = int(argv[7])
+band_inp    = str(argv[8])
 band_id_list = []
 for i in range(len(band_inp)):
     band_id_list.append(int(band_inp[i]))
@@ -74,15 +76,14 @@ def find_gal_pos(gal_pos, target):
     id_list = []
     for i in range(len(gal_pos)):
         if np.all(np.equal(gal_pos[i], target)):
-            print('its here')
             id_list.append(i)
     id_array = np.array(id_list)
     return id_array
 
-def PCA_fit(dim, gal_pos):
-    if path.isfile('PCA_components.npy'):
-        components = np.load('PCA_components.npy')
-        var_ratios = np.load('PCA_var_ratios.npy')
+def PCA_fit(dim, gal_pos, band_inp):
+    if path.isfile('PCA_components_{}.npy'.format(band_inp)):
+        components = np.load('PCA_components_{}.npy'.format(band_inp))
+        var_ratios = np.load('PCA_var_ratios_{}.npy'.format(band_inp))
         print('Use existed PCA model')
     else:
         a_start = time.time()
@@ -90,10 +91,10 @@ def PCA_fit(dim, gal_pos):
         pca.fit(gal_pos)
         components = pca.components_
         var_ratios = pca.explained_variance_ratio_
-        np.save('PCA_components', components)
-        np.save('PCA_var_ratios', var_ratios)
+        np.save('PCA_components_{}'.format(band_inp), components)
+        np.save('PCA_var_ratios_{}'.format(band_inp), var_ratios)
         a_end   = time.time()
-        print('PCA took {:.3f} secs\n'.format(a_end-a_start))
+        print('PCA {} took {:.3f} secs\n'.format(band_inp, a_end-a_start))
     print(components)
     print('Var_ratios')
     print(var_ratios)
@@ -104,7 +105,10 @@ def generate_pca(bd_id_list, shape, components):
     This is to generate pca line in multi-d space
     '''
     band_bd  = [shape[bd_id] for bd_id in bd_id_list]
-    pca_axe0 = components[0,:]
+    if np.all(components[0, :] > 0.0):
+        pca_axe0 = components[0, :]
+    else:
+        pca_axe0 = -1 * components[0, :]
     pca_line, pos, i = [], [0]*len(bd_id_list), 0
     while np.all(np.less(pos, band_bd)):
         pos = i * pca_axe0
@@ -118,6 +122,9 @@ def cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper, simple_cut=True):
     '''
     This is to calculate hist along pca line
     '''
+
+    #TODO: Find a better way to execute tolerance ...
+
     lower = np.zeros(len(upper))
     pca_bin = []
     for i, pca in enumerate(pca_arr):
@@ -126,11 +133,8 @@ def cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper, simple_cut=True):
         for beam in tor_beam:
             tor_pca = pca + beam[:-1]
             if np.all(np.less(tor_pca, upper)) and np.all(np.greater_equal(tor_pca, lower)):
-                #print('test_1')
                 loc_id = find_gal_pos(gal_pos, np.array(tor_pca, dtype=int))
-                # print(loc_id)
                 if len(loc_id) == 1:
-                    print('test_2')
                     flag += gal_num[loc_id]
         pca_bin.append(flag)
     if simple_cut:
@@ -172,13 +176,16 @@ if __name__ == '__main__':
     gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(lack, band_inp))#[:1]#00000]
     shape   = np.load(posv_dir + 'Shape.npy')
 
-    # gal_pos = np.concatenate((gal_pos, np.array([[24, 38, 38, 39, 35, 15]])), axis=0)
-    # gal_num = np.concatenate((gal_num, np.array([1.0])), axis=0)
+    #print(gal_pos)
+    #print(gal_pos.shape)
+    #gal_pos = np.concatenate((gal_pos, np.array([[24, 38, 38, 39, 35, 15]])), axis=0)
+    #gal_num = np.concatenate((gal_num, np.array([1.0])), axis=0)
     # gal_pos = np.concatenate((gal_pos, np.array([[34, 50, 52, 53, 48, 20]])), axis=0)
     # gal_num = np.concatenate((gal_num, np.array([1.0])), axis=0)
+    #gal_pos = np.concatenate((gal_pos, np.array([[14, 10, 11, 13, 12, 8]])), axis=0)
+    #gal_num = np.concatenate((gal_num, np.array([1.0])), axis=0)
 
     # Load tolerance beam
-    tor      = 0
     beam_dir = 'GPV_smooth_sigma{:d}_bond{:d}_refD{:d}/'.format(sigma, tor, refD)
     tor_beam = np.load(beam_dir + "{:d}d_beam_sigma{:d}.npy".format(int(dim-lack), sigma))
 
