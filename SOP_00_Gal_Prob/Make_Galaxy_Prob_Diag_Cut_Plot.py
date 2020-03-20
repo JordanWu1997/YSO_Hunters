@@ -100,16 +100,18 @@ def plot_diag_step(diagonal, diag_cut, lack, band_inp):
     plt.xlabel('Along Diagonal Line (bin={:.1f}mag)'.format(cube))
     plt.ylabel('Galaxy Probability')
     plt.legend()
-    plt.savefig('DiagCut_L{}_{}'.format(lack, band_inp))
+    plt.savefig('Diag_Cut_L{}_{}'.format(lack, band_inp))
 
 # Main Programs
 #==========================================================
 if __name__ == '__main__':
+
     # Load pos/num
     l_start = time.time()
     gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))#[:1000]
-    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))#[:1000]
+    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(lack, band_inp))#[:1000]
     shape   = np.load(posv_dir + 'Shape.npy')
+
     # Check existence of output directory
     if not path.isdir(tomo_dir):
         system('mkdir {}'.format(tomo_dir))
@@ -120,16 +122,19 @@ if __name__ == '__main__':
     l_end   = time.time()
     print('\nExecuting {}'.format(argv[0]))
     print('\nLoading {} gal pos/num took {:.3f} secs'.format(band_inp, l_end-l_start))
+
     # Generate diagonal array
     g_start  = time.time()
     diagonal = generate_diag(dim, band_id_list, shape)
     g_end    = time.time()
     print('Generating diag array took {:.3f} secs'.format(g_end-g_start))
+
     # Calculate cut along diagonal line
     c_start  = time.time()
     diag_cut = cal_diag_cut(diagonal, gal_pos, gal_num)
     c_end    = time.time()
     print('\nCalculating diag cut took {:.3f} secs'.format(c_end-c_start))
+
     # Plot step diagram along diagonal line
     p_start  = time.time()
     plot_diag_step(diagonal, diag_cut, lack, band_inp)
