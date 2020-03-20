@@ -9,6 +9,7 @@ Executing following programs
 from __future__ import print_function
 import time
 from os import system
+from sys import argv, exit
 
 if len(argv) != 3:
     exit('\n\tError: Wrong Arguments\
