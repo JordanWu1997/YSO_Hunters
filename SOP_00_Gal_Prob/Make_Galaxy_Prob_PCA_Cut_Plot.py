@@ -41,6 +41,7 @@ tomo_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/
 
 # Main Functions
 #==========================================================
+@jit(nopython=True)
 def cascade_array(sort_pos):
     '''
     Use this to find out sources locate in same position and cascade them
@@ -51,10 +52,6 @@ def cascade_array(sort_pos):
     start = 0
     end   = 0
     for i in range(len(sort_pos)-1):
-        #================================================
-        # Indicator
-        #if i % 1000 == 0 and i>999:
-        #    print(float(i+1)/len(sort_value))
         #================================================
         # Get reference and target
         tar, ref = sort_pos[i], sort_pos[i+1]
@@ -68,6 +65,19 @@ def cascade_array(sort_pos):
     # Include the last term
     after_cascade_pos.append(sort_pos[start])
     return after_cascade_pos
+
+@jit(nopython=True)
+def find_gal_pos(gal_pos, target):
+    '''
+    This is to find if target in galaxy position array
+    '''
+    id_list = []
+    for i in range(len(gal_pos)):
+        if np.all(np.equal(gal_pos[i], target)):
+            print('its here')
+            id_list.append(i)
+    id_array = np.array(id_list)
+    return id_array
 
 def PCA_fit(dim, gal_pos):
     if path.isfile('PCA_components.npy'):
@@ -89,14 +99,14 @@ def PCA_fit(dim, gal_pos):
     print(var_ratios)
     return components, var_ratios
 
-def generate_pca(dim, bd_id_list, shape, components):
+def generate_pca(bd_id_list, shape, components):
     '''
     This is to generate pca line in multi-d space
     '''
-    band_bd  = min([shape[bd_id] for bd_id in bd_id_list])
+    band_bd  = [shape[bd_id] for bd_id in bd_id_list]
     pca_axe0 = components[0,:]
-    pca_line, pos, i = [], [0]*dim, 0
-    while round(max(pos)) < band_bd:
+    pca_line, pos, i = [], [0]*len(bd_id_list), 0
+    while np.all(np.less(pos, band_bd)):
         pos = i * pca_axe0
         pca_line.append(pos)
         i += 1
@@ -104,35 +114,30 @@ def generate_pca(dim, bd_id_list, shape, components):
     pca_round = np.rint(pca_line)
     return pca_round
 
-@jit(nopython=True)
-def find_gal_pos(gal_pos, target):
-    '''
-    This is to find if target in galaxy position array
-    '''
-    id_list = []
-    for i in range(len(gal_pos)):
-        if np.all(np.equal(gal_pos[i], target)):
-            id_list.append(i)
-    id_array = np.array(id_list)
-    return id_array
-
-def cal_pca_cut(pca_arr, gal_pos, gal_num, simple_cut=True):
+def cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper, simple_cut=True):
     '''
     This is to calculate hist along pca line
     '''
+    lower = np.zeros(len(upper))
     pca_bin = []
     for i, pca in enumerate(pca_arr):
         drawProgressBar(float(i+1)/len(pca_arr))
-        loc_id = find_gal_pos(gal_pos, pca)
-        if len(loc_id) == 1:
-            pca_bin.append(gal_num[loc_id])
-        else:
-            pca_bin.append(0.)
+        flag = 0.
+        for beam in tor_beam:
+            tor_pca = pca + beam[:-1]
+            if np.all(np.less(tor_pca, upper)) and np.all(np.greater_equal(tor_pca, lower)):
+                #print('test_1')
+                loc_id = find_gal_pos(gal_pos, np.array(tor_pca, dtype=int))
+                # print(loc_id)
+                if len(loc_id) == 1:
+                    print('test_2')
+                    flag += gal_num[loc_id]
+        pca_bin.append(flag)
     if simple_cut:
         for i, dbin in enumerate(pca_bin):
             if dbin > 1.:
                 pca_bin[i] = 1.5
-            elif dbin > 0.:
+            elif dbin < 1. and dbin > 0. :
                 pca_bin[i] = 0.5
     pca_bin = np.array(pca_bin)
     return pca_bin
@@ -160,11 +165,23 @@ def plot_pca_step(pca, pca_cut, lack, band_inp):
 # Main Programs
 #==========================================================
 if __name__ == '__main__':
+
     # Load pos/num
     l_start = time.time()
-    gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))#[:1000]
-    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))#[:1000]
+    gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))#[:1]#00000]
+    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(lack, band_inp))#[:1]#00000]
     shape   = np.load(posv_dir + 'Shape.npy')
+
+    # gal_pos = np.concatenate((gal_pos, np.array([[24, 38, 38, 39, 35, 15]])), axis=0)
+    # gal_num = np.concatenate((gal_num, np.array([1.0])), axis=0)
+    # gal_pos = np.concatenate((gal_pos, np.array([[34, 50, 52, 53, 48, 20]])), axis=0)
+    # gal_num = np.concatenate((gal_num, np.array([1.0])), axis=0)
+
+    # Load tolerance beam
+    tor      = 0
+    beam_dir = 'GPV_smooth_sigma{:d}_bond{:d}_refD{:d}/'.format(sigma, tor, refD)
+    tor_beam = np.load(beam_dir + "{:d}d_beam_sigma{:d}.npy".format(int(dim-lack), sigma))
+
     # Check existence of output directory
     if not path.isdir(tomo_dir):
         system('mkdir {}'.format(tomo_dir))
@@ -175,19 +192,23 @@ if __name__ == '__main__':
     l_end   = time.time()
     print('\nExecuting {}'.format(argv[0]))
     print('\nLoading {} gal pos/num took {:.3f} secs'.format(band_inp, l_end-l_start))
+
     # Generate pca array
     g_start  = time.time()
     components, var_ratios = PCA_fit(dim, gal_pos)
-    pca_line = generate_pca(dim, band_id_list, shape, components)
+    pca_line = generate_pca(band_id_list, shape, components)
     pca_cas  = cascade_array(pca_line)
     pca_arr  = np.array(pca_cas, dtype=int)
     g_end    = time.time()
     print('\nGenerating pca array took {:.3f} secs'.format(g_end-g_start))
+
     # Calculate cut along pca line
     c_start  = time.time()
-    pca_cut  = cal_pca_cut(pca_arr, gal_pos, gal_num)
+    upper    = np.array([shape[bd_id] for bd_id in band_id_list])
+    pca_cut  = cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper)
     c_end    = time.time()
     print('\nCalculating pca cut took {:.3f} secs'.format(c_end-c_start))
+
     # Plot step pcaram along pca line
     p_start  = time.time()
     plot_pca_step(pca_arr, pca_cut, lack, band_inp)
