@@ -100,6 +100,27 @@ def PCA_fit(dim, gal_pos, band_inp):
     print(var_ratios)
     return components, var_ratios
 
+def WPCA_fit(dim, gal_pos, gal_num, band_inp):
+    from wpca import PCA, WPCA
+    if path.isfile('WPCA_components_{}.npy'.format(band_inp)):
+        components = np.load('WPCA_components_{}.npy'.format(band_inp))
+        var_ratios = np.load('WPCA_var_ratios_{}.npy'.format(band_inp))
+        print('Use existed WPCA model')
+    else:
+        a_start = time.time()
+        weight = np.transpose(np.array(dim * list(gal_num)).reshape(dim, len(gal_num)))
+        wpca_result = WPCA(n_components=dim).fit(gal_pos, weights=weight)
+        components = wpca_result.components_
+        var_ratios = wpca_result.explained_variance_ratio_
+        np.save('WPCA_components_{}'.format(band_inp), components)
+        np.save('WPCA_var_ratios_{}'.format(band_inp), var_ratios)
+        a_end   = time.time()
+        print('WPCA took {:.3f} secs'.format(a_end-a_start))
+    print(components)
+    print('Var_ratios')
+    print(var_ratios)
+    return components, var_ratios
+
 def generate_pca(bd_id_list, shape, components):
     '''
     This is to generate pca line in multi-d space
@@ -202,7 +223,8 @@ if __name__ == '__main__':
 
     # Generate pca array
     g_start  = time.time()
-    components, var_ratios = PCA_fit(dim, gal_pos)
+    #components, var_ratios = PCA_fit(dim, gal_pos, band_inp)
+    components, var_ratios = WPCA_fit(dim, gal_pos, gal_num, band_inp)
     pca_line = generate_pca(band_id_list, shape, components)
     pca_cas  = cascade_array(pca_line)
     pca_arr  = np.array(pca_cas, dtype=int)
@@ -216,7 +238,7 @@ if __name__ == '__main__':
     c_end    = time.time()
     print('\nCalculating pca cut took {:.3f} secs'.format(c_end-c_start))
 
-    # Plot step pcaram along pca line
+    # Plot step along pca line
     p_start  = time.time()
     plot_pca_step(pca_arr, pca_cut, lack, band_inp)
     chdir('../../')
