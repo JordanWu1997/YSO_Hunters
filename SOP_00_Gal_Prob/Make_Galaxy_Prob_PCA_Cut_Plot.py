@@ -6,7 +6,7 @@ from __future__ import print_function
 from sys import argv, exit
 from os import path, system, chdir
 from numba import jit
-from sklearn.decomposition import PCA
+from wpca import PCA, WPCA
 from Useful_Functions import *
 import matplotlib.pyplot as plt
 import numpy as np
@@ -81,27 +81,36 @@ def find_gal_pos(gal_pos, target):
     id_array = np.array(id_list)
     return id_array
 
-def PCA_fit(dim, gal_pos, band_inp):
-    if path.isfile('PCA_components_{}.npy'.format(band_inp)):
-        components = np.load('PCA_components_{}.npy'.format(band_inp))
-        premean    = np.load('PCA_premean_{}.npy'.format(band_inp))
-        variances  = np.load('PCA_variances_{}.npy'.format(band_inp))
-        var_ratios = np.load('PCA_var_ratios_{}.npy'.format(band_inp))
-        print('Use existed PCA model')
+def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted=True):
+    # WPCA or PCA
+    if weighted:
+        name = 'WPCA'
+    else:
+        name = 'PCA'
+    # Execute
+    if path.isfile('{}_components_{}.npy'.format(name, band_inp)):
+        components = np.load('{}_components_{}.npy'.format(name, band_inp))
+        premean    = np.load('{}_premean_{}.npy'.format(name, band_inp))
+        variances  = np.load('{}_variances_{}.npy'.format(name, band_inp))
+        var_ratios = np.load('{}_var_ratios_{}.npy'.format(name, band_inp))
+        print('Use existed {} model'.format(name))
     else:
         a_start = time.time()
-        pca = PCA(n_components=len(band_inp))
-        pca.fit(gal_pos)
-        components = pca.components_
-        premean    = pca.mean_
-        variances  = pca.explained_variance_
-        var_ratios = pca.explained_variance_ratio_
-        np.save('PCA_components_{}'.format(band_inp), components)
-        np.save('PCA_premean_{}.npy'.format(band_inp), premean)
-        np.save('PCA_variances_{}'.format(band_inp), variances)
-        np.save('PCA_var_ratios_{}'.format(band_inp), var_ratios)
+        weight =  np.transpose(np.array(len(band_inp) * list(gal_num)).reshape(len(band_inp), len(gal_num)))
+        if weighted:
+            pca_result = WPCA(n_components=len(band_inp)).fit(gal_pos, weights=weight)
+        else:
+            pca_result = PCA(n_components=len(band_inp))
+        components = pca_result.components_
+        premean    = pca_result.mean_
+        variances  = pca_result.explained_variance_
+        var_ratios = pca_result.explained_variance_ratio_
+        np.save('{}_components_{}'.format(name, band_inp), components)
+        np.save('{}_premean_{}'.format(name, band_inp), premean)
+        np.save('{}_variances_{}'.format(name, band_inp), variances)
+        np.save('{}_var_ratios_{}'.format(name, band_inp), var_ratios)
         a_end   = time.time()
-        print('PCA {} took {:.3f} secs\n'.format(band_inp, a_end-a_start))
+        print('{} took {:.3f} secs'.format(name, a_end-a_start))
     print(components)
     print('Pre Mean (Centroid of PCA)')
     print(premean)
@@ -109,38 +118,7 @@ def PCA_fit(dim, gal_pos, band_inp):
     print(variances)
     print('Var_ratios')
     print(var_ratios)
-    return components, premean, variances, var_ratios
-
-def WPCA_fit(dim, gal_pos, gal_num, band_inp):
-    from wpca import WPCA
-    if path.isfile('WPCA_components_{}.npy'.format(band_inp)):
-        components = np.load('WPCA_components_{}.npy'.format(band_inp))
-        premean    = np.load('WPCA_premean_{}.npy'.format(band_inp))
-        variances  = np.load('WPCA_variances_{}.npy'.format(band_inp))
-        var_ratios = np.load('WPCA_var_ratios_{}.npy'.format(band_inp))
-        print('Use existed WPCA model')
-    else:
-        a_start = time.time()
-        weight = np.transpose(np.array(len(band_inp) * list(gal_num)).reshape(len(band_inp), len(gal_num)))
-        wpca_result = WPCA(n_components=len(band_inp)).fit(gal_pos, weights=weight)
-        components = wpca_result.components_
-        premean    = wpca_result.mean_
-        variances  = wpca_result.explained_variance_
-        var_ratios = wpca_result.explained_variance_ratio_
-        np.save('WPCA_components_{}'.format(band_inp), components)
-        np.save('WPCA_premean_{}'.format(band_inp), premean)
-        np.save('WPCA_variances_{}'.format(band_inp), variances)
-        np.save('WPCA_var_ratios_{}'.format(band_inp), var_ratios)
-        a_end   = time.time()
-        print('WPCA took {:.3f} secs'.format(a_end-a_start))
-    print(components)
-    print('Pre Mean (Centroid of PCA)')
-    print(premean)
-    print('Explained Variance (Eigenvalue)')
-    print(variances)
-    print('Var_ratios')
-    print(var_ratios)
-    return components, premean, variances, var_ratios
+    return components, premean, variances, var_ratios, name
 
 def generate_pca(bd_id_list, shape, centroid, components, component_n):
     '''
@@ -199,7 +177,7 @@ def cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper, simple_cut=True):
     pca_bin = np.array(pca_bin)
     return pca_bin
 
-def plot_pca_step(pca, pca_cut, lack, band_inp, var_ratio, component_n):
+def plot_pca_step(pca, pca_cut, lack, band_inp, var_ratio, name, component_n):
     '''
     This is to plot histogram along pca eigen axis
     '''
@@ -210,14 +188,14 @@ def plot_pca_step(pca, pca_cut, lack, band_inp, var_ratio, component_n):
     plt.axhline(0.0, xmax=len(pca), xmin=0, label='GP=0', c='r', ls='--')
     plt.step(np.arange(0+0.5, len(pca)+0.5, 1), pca_cut, c='k')
     plt.xticks(np.arange(0+0.5, len(pca)+0.5, 1))
-    frame1 = plt.gca()
-    frame1.axes.xaxis.set_ticklabels([0])
-    frame1.axes.yaxis.set_ticklabels([])
+    frame = plt.gca()
+    frame.axes.xaxis.set_ticklabels([0])
+    frame.axes.yaxis.set_ticklabels([])
     plt.title('Band:{}; e-axis{:d}; var_ratio={:.3f}'.format(band_inp, component_n, var_ratio))
     plt.xlabel('Along PC e-axis {:d} (bin={:.1f}mag)'.format(component_n, cube))
     plt.ylabel('Galaxy Probability')
     plt.legend()
-    plt.savefig('L{:d}_{}_PCA_E{}'.format(lack, band_inp, component_n))
+    plt.savefig('L{:d}_{}_{}_E{}'.format(lack, band_inp, name, component_n))
 
 # Main Programs
 #==========================================================
@@ -225,8 +203,8 @@ if __name__ == '__main__':
 
     # Load pos/num
     l_start = time.time()
-    gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))#[:1]#00000]
-    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(lack, band_inp))#[:1]#00000]
+    gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(lack, band_inp))
+    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(lack, band_inp))
     shape   = np.load(posv_dir + 'Shape.npy')
     gal_pos = gal_pos[:, band_id_list]
 
@@ -247,7 +225,7 @@ if __name__ == '__main__':
 
     # Generate wpca array
     g_start  = time.time()
-    components, premean, variances, var_ratios = WPCA_fit(dim, gal_pos, gal_num, band_inp)
+    components, premean, variances, var_ratios, name = PCA_fit(dim, gal_pos, gal_num, band_inp, weighted=True)
     pca_line_list = generate_pca(band_id_list, shape, premean, components, dim-int(lack))
     pca_cas_list  = []
     for pca_line in pca_line_list:
@@ -271,7 +249,7 @@ if __name__ == '__main__':
     # Plot step along pca line
     p_start  = time.time()
     for i in range(len(pca_cut_list)):
-        plot_pca_step(pca_cas_list[i], pca_cut_list[i], lack, band_inp, var_ratios[i], i)
+        plot_pca_step(pca_cas_list[i], pca_cut_list[i], lack, band_inp, var_ratios[i], name, i)
     chdir('../../')
     p_end    = time.time()
     print('\nPlotting step cut took {:.3f} secs'.format(p_end-p_start))
