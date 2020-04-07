@@ -6,15 +6,16 @@ from __future__ import print_function
 from sys import argv, exit
 from os import path, system, chdir
 from numba import jit
-from wpca import PCA, WPCA
+from wpca import WPCA  #PCA
+from sklearn.decomposition import PCA
 from Useful_Functions import *
 import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-if len(argv) != 9:
+if len(argv) != 10:
     exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [tor] [lack] [band_inp]\
+    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [tor] [lack] [band_inp] [weighted]\
     \n\t[dim]: dimension for smooth (for now only "6")\
     \n\t[cube size]: length of multi-d cube in magnitude unit\
     \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
@@ -22,7 +23,8 @@ if len(argv) != 9:
     \n\t[ref-D]: reference dimension which to modulus other dimension to\
     \n\t[tor]: tolerence radius unit in cell\
     \n\t[lack]: number of lack bands\
-    \n\t[band_inp]: band used to do smooth in string e.g. 012345\n')
+    \n\t[band_inp]: band used to do smooth in string e.g. 012345\
+    \n\t[weighted]: Use weighted PCA or not (True/False)\n')
 
 # Input Variables
 #==========================================================
@@ -34,6 +36,7 @@ refD        = int(argv[5])       # Reference Beam Dimension
 tor         = int(argv[6])
 lack        = int(argv[7])
 band_inp    = str(argv[8])
+weighted    = str(argv[9])
 band_id_list = []
 for i in range(len(band_inp)):
     band_id_list.append(int(band_inp[i]))
@@ -81,9 +84,9 @@ def find_gal_pos(gal_pos, target):
     id_array = np.array(id_list)
     return id_array
 
-def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted=True):
+def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted):
     # WPCA or PCA
-    if weighted:
+    if weighted == 'True':
         name = 'WPCA'
     else:
         name = 'PCA'
@@ -96,11 +99,11 @@ def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted=True):
         print('Use existed {} model'.format(name))
     else:
         a_start = time.time()
-        weight =  np.transpose(np.array(len(band_inp) * list(gal_num)).reshape(len(band_inp), len(gal_num)))
-        if weighted:
+        weight = np.transpose(np.array(len(band_inp) * list(gal_num)).reshape(len(band_inp), len(gal_num)))
+        if weighted == 'True':
             pca_result = WPCA(n_components=len(band_inp)).fit(gal_pos, weights=weight)
         else:
-            pca_result = PCA(n_components=len(band_inp))
+            pca_result = PCA(n_components=len(band_inp)).fit(gal_pos)
         components = pca_result.components_
         premean    = pca_result.mean_
         variances  = pca_result.explained_variance_
@@ -225,7 +228,7 @@ if __name__ == '__main__':
 
     # Generate wpca array
     g_start  = time.time()
-    components, premean, variances, var_ratios, name = PCA_fit(dim, gal_pos, gal_num, band_inp, weighted=True)
+    components, premean, variances, var_ratios, name = PCA_fit(dim, gal_pos, gal_num, band_inp, weighted)
     pca_line_list = generate_pca(band_id_list, shape, premean, components, dim-int(lack))
     pca_cas_list  = []
     for pca_line in pca_line_list:
