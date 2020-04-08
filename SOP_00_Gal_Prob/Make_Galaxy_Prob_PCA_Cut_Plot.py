@@ -9,9 +9,14 @@ from numba import jit
 from wpca import WPCA  #PCA
 from sklearn.decomposition import PCA
 from Useful_Functions import *
-import matplotlib.pyplot as plt
 import numpy as np
 import time
+
+# For non-interactive backend (No request for showing pictures)
+import matplotlib
+matplotlib.use('Agg')
+matplotlib.rc('figure', max_open_warning = 0)
+import matplotlib.pyplot as plt
 
 if len(argv) != 10:
     exit('\n\tError: Wrong Arguments\
