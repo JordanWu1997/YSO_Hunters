@@ -2,7 +2,7 @@
 '''
 Latest update JordanWu
 '''
-from future import print_function
+from __future__ import print_function
 from sys import argv, exit
 from os import system
 import time
