@@ -97,8 +97,8 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
         # PCA eigenvector
         for j in range(len(evectors)):
             evector = evectors[j]
-            mean_x, mean_y, mean_z = mean[0], mean[1], mean[2]
-            evector_x, evector_y, evector_z = evector[0], evector[1], evector[2]
+            mean_x, mean_y, mean_z = mean[bd_ind[0]], mean[bd_ind[1]], mean[bd_ind[2]]
+            evector_x, evector_y, evector_z = evector[bd_ind[0]], evector[bd_ind[1]], evector[bd_ind[2]]
             ax.quiver(mean_x, mean_y, mean_z, # <-- starting point of vector
                       evector_x, evector_y, evector_z, # <-- directions of vector
                       length=100*eratio[j], color='r')
@@ -175,7 +175,7 @@ if __name__ == '__main__':
                                 deg_slice, incli, pca_band_ind, mean, evectors, eratio)
         chdir('../')
         system('convert -delay 100 -loop 0 {}*_WI_{}_{}.png {}_all_{}_WI_{}_{}.gif'.format(all_dir, method, \
-                pca_band_ind, pca_band_ind, band_ind[0], method, pca_band_ind))
+                pca_band_ind, band_ind, band_ind[0], method, pca_band_ind))
         chdir('../../')
         p_end   = time.time()
         print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
