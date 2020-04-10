@@ -68,15 +68,16 @@ def plot_3d_scatter(pos_array, num_array, shape, bd_ind, bd_name, sl_num, incli)
     '''
     Plot 2D plot along band 3
     '''
-    bd0 = pos_array[:, bd_ind[0]]
-    bd1 = pos_array[:, bd_ind[1]]
-    bd2 = pos_array[:, bd_ind[2]]
-
+    bd0, bd1, bd2 = pos_array[:, bd_ind[0]], pos_array[:, bd_ind[1]], pos_array[:, bd_ind[2]]
+    bd0_g1, bd1_g1, bd2_g1 = bd0[num_array>1.], bd1[num_array>1.], bd2[num_array>1.]
+    bd0_e1, bd1_e1, bd2_e1 = bd0[num_array==1.], bd1[num_array==1.], bd2[num_array==1.]
     for i, deg in enumerate(np.linspace(0, 360, sl_num, endpoint=False)):
         drawProgressBar(float(i+1)/sl_num)
         fig = plt.figure(figsize=(12, 8))
         ax  = fig.add_subplot(111, projection='3d')
-        ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
+        #ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
+        ax.scatter(bd0_g1, bd1_g1, bd2_g1, s=0.5, c='b', alpha=0.5, label='Scatter (GP>1)')
+        ax.scatter(bd0_e1, bd1_e1, bd2_e1, s=0.5, c='g', alpha=0.8, label='Scatter (GP=1)')
         ax.set_title('{}{}{}_{}'.format(bd_name[0], bd_name[1], bd_name[2], bd_name[0]))
         ax.set_xlabel('{} ({:d})'.format(bd_name[0], shape[0]))
         ax.set_ylabel('{} ({:d})'.format(bd_name[1], shape[1]))
@@ -88,8 +89,7 @@ def plot_3d_scatter(pos_array, num_array, shape, bd_ind, bd_name, sl_num, incli)
         ax.w_yaxis.set_ticklabels([0])
         ax.w_zaxis.set_ticklabels([0])
         ax.view_init(incli, deg)
-        # plt.axis('equal')
-        # plt.tight_layout()
+        ax.legend()
         plt.savefig('{}{}{}_{:0>3d}'.format(bd_name[0], bd_name[1], bd_name[2], i))
         plt.clf()
 
@@ -136,7 +136,7 @@ for comb in combinations(band_ind_list, 3):
     chdir(all_dir)
     plot_3d_scatter(pos_array, num_array, shape, bd_ind, bd_name, deg_slice, incli)
     chdir('../')
-    system('convert -delay 100 -loop 0 {}*.png {}_all_{}.gif'.format(all_dir, band_ind, bd_ind[0]))
+    system('convert -delay 100 -loop 0 {}*.png {}_all_{}_n{:d}_i{:d}.gif'.format(all_dir, band_ind, bd_ind[0], deg_slice, incli))
     chdir('../../')
     p_end   = time.time()
     print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
