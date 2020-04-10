@@ -20,7 +20,6 @@ if len(argv) != 8:
 
 #=======================================================
 # Input variables
-band_name  = band_name
 dim        = int(argv[1])       # Dimension of position vector
 cube       = float(argv[2])     # Beamsize for each cube
 sigma      = int(argv[3])       # STD for Gaussian Smooth
@@ -33,7 +32,7 @@ incli      = int(argv[7])
 GP2D_Plot = 'Make_Galaxy_Prob_2D_Plot.py'
 GP3D_Plot = 'Make_Galaxy_Prob_3D_Plot.py'
 GPPCA_Cut = 'Make_Galaxy_Prob_PCA_Cut_Plot.py'
-GP3D_Plot_PCA = 'Make_Galaxy_Prob_3D_Plot_With_PCA'
+GP3D_Plot_PCA = 'Make_Galaxy_Prob_3D_Plot_With_PCA.py'
 
 #=======================================================
 # Main Program
@@ -54,11 +53,10 @@ if __name__ == '__main__':
             GPPCA_Cut, dim, cube, sigma, bond, refD, '0', '0', ''.join([str(i) for i in range(dim)]), 'True'))
     system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {}'.format(\
             GPPCA_Cut, dim, cube, sigma, bond, refD, '0', '0', ''.join([str(i) for i in range(dim)]), 'False'))
-
     # Make_Galaxy_Prob_3D_Plot_With_PCA (Weigthed, Non-weighted)
-    system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d } {} {}'.format(\
+    system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d} {} {}'.format(\
             GP3D_Plot_PCA, dim, cube, sigma, bond, refD, deg_slice, incli, 'True', 'True'))
-    system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d } {} {}'.format(\
+    system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d} {} {}'.format(\
             GP3D_Plot_PCA, dim, cube, sigma, bond, refD, deg_slice, incli, 'False', 'True'))
 
     t_end   = time.time()

@@ -85,16 +85,16 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
     '''
     # Load 3band data
     bd0, bd1, bd2 = pos_array[:, bd_ind[0]], pos_array[:, bd_ind[1]], pos_array[:, bd_ind[2]]
-    bd0_ge1, bd1_ge1, bd2_ge1 = bd0[num_array>=1], bd1[num_array>=1], bd2[num_array>=1]
-    bd0_ls1, bd1_ls1, bd2_ls1 = bd0[num_array<1], bd1[num_array<1], bd2[num_array<1]
+    bd0_g1, bd1_g1, bd2_g1 = bd0[num_array>1], bd1[num_array>1], bd2[num_array>1]
+    bd0_e1, bd1_e1, bd2_e1 = bd0[num_array==1], bd1[num_array==1], bd2[num_array==1]
     for i, deg in enumerate(np.linspace(0, 360, sl_num, endpoint=False)):
         drawProgressBar(float(i+1)/sl_num)
         fig = plt.figure(figsize=(12, 8))
         ax  = fig.add_subplot(111, projection='3d')
         # Data Scatter
         #ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
-        ax.scatter(bd0_ge1, bd1_ge1, bd2_ge1, s=0.5, c='b', alpha=0.8)
-        ax.scatter(bd0_ls1, bd1_ls1, bd2_ls1, s=0.5, c='g', alpha=0.8)
+        ax.scatter(bd0_g1, bd1_g1, bd2_g1, s=0.5, c='b', alpha=0.5)
+        ax.scatter(bd0_e1, bd1_e1, bd2_e1, s=0.5, c='g', alpha=0.8)
         # PCA eigenvector
         for j in range(len(evectors)):
             evector = evectors[j]
@@ -114,7 +114,7 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
         ax.w_yaxis.set_ticklabels([0])
         ax.w_zaxis.set_ticklabels([0])
         ax.view_init(incli, deg)
-        ax.legend(['Scatter (GP>=1)', 'Scatter (GP<1)', '{}_{}'.format(method, pca_band_ind)])
+        ax.legend(['Scatter (GP>1)', 'Scatter (GP=1)', '{}_{}'.format(method, pca_band_ind)])
         plt.savefig('{}{}{}_{:0>3d}_WI_{}_{}'.format(bd_name[0], bd_name[1], bd_name[2], i, method, pca_band_ind))
         plt.clf()
 
@@ -153,7 +153,7 @@ if __name__ == '__main__':
         l_start = time.time()
         gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
         gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
-        out_pos, out_num = sort_inp_gal(gal_pos, gal_num)
+        out_pos, out_num = sort_inp_gal(gal_pos, gal_num) # only include gp>=1 data points
         pos_array, num_array = np.array(out_pos), np.array(out_num)
         # Load PCA data
         mean, evectors, eratio = load_pca_data(method, pca_band_ind)
@@ -175,8 +175,8 @@ if __name__ == '__main__':
         plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
                                 deg_slice, incli, pca_band_ind, mean, evectors, eratio)
         chdir('../')
-        system('convert -delay 100 -loop 0 {}*_WI_{}_{}.png {}_all_{}_WI_{}_{}.gif'.format(all_dir, method, \
-                pca_band_ind, band_ind, band_ind[0], method, pca_band_ind))
+        system('convert -delay 100 -loop 0 {}*_WI_{}_{}.png {}_all_{}_n{:d}_i{:d}_WI_{}_{}.gif'.format(all_dir, method, \
+                pca_band_ind, band_ind, band_ind[0], deg_slice, incli, method, pca_band_ind))
         chdir('../../')
         p_end   = time.time()
         print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
