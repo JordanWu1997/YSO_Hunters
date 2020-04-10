@@ -84,16 +84,17 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
     Plot 2D plot along band 3 with PCA eigenvector
     '''
     # Load 3band data
-    bd0 = pos_array[:, bd_ind[0]]
-    bd1 = pos_array[:, bd_ind[1]]
-    bd2 = pos_array[:, bd_ind[2]]
-
+    bd0, bd1, bd2 = pos_array[:, bd_ind[0]], pos_array[:, bd_ind[1]], pos_array[:, bd_ind[2]]
+    bd0_ge1, bd1_ge1, bd2_ge1 = bd0[num_array>=1], bd1[num_array>=1], bd2[num_array>=1]
+    bd0_ls1, bd1_ls1, bd2_ls1 = bd0[num_array<1], bd1[num_array<1], bd2[num_array<1]
     for i, deg in enumerate(np.linspace(0, 360, sl_num, endpoint=False)):
         drawProgressBar(float(i+1)/sl_num)
         fig = plt.figure(figsize=(12, 8))
         ax  = fig.add_subplot(111, projection='3d')
         # Data Scatter
-        ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
+        #ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
+        ax.scatter(bd0_ge1, bd1_ge1, bd2_ge1, s=0.5, c='b', alpha=0.8)
+        ax.scatter(bd0_ls1, bd1_ls1, bd2_ls1, s=0.5, c='g', alpha=0.8)
         # PCA eigenvector
         for j in range(len(evectors)):
             evector = evectors[j]
@@ -113,7 +114,7 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
         ax.w_yaxis.set_ticklabels([0])
         ax.w_zaxis.set_ticklabels([0])
         ax.view_init(incli, deg)
-        ax.legend(['Scatter', '{}_{}'.format(method, pca_band_ind)])
+        ax.legend(['Scatter (GP>=1)', 'Scatter (GP<1)', '{}_{}'.format(method, pca_band_ind)])
         plt.savefig('{}{}{}_{:0>3d}_WI_{}_{}'.format(bd_name[0], bd_name[1], bd_name[2], i, method, pca_band_ind))
         plt.clf()
 
