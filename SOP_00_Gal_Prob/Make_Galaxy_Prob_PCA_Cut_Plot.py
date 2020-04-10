@@ -89,7 +89,11 @@ def find_gal_pos(gal_pos, target):
     id_array = np.array(id_list)
     return id_array
 
-def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted):
+def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted, onlyGP_ge1=True):
+    # Only include GP >= 1 datapoints
+    if onlyGP_ge1:
+        gal_pos = gal_pos[gal_num>=1]
+        gal_num = gal_num[gal_num>=1]
     # WPCA or PCA
     if weighted == 'True':
         name = 'WPCA'
