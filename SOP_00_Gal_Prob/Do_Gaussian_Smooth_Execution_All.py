@@ -96,19 +96,23 @@ for i in range(len(band_inp_list)):
     if one_by_one == 'yes': # smooth -> cascade -> smooth -> cascade ...
         system('Do_Gaussian_Smooth_Slice_Index.py {:d} {:.1f} {:d} {:d} {:d} {:d} {} {:d} {:d}'.format(\
                 dim, cube, sigma, bond, refD, lack_inp_list[i], band_inp_list[i], slice_num, 0))
-        pos = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp_list[i], slice_ind_list[0]))
-        num = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp_list[i], slice_ind_list[0]))
+        pos = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp_list[i],\
+                      slice_ind_list[0]))
+        num = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp_list[i],\
+                      slice_ind_list[0]))
         for j in range(1, slice_num):
             system('Do_Gaussian_Smooth_Slice_Index.py {:d} {:.1f} {:d} {:d} {:d} {:d} {} {:d} {:d}'.format(\
                 dim, cube, sigma, bond, refD, lack_inp_list[i], band_inp_list[i], slice_num, j))
-            new_pos  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp_list[i], slice_ind_list[j]))
-            new_num  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp_list[i], slice_ind_list[j]))
+            new_pos  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(\
+                    band_inp_list[i], slice_ind_list[j]))
+            new_num  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(\
+                    band_inp_list[i], slice_ind_list[j]))
             join_pos = np.concatenate((pos, new_pos), axis=0)
             join_num = np.concatenate((num, new_num), axis=0)
             # Sort and then cascade
             sort_ind = np.lexsort(tuple(np.transpose(join_pos)))
             sort_pos = np.array(join_pos[sort_ind], dtype=int)
-            sort_num = np.array(join_num[sort_ind], dtype=int)
+            sort_num = np.array(join_num[sort_ind], dtype=float)
             cas_pos, cas_num = cascade_array(sort_pos, sort_num)
             # Start again with cascade pos/num
             pos, num = np.array(cas_pos), np.array(cas_num)
@@ -124,19 +128,20 @@ for i in range(len(band_inp_list)):
         for j in range(1, slice_num):
             system('Do_Gaussian_Smooth_Slice_Index.py {:d} {:.1f} {:d} {:d} {:d} {:d} {} {:d} {:d}'.format(\
                 dim, cube, sigma, bond, refD, lack_inp_list[i], band_inp_list[i], slice_num, j))
-            new_pos  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(band_inp_list[i], slice_ind_list[j]))
-            new_num  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(band_inp_list[i], slice_ind_list[j]))
+            new_pos  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_pos.npy".format(\
+                    band_inp_list[i], slice_ind_list[j]))
+            new_num  = np.load(temp_dir_list[i] + "after_smooth_{}_{:0>3d}_num.npy".format(\
+                    band_inp_list[i], slice_ind_list[j]))
             pos      = np.concatenate((pos, new_pos), axis=0)
             num      = np.concatenate((num, new_num), axis=0)
             drawProgressBar(float(j+1)/slice_num)
         # If no slice needed
         if slice_num <= 1:
             join_pos, join_num = pos, num
-            print('test')
         # Sort explictly
         sort_ind = np.lexsort(tuple(np.transpose(join_pos)))
         sort_pos = np.array(join_pos[sort_ind], dtype=int)
-        sort_num = np.array(join_num[sort_ind], dtype=int)
+        sort_num = np.array(join_num[sort_ind], dtype=float)
         pos, num = cascade_array(sort_pos, sort_num)
     #================================================
     # Save all band result
