@@ -53,6 +53,7 @@ if __name__ == '__main__':
             GPPCA_Cut, dim, cube, sigma, bond, refD, '0', '0', ''.join([str(i) for i in range(dim)]), 'True'))
     system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {}'.format(\
             GPPCA_Cut, dim, cube, sigma, bond, refD, '0', '0', ''.join([str(i) for i in range(dim)]), 'False'))
+
     # Make_Galaxy_Prob_3D_Plot_With_PCA (Weigthed, Non-weighted)
     system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d} {} {}'.format(\
             GP3D_Plot_PCA, dim, cube, sigma, bond, refD, deg_slice, incli, 'True', 'True'))
