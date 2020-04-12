@@ -45,9 +45,10 @@ incli      = int(argv[7])
 weighted   = str(argv[8])
 maxd_pca   = str(argv[9])
 
+ddim       = 6                  # Specific dimensional data to plot
 shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 all_shape  = np.load(shape_dir + 'Shape.npy')
-print('\n', all_shape)
+print('\n', all_shape, ddim)
 
 smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(\
                 dim, cube, sigma, bond, refD)
@@ -84,7 +85,7 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
     Plot 2D plot along band 3 with PCA eigenvector
     '''
     # Load 3band data
-    bd0, bd1, bd2 = pos_array[:, bd_ind[0]], pos_array[:, bd_ind[1]], pos_array[:, bd_ind[2]]
+    bd0, bd1, bd2 = pos_array[:, 0], pos_array[:, 1], pos_array[:, 2]
     bd0_g1, bd1_g1, bd2_g1 = bd0[num_array>1], bd1[num_array>1], bd2[num_array>1]
     bd0_e1, bd1_e1, bd2_e1 = bd0[num_array==1], bd1[num_array==1], bd2[num_array==1]
     for i, deg in enumerate(np.linspace(0, 360, sl_num, endpoint=False)):
@@ -93,8 +94,8 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
         ax  = fig.add_subplot(111, projection='3d')
         # Data Scatter
         #ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
-        ax.scatter(bd0_g1, bd1_g1, bd2_g1, s=0.5, c='b', alpha=0.5)
-        ax.scatter(bd0_e1, bd1_e1, bd2_e1, s=0.5, c='g', alpha=0.8)
+        ax.scatter(bd0_g1, bd1_g1, bd2_g1, s=0.5, c='steelblue', alpha=0.3)
+        ax.scatter(bd0_e1, bd1_e1, bd2_e1, s=0.5, c='g', alpha=1.0)
         # PCA eigenvector
         for j in range(len(evectors)):
             evector = evectors[j]
@@ -151,8 +152,17 @@ if __name__ == '__main__':
         #=======================================================
         # Load galaxy pos/num
         l_start = time.time()
-        gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
-        gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
+        if ddim == dim:
+            gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(0, ''.join([str(i) for i in range(ddim)])))
+            gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(0, ''.join([str(i) for i in range(ddim)])))
+            gal_pos_1, gal_pos_2, gal_pos_3 = np.array([gal_pos[:, bd_ind[0]]]), \
+                                              np.array([gal_pos[:, bd_ind[1]]]), \
+                                              np.array([gal_pos[:, bd_ind[2]]])
+            gal_con = np.concatenate((gal_pos_1, gal_pos_2, gal_pos_3), axis=0)
+            gal_pos = np.transpose(gal_con)
+        else:
+            gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
+            gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
         out_pos, out_num = sort_inp_gal(gal_pos, gal_num) # only include gp>=1 data points
         pos_array, num_array = np.array(out_pos), np.array(out_num)
         # Load PCA data
