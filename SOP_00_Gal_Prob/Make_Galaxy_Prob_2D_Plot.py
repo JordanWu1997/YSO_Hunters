@@ -36,11 +36,12 @@ sigma      = int(argv[3])       # STD for Gaussian Smooth
 bond       = int(argv[4])
 refD       = int(argv[5])       # Reference Beam Dimension
 
+ddim       = 6                  # Specific dimensional data to plot
 shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
 output_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
 all_shape  = np.load(shape_dir + 'Shape.npy')
-print('\n', all_shape)
+print('\n', all_shape, ddim)
 
 # Check storage directory
 if not path.isdir(output_dir):
@@ -52,153 +53,138 @@ def update_num(gal_pos, gal_num):
     '''
     Update gal_num to a cube array with gal_pos
     '''
-    bd1_pos, bd2_pos, bd3_pos = gal_pos[:, bd_ind[0]], gal_pos[:, bd_ind[1]], gal_pos[:, bd_ind[2]]
+    bd1_pos, bd2_pos, bd3_pos = gal_pos[:, 0], gal_pos[:, 1], gal_pos[:, 2]
     bd1_len, bd2_len, bd3_len = shape[0], shape[1], shape[2]
     cube_array = np.zeros((bd1_len, bd2_len, bd3_len))
     for i in range(len(gal_pos)):
         if gal_num[i] > 1.:
-            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 2
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 2.0
         elif gal_num[i] == 1.:
-            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 1
-        else:
-            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 0.5 #gal_num[i]
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 1.2
+        elif gal_num[i] < 1.:
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = 0.5
     return cube_array
 
-def plot_along_bd1(cube_array, shape, bd_name):
+def plot_along_bd(cube_array, shape, bd_name, bd_axis):
+    '''
+    Plot 2D plot along specific band
+    '''
+    for i in range(cube_array.shape[bd_axis]):
+        drawProgressBar(float(i+1)/cube_array.shape[bd_axis])
 
-    '''
-    Plot 2D plot along band 1
-    '''
-    for i in range(cube_array.shape[0]):
-        drawProgressBar(float(i+1)/cube_array.shape[0])
-        plt.figure()
-        plt.imshow(cube_array[i, :, :], origin='lower', vmin=0, vmax=2)
-        plt.title('{} = {:d}'.format(bd_name[0], i))
-        plt.xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
-        plt.ylabel('{} ({:d})'.format(bd_name[1], shape[1]))
-        plt.xticks(np.arange(0-0.5, shape[2]+0.5, 1))
-        plt.yticks(np.arange(0-0.5, shape[1]+0.5, 1))
-        frame1 = plt.gca()
-        frame1.axes.xaxis.set_ticklabels([0])
-        frame1.axes.yaxis.set_ticklabels([0])
-        plt.colorbar(label='galaxy probability')
-        plt.grid()
+        fig, axe = plt.subplots()
+        if bd_axis == 0:
+            cax = axe.imshow(cube_array[i, :, :], origin='lower', vmin=0, vmax=2, cmap='hot')
+            axe.set_title('{} = {:d}'.format(bd_name[0], i))
+            axe.set_xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
+            axe.set_ylabel('{} ({:d})'.format(bd_name[1], shape[1]))
+            axe.set_xticks(np.arange(0-0.5, shape[2]+0.5, 1))
+            axe.set_yticks(np.arange(0-0.5, shape[1]+0.5, 1))
+        elif bd_axis == 1:
+            cax = axe.imshow(cube_array[:, i, :], origin='lower', vmin=0, vmax=2, cmap='hot')
+            axe.set_title('{} = {:d}'.format(bd_name[1], i))
+            axe.set_xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
+            axe.set_ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
+            axe.set_xticks(np.arange(0-0.5, shape[2]+0.5, 1))
+            axe.set_yticks(np.arange(0-0.5, shape[0]+0.5, 1))
+        elif bd_axis == 2:
+            cax = axe.imshow(cube_array[:, :, i], origin='lower', vmin=0, vmax=2, cmap='hot')
+            axe.set_title('{} = {:d}'.format(bd_name[2], i))
+            axe.set_xlabel('{} ({:d})'.format(bd_name[1], shape[1]))
+            axe.set_ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
+            axe.set_xticks(np.arange(0-0.5, shape[1]+0.5, 1))
+            axe.set_yticks(np.arange(0-0.5, shape[0]+0.5, 1))
+
+        axe.xaxis.set_ticklabels([0])
+        axe.yaxis.set_ticklabels([0])
+        cbar = fig.colorbar(cax, ticks=[0.0, 0.5, 1.2, 2.0], label='GP')
+        cbar.ax.set_yticklabels(['=0', '< 1.', '=1.', '> 1'])
+        axe.grid()
         plt.tight_layout()
         plt.savefig('{}_{:0>3d}'.format(bd_name[0], i))
         plt.clf()
 
-def plot_along_bd2(cube_array, shape, bd_name):
-    '''
-    Plot 2D plot along band 2
-    '''
-    for j in range(cube_array.shape[1]):
-        drawProgressBar(float(j+1)/cube_array.shape[1])
-        plt.figure()
-        plt.imshow(cube_array[:, j, :], origin='lower', vmin=0, vmax=2)
-        plt.title('{} = {:d}'.format(bd_name[1], j))
-        plt.xlabel('{} ({:d})'.format(bd_name[2], shape[2]))
-        plt.ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
-        plt.xticks(np.arange(0-0.5, shape[2]+0.5, 1))
-        plt.yticks(np.arange(0-0.5, shape[0]+0.5, 1))
-        frame1 = plt.gca()
-        frame1.axes.xaxis.set_ticklabels([0])
-        frame1.axes.yaxis.set_ticklabels([0])
-        plt.colorbar(label='galaxy probability')
-        plt.grid()
-        plt.tight_layout()
-        plt.savefig('{}_{:0>3d}'.format(bd_name[1], j))
-        plt.clf()
-
-def plot_along_bd3(cube_array, shape, bd_name):
-    '''
-    Plot 2D plot along band 3
-    '''
-    for k in range(cube_array.shape[2]):
-        drawProgressBar(float(k+1)/cube_array.shape[2])
-        plt.figure()
-        plt.imshow(cube_array[:, :, k], origin='lower', vmin=0, vmax=2)
-        plt.title('{} = {:d}'.format(bd_name[2], k))
-        plt.xlabel('{} ({:d})'.format(bd_name[1], shape[1]))
-        plt.ylabel('{} ({:d})'.format(bd_name[0], shape[0]))
-        plt.xticks(np.arange(0-0.5, shape[1]+0.5, 1))
-        plt.yticks(np.arange(0-0.5, shape[0]+0.5, 1))
-        frame1 = plt.gca()
-        frame1.axes.xaxis.set_ticklabels([0])
-        frame1.axes.yaxis.set_ticklabels([0])
-        plt.colorbar(label='galaxy probability')
-        plt.grid()
-        plt.tight_layout()
-        plt.savefig('{}_{:0>3d}'.format(bd_name[2], k))
-        plt.clf()
-
 #=======================================================
 # Main Programs
-m_start = time.time()
-# Just for debugging test: band_ind_list = np.array([0, 1, 2])
-band_ind_list = np.arange(0, dim, 1)
-for comb in combinations(band_ind_list, 3):
+if __name__ == '__main__':
+
+    m_start = time.time()
+
+    # Just for debugging test: band_ind_list = np.array([0, 1, 2])
+    band_ind_list = np.arange(0, dim, 1)
+    for comb in combinations(band_ind_list, 3):
+
+        #=======================================================
+        # Generate band input
+        band_ind = ''
+        for band in comb:
+            band_ind += str(band)
+        bd_ind, shape, bd_name = [], [], []
+        for ind in band_ind:
+            bd_ind.append(int(ind))
+            shape.append(all_shape[int(ind)])
+            bd_name.append(band_name[int(ind)])
+        print('\n# band: ' + band_ind)
+
+        #======================================================
+        # Load galaxy pos/num
+        l_start = time.time()
+        if ddim == dim:
+            gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(0, ''.join([str(i) for i in range(ddim)])))
+            gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(0, ''.join([str(i) for i in range(ddim)])))
+            gal_pos_1, gal_pos_2, gal_pos_3 = np.array([gal_pos[:, bd_ind[0]]]), \
+                                              np.array([gal_pos[:, bd_ind[1]]]), \
+                                              np.array([gal_pos[:, bd_ind[2]]])
+            gal_con = np.concatenate((gal_pos_1, gal_pos_2, gal_pos_3), axis=0)
+            gal_pos = np.transpose(gal_con)
+        else:
+            gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
+            gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
+
+        cube_array = update_num(gal_pos, gal_num)
+        l_end   = time.time()
+        #print('Loading took {:.3f} secs'.format(l_end-l_start))
+
+        #=======================================================
+        # Start plotting
+        p_start = time.time()
+        chdir(output_dir)
+        tomo_dir = 'tomo_{}/'.format(band_ind)
+        if not path.isdir(tomo_dir):
+            system('mkdir {}'.format(tomo_dir))
+        chdir(tomo_dir)
+
+        print('axis-0')
+        axis_dir = 'axis_{}/'.format(bd_ind[0])
+        if not path.isdir(axis_dir):
+            system('mkdir {}'.format(axis_dir))
+        chdir(axis_dir)
+        plot_along_bd(cube_array, shape, bd_name, 0)
+        chdir('../')
+        system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[0]))
+
+        print('\naxis-1')
+        axis_dir = 'axis_{}/'.format(bd_ind[1])
+        if not path.isdir(axis_dir):
+            system('mkdir {}'.format(axis_dir))
+        chdir(axis_dir)
+        plot_along_bd(cube_array, shape, bd_name, 1)
+        chdir('../')
+        system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[1]))
+
+        print('\naxis-2')
+        axis_dir = 'axis_{}/'.format(bd_ind[2])
+        if not path.isdir(axis_dir):
+            system('mkdir {}'.format(axis_dir))
+        chdir(axis_dir)
+        plot_along_bd(cube_array, shape, bd_name, 2)
+        chdir('../')
+        system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[2]))
+
+        chdir('../../')
+        p_end   = time.time()
+        print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
 
     #=======================================================
-    # Generate band input
-    band_ind = ''
-    for band in comb:
-        band_ind += str(band)
-    bd_ind, shape, bd_name = [], [], []
-    for ind in band_ind:
-        bd_ind.append(int(ind))
-        shape.append(all_shape[int(ind)])
-        bd_name.append(band_name[int(ind)])
-    print('\n# band: ' + band_ind)
-
-    #=======================================================
-    # Load galaxy pos/num
-    l_start = time.time()
-    gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
-    gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
-    cube_array = update_num(gal_pos, gal_num)
-    l_end   = time.time()
-    #print('Loading took {:.3f} secs'.format(l_end-l_start))
-
-    #=======================================================
-    # Start plotting
-    p_start = time.time()
-    chdir(output_dir)
-    tomo_dir = 'tomo_{}/'.format(band_ind)
-    if not path.isdir(tomo_dir):
-        system('mkdir {}'.format(tomo_dir))
-    chdir(tomo_dir)
-
-    axis_dir = 'axis_{}/'.format(bd_ind[0])
-    if not path.isdir(axis_dir):
-        system('mkdir {}'.format(axis_dir))
-    print('axis-0')
-    chdir(axis_dir)
-    plot_along_bd1(cube_array, shape, bd_name)
-    chdir('../')
-    system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[0]))
-
-    axis_dir = 'axis_{}/'.format(bd_ind[1])
-    if not path.isdir(axis_dir):
-        system('mkdir {}'.format(axis_dir))
-    chdir(axis_dir)
-    print('\naxis-1')
-    plot_along_bd2(cube_array, shape, bd_name)
-    chdir('../')
-    system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[1]))
-
-    axis_dir = 'axis_{}/'.format(bd_ind[2])
-    if not path.isdir(axis_dir):
-        system('mkdir {}'.format(axis_dir))
-    chdir(axis_dir)
-    print('\naxis-2')
-    plot_along_bd3(cube_array, shape, bd_name)
-    chdir('../')
-    system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[2]))
-
-    chdir('../../')
-    p_end   = time.time()
-    print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
-
-#=======================================================
-m_end   = time.time()
-print('\nWhole Process took {:.3f} secs\n'.format(m_end-m_start))
+    m_end   = time.time()
+    print('\nWhole Process took {:.3f} secs\n'.format(m_end-m_start))
