@@ -138,7 +138,7 @@ def generate_pca(bd_id_list, shape, centroid, components, component_n):
     '''
     # Set up boundary
     band_upper_bd  = np.array([shape[bd_id] for bd_id in bd_id_list])
-    band_lower_bd  = np.array([0.5 for bd_id in bd_id_list])
+    band_lower_bd  = np.array([0.0 for bd_id in bd_id_list])
     pca_round_list = []
     for n in range(component_n):
         # Set up pca axe
@@ -147,6 +147,7 @@ def generate_pca(bd_id_list, shape, centroid, components, component_n):
             pca_axe = -1 * pca_axe
         # Smaller than centroid
         pca_line, pos, i = [centroid], centroid, 1
+        # print(pca_axe)
         while np.all(np.greater_equal(pos, band_lower_bd)):
             pos = centroid + (i * pca_axe)
             pca_line.append(pos)
@@ -159,8 +160,13 @@ def generate_pca(bd_id_list, shape, centroid, components, component_n):
             j += 1
         # Store in numpy array (round to closet integer)
         pca_round = np.rint(pca_line)
-        pca_int   = np.array(pca_round, dtype=int)
-        pca_round_list.append(pca_int)
+        # Remove negative element in pca array
+        pca_non_neg = []
+        for pca_int in pca_round:
+            if np.all(pca_int >= np.zeros(len(pca_int))):
+                pca_non_neg.append(pca_int)
+        pca_non_neg = np.array(pca_non_neg, dtype=int)
+        pca_round_list.append(pca_non_neg)
     return pca_round_list
 
 def cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper, simple_cut=True):
