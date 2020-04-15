@@ -49,23 +49,23 @@
 	└── ...... (Different band combinations)
 ├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/          #
 	├── pca_cut/                                        #
-	│     ├── L0_012345_PCA_E0.png                      #
-	│     ├── L0_012345_WPCA_E0.png                     #
-	│     ├── ...... (Different principle components)   
-	│     ├── PCA_components_012345.npy                 #
-	│     ├── PCA_premean_012345.npy                    #
-	│     ├── PCA_variances_012345.npy                  #
-	│     ├── PCA_var_ratios_012345.npy                 #
-	│     ├── WPCA_components_012345.npy                #
-	│     ├── WPCA_premean_012345.npy                   #
-	│     ├── WPCA_variances_012345.npy                 #
-	│     └── WPCA_var_ratios_012345.npy                #
+		├── L0_012345_PCA_E0.png                    #
+		├── L0_012345_WPCA_E0.png                   #
+	     	├── ...... (Different principle components)   
+		├── PCA_components_012345.npy               #
+	     	├── PCA_premean_012345.npy                  #
+	     	├── PCA_variances_012345.npy                #
+	     	├── PCA_var_ratios_012345.npy               #
+	     	├── WPCA_components_012345.npy              #
+	     	├── WPCA_premean_012345.npy                 #
+	     	├── WPCA_variances_012345.npy               #
+	     	└── WPCA_var_ratios_012345.npy              #
 	├── tomo_012/                                       #
-	│     ├── 012_all_0_n5_i10.gif                      #
-	│     ├── 012_all_0_n5_i10_WI_PCA_012345.gif        #
-	│     ├── 012_all_0_n5_i10_WI_WPCA_012345.gif       #
-	│     ├── 012axis_0.gif                             #
-	│     ├── all_012_n5_i10/                           #
-	│     ├── all_012_n5_i10_WI_PCA_012345/             #
-	│     └─ all_012_n5_i10_WI_WPCA_012345/             #
+	     	├── 012_all_0_n5_i10.gif                    #
+	     	├── 012_all_0_n5_i10_WI_PCA_012345.gif      #
+	     	├── 012_all_0_n5_i10_WI_WPCA_012345.gif     #
+	     	├── 012axis_0.gif                           #
+	     	├── all_012_n5_i10/                         #
+	     	├── all_012_n5_i10_WI_PCA_012345/           #
+	     	└─ all_012_n5_i10_WI_WPCA_012345/           #
 	└── ...... (Different band combinations)
