@@ -24,8 +24,8 @@
 	- Make_Galaxy_Prob_3D_Plot_With_PCA.py
 	
 # Output File Structure
+## In "Working Directory" (where all above programs should be excecuted)
 ```
-"In Working Directory" (Where all programs should be excecuted under)
 ├── GPV_6Dposvec_bin0.2/                                    # 
 	├── Band_pos_num/                                   #
 	├── Lack_pos_num/                                   #
@@ -39,7 +39,7 @@
 	├── 4d_beam_sigma2.npy                              #
 	├── 5d_beam_sigma2.npy                              #
 	├── 6d_beam_sigma2.npy                              #
-	└── ND_Beam_sigma2_refD5                            #
+	└── ND_Beam_sigma2_refD5/                           #
     		└── Beam_in_diff_dim.png                    #
 ├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/          #
 	├── After_012345/                                   #
