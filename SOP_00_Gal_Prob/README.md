@@ -24,7 +24,7 @@
 	- Make_Galaxy_Prob_3D_Plot_With_PCA.py
 	
 ### Part4 -  Output File Structure
-#### In "Working Directory" (where all above programs should be excecuted and input catalogs should be)
+#### In "Working Directory" (where all above programs should be excecuted and input catalogs should be stored)
 ```
 ├── GPV_6Dposvec_bin0.2/                                    # 
 	├── Band_pos_num/                                   #
