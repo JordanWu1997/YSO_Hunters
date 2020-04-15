@@ -47,7 +47,7 @@
 	├── after_smooth_lack_0_012345_all_cas_num.npy      #
 	├── after_smooth_lack_0_012345_all_cas_pos.npy      #
 	└── ...... (Different band combinations)
-GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/              #
+├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/          #
 	├── pca_cut/                                        #
 	│     ├── L0_012345_PCA_E0.png                      #
 	│     ├── L0_012345_WPCA_E0.png                     #
