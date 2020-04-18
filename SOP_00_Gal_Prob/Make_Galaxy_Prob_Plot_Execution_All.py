@@ -50,9 +50,9 @@ if __name__ == '__main__':
 
     # Make_Galaxy_Prob_PCA_Cut_Plot.py (Weighted, Non-weighted)
     system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {}'.format(\
-            GPPCA_Cut, dim, cube, sigma, bond, refD, '0', '0', ''.join([str(i) for i in range(dim)]), 'True'))
+            GPPCA_Cut, dim, cube, sigma, bond, refD, '0', ''.join([str(i) for i in range(dim)]), 'True'))
     system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {}'.format(\
-            GPPCA_Cut, dim, cube, sigma, bond, refD, '0', '0', ''.join([str(i) for i in range(dim)]), 'False'))
+            GPPCA_Cut, dim, cube, sigma, bond, refD, '0', ''.join([str(i) for i in range(dim)]), 'False'))
 
     # Make_Galaxy_Prob_3D_Plot_With_PCA (Weigthed, Non-weighted)
     system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d} {} {}'.format(\
