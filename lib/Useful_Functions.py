@@ -1,5 +1,7 @@
 #!/usr/bin/python
-'''----------------------------------------------------------------
+'''
+----------------------------------------------------------------
+This stores useful functions in YSO Hunter project
 -------------------------------------------------------------------
 latest update : Jordan Wu'''
 
@@ -45,6 +47,15 @@ def cal_smooth_beam(pos_array, num_array, no_lack_ind, beam):
             after_beam_smooth_num.append(float(num_array) * weight)
     return after_beam_smooth_pos, after_beam_smooth_num
 
+def sort_up_array_element(input_array):
+    '''
+    Use this to sort up array (MUST DO before cascade array)
+    '''
+    input_array_t  = np.transpose(input_array)
+    sort_ind_array = np.lexsort(tuple(input_array_t))
+    sort_up_array  = input_array[sort_ind_array]
+    return sort_ind_array, sort_up_array
+
 @jit(nopython=True)
 def cascade_array(sort_pos, sort_num):
     '''
@@ -77,3 +88,31 @@ def cascade_array(sort_pos, sort_num):
     after_cascade_pos.append(sort_pos[start])
     after_cascade_num.append(np.sum(sort_num[start:]))
     return after_cascade_pos, after_cascade_num
+
+def cascade_array_same_pos(sort_pos):
+    '''
+    Use this to find out sources locate in same position and cascade them
+    '''
+    after_cascade_pos = []
+    start = 0
+    end   = 0
+    for i in range(len(sort_pos)-1):
+        tar, ref = sort_pos[i], sort_pos[i+1]
+        end += 1
+        if not np.all(np.equal(tar, ref)):
+            after_cascade_pos.append(sort_pos[start])
+            start = end
+    after_cascade_pos.append(sort_pos[start])
+    return after_cascade_pos
+
+@jit(nopython=True)
+def find_pos_id_in_gal_pos(gal_pos, target):
+    '''
+    This is to find if target in galaxy position array
+    '''
+    id_list = []
+    for i in range(len(gal_pos)):
+        if np.all(np.equal(gal_pos[i], target)):
+            id_list.append(i)
+    id_array = np.array(id_list)
+    return id_array
