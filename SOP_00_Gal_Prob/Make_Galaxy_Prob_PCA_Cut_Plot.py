@@ -5,9 +5,7 @@
 from __future__ import print_function
 from sys import argv, exit
 from os import path, system, chdir
-from numba import jit
-from wpca import WPCA  #PCA
-from sklearn.decomposition import PCA
+from wpca import WPCA, PCA
 from Useful_Functions import *
 import numpy as np
 import time
@@ -15,18 +13,17 @@ import time
 # For non-interactive backend (No request for showing pictures)
 import matplotlib
 matplotlib.use('Agg')
-matplotlib.rc('figure', max_open_warning = 0)
+matplotlib.rc('figure', max_open_warning=0)
 import matplotlib.pyplot as plt
 
-if len(argv) != 10:
+if len(argv) != 9:
     exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [tor] [lack] [band_inp] [weighted]\
+    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [lack] [band_inp] [weighted]\
     \n\t[dim]: dimension for smooth (for now only "6")\
     \n\t[cube size]: length of multi-d cube in magnitude unit\
     \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
     \n\t[bond]: boundary radius of gaussian beam unit in cell\
     \n\t[ref-D]: reference dimension which to modulus other dimension to\
-    \n\t[tor]: tolerence radius unit in cell\
     \n\t[lack]: number of lack bands\
     \n\t[band_inp]: band used to do smooth in string e.g. 012345\
     \n\t[weighted]: Use weighted PCA or not (True/False)\n')
@@ -38,57 +35,22 @@ cube        = float(argv[2])     # Beamsize for each cube
 sigma       = int(argv[3])       # STD for Gaussian Smooth
 bond        = int(argv[4])
 refD        = int(argv[5])       # Reference Beam Dimension
-tor         = int(argv[6])
-lack        = int(argv[7])
-band_inp    = str(argv[8])
-weighted    = str(argv[9])
+lack        = int(argv[6])
+band_inp    = str(argv[7])
+weighted    = str(argv[8])
+
+# Check directories
 band_id_list = []
 for i in range(len(band_inp)):
     band_id_list.append(int(band_inp[i]))
 posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
 tomo_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
+# Cut style: fc (full cut) / sc (simple cut)
+cut_style = 'fc'
 
 # Main Functions
 #==========================================================
-def sort_up_array_element(input_array):
-    '''
-    Use this to sort up array (MUST DO before cascade array)
-    '''
-    input_array_t  = np.transpose(input_array)
-    sort_ind_array = np.lexsort(tuple(input_array_t))
-    sort_up_array  = input_array[sort_ind_array]
-    return sort_ind_array, sort_up_array
-
-@jit(nopython=True)
-def cascade_array(sort_pos):
-    '''
-    Use this to find out sources locate in same position and cascade them
-    '''
-    after_cascade_pos = []
-    start = 0
-    end   = 0
-    for i in range(len(sort_pos)-1):
-        tar, ref = sort_pos[i], sort_pos[i+1]
-        end += 1
-        if not np.all(np.equal(tar, ref)):
-            after_cascade_pos.append(sort_pos[start])
-            start = end
-    after_cascade_pos.append(sort_pos[start])
-    return after_cascade_pos
-
-@jit(nopython=True)
-def find_gal_pos(gal_pos, target):
-    '''
-    This is to find if target in galaxy position array
-    '''
-    id_list = []
-    for i in range(len(gal_pos)):
-        if np.all(np.equal(gal_pos[i], target)):
-            id_list.append(i)
-    id_array = np.array(id_list)
-    return id_array
-
 def PCA_fit(dim, gal_pos, gal_num, band_inp, weighted, onlyGP_ge1=True):
     # Only include GP >= 1 datapoints
     if onlyGP_ge1:
@@ -169,51 +131,66 @@ def generate_pca(bd_id_list, shape, centroid, components, component_n):
         pca_round_list.append(pca_non_neg)
     return pca_round_list
 
-def cal_pca_cut(pca_arr, gal_pos, gal_num, tor_beam, upper, simple_cut=True):
+def cal_pca_cut(pca_arr, gal_pos, gal_num, upper, cut_style='sc'):
     '''
     This is to calculate hist along pca line
+    Note: No more tolerance
+    Note: sc stands for simple cut
+          fc stands for full cut
     '''
-    #TODO: Find a better way to execute tolerance ...
+    # get pca cut
     lower = np.zeros(len(upper))
     pca_bin = []
-    for i, pca in enumerate(pca_arr):
+    for i, pca_pos in enumerate(pca_arr):
         drawProgressBar(float(i+1)/len(pca_arr))
-        flag = 0.
-        for beam in tor_beam:
-            tor_pca = pca + beam[:-1]
-            if np.all(np.less(tor_pca, upper)) and np.all(np.greater_equal(tor_pca, lower)):
-                loc_id = find_gal_pos(gal_pos, np.array(tor_pca, dtype=int))
-                if len(loc_id) == 1:
-                    flag += gal_num[loc_id]
-        pca_bin.append(flag)
-    if simple_cut:
+        loc_id = find_pos_id_in_gal_pos(gal_pos, np.array(pca_pos, dtype=int))
+        if len(loc_id) == 1:
+            num = gal_num[loc_id]
+        else:
+            num = 0.
+        pca_bin.append(num)
+    # cut_style
+    if cut_style == 'sc':
         for i, dbin in enumerate(pca_bin):
             if dbin > 1.:
                 pca_bin[i] = 1.5
             elif dbin < 1. and dbin > 0. :
                 pca_bin[i] = 0.5
+    elif cut_style == 'fc':
+        pass
     pca_bin = np.array(pca_bin)
     return pca_bin
 
-def plot_pca_step(pca, pca_cut, lack, band_inp, var_ratio, name, component_n):
+def plot_pca_step(pca, pca_cut, lack, band_inp, var_ratio, name, component_n, cut_style='sc'):
     '''
     This is to plot histogram along pca eigen axis
+    sc stands for simple cut
     '''
     plt.figure()
-    plt.axhline(1.5, xmax=len(pca), xmin=0, label='GP>1', c='g', ls='--')
-    plt.axhline(1.0, xmax=len(pca), xmin=0, label='GP=1', c='b', ls='--')
-    plt.axhline(0.5, xmax=len(pca), xmin=0, label='GP<1', c='gold', ls='--')
-    plt.axhline(0.0, xmax=len(pca), xmin=0, label='GP=0', c='r', ls='--')
-    plt.step(np.arange(0+0.5, len(pca)+0.5, 1), pca_cut, c='k')
-    plt.xticks(np.arange(0+0.5, len(pca)+0.5, 1))
     frame = plt.gca()
     frame.axes.xaxis.set_ticklabels([0])
-    frame.axes.yaxis.set_ticklabels([])
-    plt.title('Band:{}; e-axis{:d}; var_ratio={:.3f}'.format(band_inp, component_n, var_ratio))
+
+    if cut_style == 'sc':
+        frame.axes.yaxis.set_ticklabels([])
+        plt.axhline(1.5, xmax=len(pca), xmin=0, label='GP>1', c='g', ls='--')
+        plt.axhline(1.0, xmax=len(pca), xmin=0, label='GP=1', c='b', ls='--')
+        plt.axhline(0.5, xmax=len(pca), xmin=0, label='GP<1', c='gold', ls='--')
+        plt.axhline(0.0, xmax=len(pca), xmin=0, label='GP=0', c='r', ls='--')
+        yscale = 'linear'
+        ylabe = 'Galaxy Probability ({})'.format(cut_style)
+    elif cut_style == 'fc':
+        plt.axhline(1.0, xmax=len(pca), xmin=0, label='GP=1', c='b', ls='--')
+        yscale = 'log'
+        ylabel = 'log Galaxy Probability ({})'.format(cut_style)
+
+    plt.step(np.arange(0+0.5, len(pca)+0.5, 1), pca_cut, c='k')
+    plt.xticks(np.arange(0+0.5, len(pca)+0.5, 1))
+    plt.yscale(yscale)
+    plt.ylabel(ylabel)
+    plt.title('{} Band:{}; e-axis{:d}; var_ratio={:.3f}'.format(cut_style, band_inp, component_n, var_ratio))
     plt.xlabel('Along PC e-axis {:d} (bin={:.1f}mag)'.format(component_n, cube))
-    plt.ylabel('Galaxy Probability')
     plt.legend()
-    plt.savefig('L{:d}_{}_{}_E{}'.format(lack, band_inp, name, component_n))
+    plt.savefig('{}_L{:d}_{}_{}_E{}'.format(cut_style, lack, band_inp, name, component_n))
 
 # Main Programs
 #==========================================================
@@ -225,10 +202,6 @@ if __name__ == '__main__':
     gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(lack, band_inp))
     shape   = np.load(posv_dir + 'Shape.npy')
     gal_pos = gal_pos[:, band_id_list]
-
-    # Load tolerance beam
-    beam_dir = 'GPV_smooth_sigma{:d}_bond{:d}_refD{:d}/'.format(sigma, tor, refD)
-    tor_beam = np.load(beam_dir + "{:d}d_beam_sigma{:d}.npy".format(int(dim-lack), sigma))
 
     # Check existence of output directory
     if not path.isdir(tomo_dir):
@@ -248,7 +221,7 @@ if __name__ == '__main__':
     pca_cas_list  = []
     for pca_line in pca_line_list:
         _, sort_pca_line = sort_up_array_element(pca_line)
-        pca_cas = cascade_array(sort_pca_line)
+        pca_cas = cascade_array_same_pos(sort_pca_line)
         pca_cas_list.append(pca_cas)
     g_end    = time.time()
     print('\nGenerating pca array took {:.3f} secs'.format(g_end-g_start))
@@ -259,7 +232,7 @@ if __name__ == '__main__':
     pca_cut_list = []
     for i, pca_cas in enumerate(pca_cas_list):
         print('\ne-axis {:d}'.format(i))
-        pca_cut = cal_pca_cut(pca_cas, gal_pos, gal_num, tor_beam, upper)
+        pca_cut = cal_pca_cut(pca_cas, gal_pos, gal_num, upper, cut_style=cut_style)
         pca_cut_list.append(pca_cut)
     c_end    = time.time()
     print('\nCalculating pca cut took {:.3f} secs'.format(c_end-c_start))
@@ -267,7 +240,7 @@ if __name__ == '__main__':
     # Plot step along pca line
     p_start  = time.time()
     for i in range(len(pca_cut_list)):
-        plot_pca_step(pca_cas_list[i], pca_cut_list[i], lack, band_inp, var_ratios[i], name, i)
+        plot_pca_step(pca_cas_list[i], pca_cut_list[i], lack, band_inp, var_ratios[i], name, i, cut_style=cut_style)
     chdir('../../')
     p_end    = time.time()
     print('\nPlotting step cut took {:.3f} secs'.format(p_end-p_start))
