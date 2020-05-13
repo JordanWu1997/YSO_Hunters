@@ -16,9 +16,9 @@ matplotlib.use('Agg')
 matplotlib.rc('figure', max_open_warning=0)
 import matplotlib.pyplot as plt
 
-if len(argv) != 9:
+if len(argv) != 10:
     exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [lack] [band_inp] [weighted]\
+    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [lack] [band_inp] [weighted] [cut_style]\
     \n\t[dim]: dimension for smooth (for now only "6")\
     \n\t[cube size]: length of multi-d cube in magnitude unit\
     \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
@@ -26,7 +26,8 @@ if len(argv) != 9:
     \n\t[ref-D]: reference dimension which to modulus other dimension to\
     \n\t[lack]: number of lack bands\
     \n\t[band_inp]: band used to do smooth in string e.g. 012345\
-    \n\t[weighted]: Use weighted PCA or not (True/False)\n')
+    \n\t[weighted]: Use weighted PCA or not (True/False)\
+    \n\t[cut_style]: fc (full cut) / sc (simple cut, with interval)\n')
 
 # Input Variables
 #==========================================================
@@ -38,6 +39,7 @@ refD        = int(argv[5])       # Reference Beam Dimension
 lack        = int(argv[6])
 band_inp    = str(argv[7])
 weighted    = str(argv[8])
+cut_style   = str(argv[9])       # Cut style: fc (full cut) / sc (simple cut)
 
 # Check directories
 band_id_list = []
@@ -46,8 +48,6 @@ for i in range(len(band_inp)):
 posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
 tomo_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
-# Cut style: fc (full cut) / sc (simple cut)
-cut_style = 'fc'
 
 # Main Functions
 #==========================================================
@@ -177,7 +177,7 @@ def plot_pca_step(pca, pca_cut, lack, band_inp, var_ratio, name, component_n, cu
         plt.axhline(0.5, xmax=len(pca), xmin=0, label='GP<1', c='gold', ls='--')
         plt.axhline(0.0, xmax=len(pca), xmin=0, label='GP=0', c='r', ls='--')
         yscale = 'linear'
-        ylabe = 'Galaxy Probability ({})'.format(cut_style)
+        ylabel = 'Galaxy Probability ({})'.format(cut_style)
     elif cut_style == 'fc':
         plt.axhline(1.0, xmax=len(pca), xmin=0, label='GP=1', c='b', ls='--')
         yscale = 'log'
