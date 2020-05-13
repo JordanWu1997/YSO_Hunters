@@ -15,7 +15,7 @@ if len(argv) != 6:
     \n\tExample: [program] [input catalog] [mag/flux] [qua] [dimension] [cube size]\
     \n\t[input catalog]: must include magnitudes\
     \n\t[mag/flux]: input data in magnitude or flux (mJy)\
-    \n\t[qua]: if qua label is taken into calculation\
+    \n\t[qua]: if qua label is taken into calculation (True/False)\
     \n\t[dimension]: dim of magnitude space (for now only "6")\
     \n\t[cube size]: length of multi-d cube in magnitude unit\n')
 
