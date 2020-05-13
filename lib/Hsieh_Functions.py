@@ -45,6 +45,24 @@ f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]  # H: 1024000
 f0_UKIDSS_Spitzer = [1530000, 280900, 179700, 115000, 64130, 7140] # H: 1019000
 f0_Spitzer = [280900, 179700, 115000, 64130, 7140]
 
+# parameters [band, flux index, mag index, C_av(Exctintion_coef)]
+C_av_list = [['J',  0.2741],
+            ['H',  0.1622],
+            ['K',  0.1119],
+            ['IR1', 0.0671],
+            ['IR2', 0.0543],
+            ['IR3', 0.0444],
+            ['IR4', 0.0463],
+            ['MP1', 0.0259],
+            ['MP2', 0]]
+
+# Extinction Correction Parameters
+Av_coor_ID   = [0, 1]  # RA, Dec on extinction table
+Av_ID        = [17]
+coor_ID      = [0, 2]  # RA, Dec on input table
+full_mag_ID  = [33, 54, 75, 96, 117, 138, 159, 180, 201]
+full_flux_ID = [35, 56, 77, 98, 119, 140, 161, 182, 203]
+
 # Band name
 band_name = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
 #==============================================================================
