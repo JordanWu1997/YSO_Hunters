@@ -17,6 +17,18 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 	- Try to make all programs more flexiable (catalog column indice independence)
 
 ## **IV. How To Use SOP Programs**
+0. Catalog on zeus (Optional)
+- All used catalog stored under:
+    - ``` /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog ```
+    1.  Purpose: Construct galaxy probabilties and find boundaries
+        - SEIP_pred_catalog: SEIP catalog to construct galaxy probabilities and find boundaries
+        - UKIDSS_DR10PLUS: c2d catalog for ELAIS N1 region
+    2.  Purpose: Try to find out new YSO in molecular cloud regions
+        - 2MASS_TO_UKIDSS: For region where no UKIDSS observation, just transform old c2d catalog to UKIDSS system (CHA_II, LUP_I, LUP_III, LUP_IV)
+        - UKIDSS_DR11PLUS_WI_2MASS_BR: For J, H, K band, Replace 2MASS observation (which MAG<11.5) with UKIDSS observation and transform 2MASS data to UKIDSS system.
+    3.  Purpose: Backup c2d catalogs
+        - SPITZER: The c2d catalog from spitzer catalog
+
 1. Add Directories started with SOP to current working environments
 - e.g. In .cshrc file:
 ```

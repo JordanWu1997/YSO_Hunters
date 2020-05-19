@@ -1,13 +1,15 @@
 # Sequence of executing programs
 ### Part 0 - _Catalogs_
 - (1) SEIP catalog (Used now)
-    - /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog/SEIP_pred_catalog/SEIP_sed.txt
+    - ``` /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog/SEIP_pred_catalog/SEIP_sed.txt ```
     - Band: J, H, K, IR1, IR2, IR3, IR4, MP1 (unit: mJy)
     - Note: J, H, K have already transform from 2mass system to ukidss system
 - (2) UKIDSS + c2d catalog (Not used now)
-    - /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog/UKIDSS_DR10PLUS/ADD_UKIDSS/catalog-SWIRE_UKIDSS_ELAIS_N1_WI_2MASS_BR.tbl
+    - ``` /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog/UKIDSS_DR10PLUS/ADD_UKIDSS/catalog-SWIRE_UKIDSS_ELAIS_N1_WI_2MASS_BR.tbl ```
     - Band: J, H, K, IR1, IR2, IR3, IR4, MP1 (unit: mJy)
-    - Note: For J, H, K bands, UKIDSS data is used to replace 2MASS data (which mag<11.5). And 2MASS data also have been transformed to UKIDSS system.
+    - Note:
+        - For J, H, K bands, UKIDSS data is used to replace 2MASS data (which mag<11.5).
+        - For J, H, K bands, 2MASS data also have been transformed to UKIDSS system.
 
 ### Part 1 - Count and project input galaxy catalog
 - (1) Count_Gal_Pos_Vec_numba.py
