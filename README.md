@@ -17,7 +17,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 	- Try to make all programs more flexiable (catalog column indice independence)
 
 ## **IV. How To Use SOP Programs**
-0. Catalog on zeus (Optional)
+#### 0. Catalog on zeus (Optional)
 - All used catalog stored under:
     - ``` /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog ```
     1.  Purpose: Construct galaxy probabilties and find boundaries
@@ -29,7 +29,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
     3.  Purpose: Backup c2d catalogs
         - SPITZER: The c2d catalog from spitzer catalog
 
-1. Add Directories started with SOP to current working environments
+#### 1. Add Directories started with SOP to current working environments
 - e.g. In .cshrc file:
 ```
 #====================================================================
@@ -73,12 +73,12 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 #====================================================================
 ```
 
-2. Revise Locations of Some Programs if **No such file** error happens.
+#### 2. Revise Locations of Some Programs if **No such file** error happens.
 	- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
 	- Then , change some path or file that may be needed to revised
 		- e.g. location where multi-D galaxy probability array stored
 
-3. Standard Sequence for Execution:
+#### 3. Standard Sequence for Execution:
 	1. SOP_Execution_GPM_Construct.py (Still working ...)
 	2. SOP_Execution_Preset.py
 	3. SOP_Execution_5D_method.py
