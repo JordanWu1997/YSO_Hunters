@@ -24,7 +24,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
         - SEIP_pred_catalog: SEIP catalog to construct galaxy probabilities and find boundaries
         - UKIDSS_DR10PLUS: c2d catalog for ELAIS N1 region
     2.  Purpose: Try to find out new YSO in molecular cloud regions
-        - 2MASS_TO_UKIDSS: For region where no UKIDSS observation, just transform old c2d catalog to UKIDSS system (MC: CHA_II, LUP_I, LUP_III, LUP_IV)
+        - 2MASS_TO_UKIDSS: For region where no UKIDSS observation, just transform c2d catalog to UKIDSS system (MC: CHA_II, LUP_I, LUP_III, LUP_IV)
         - UKIDSS_DR11PLUS_WI_2MASS_BR: For J, H, K band, Replace 2MASS observation (which MAG<11.5) with UKIDSS observation and transform 2MASS data to UKIDSS system (MC: OPH, PER, SER)
     3.  Purpose: Backup c2d catalogs
         - SPITZER: The c2d catalog from spitzer catalog (ELAIS_N1, CHA_II, LUP_I, LUP_III, LUP_IV, SER, PER, OPH)
