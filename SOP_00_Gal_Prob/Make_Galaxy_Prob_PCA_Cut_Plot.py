@@ -5,7 +5,8 @@
 from __future__ import print_function
 from sys import argv, exit
 from os import path, system, chdir
-from wpca import WPCA, PCA
+# from wpca import WPCA, PCA
+from sklearn.decomposition import PCA
 from Useful_Functions import *
 import numpy as np
 import time
