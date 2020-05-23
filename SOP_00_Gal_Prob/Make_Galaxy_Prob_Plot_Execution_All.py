@@ -48,14 +48,14 @@ if __name__ == '__main__':
             GP3D_Plot, dim, cube, sigma, bond, refD, deg_slice, incli))
 
     # Make_Galaxy_Prob_PCA_Cut_Plot.py (Non-weighted, full cut and simple cut)
-    system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {} {}'.format(\
+    system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {}'.format(\
             GPPCA_Cut, dim, cube, sigma, bond, refD, '0', ''.join([str(i) for i in range(dim)]), 'False', 'sc'))
-    system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {} {}'.format(\
+    system('{} {:d} {:.1f} {:d} {:d} {:d} {} {} {} {}'.format(\
             GPPCA_Cut, dim, cube, sigma, bond, refD, '0', ''.join([str(i) for i in range(dim)]), 'False', 'fc'))
 
     # Make_Galaxy_Prob_3D_Plot_With_PCA (Weigthed, Non-weighted)
     system('{} {:d} {:.1f} {:d} {:d} {:d} {:d} {:d} {} {}'.format(\
-            GP3D_Plot_PCA, dim, cube, sigma, bond, refD, deg_slice, incli, 'True', 'True'))
+            GP3D_Plot_PCA, dim, cube, sigma, bond, refD, deg_slice, incli, 'False', 'True'))
 
     t_end   = time.time()
     print('{} took {:.3f} secs'.format(argv[0], t_end-t_start))
