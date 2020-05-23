@@ -36,23 +36,20 @@ if len(argv) != 10:
 dim         = int(argv[1])       # Dimension of position vector
 cube        = float(argv[2])     # Beamsize for each cube
 sigma       = int(argv[3])       # STD for Gaussian Smooth
-bond        = int(argv[4])       #
+bond        = int(argv[4])       # Bond for Gaussian Smooth
 refD        = int(argv[5])       # Reference Beam Dimension
-band_inp    = str(argv[6])
-sc_fixed_bd = int(argv[7])
-sc_lower_bd = [int(i) for i in str(argv[8]).split(',')] #
-sc_upper_bd = [int(j) for j in str(argv[9]).split(',')] #
-
+band_inp    = str(argv[6])       # Input band ids
+sc_fixed_bd = int(argv[7])       # Fixed band id
 # Directory
-posv_dir   = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
-out_prefix = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
-out_dir    = '{}/'.format(out_prefix)
-tomo_dir   = '{}_GPtomo/'.format(out_prefix)
-pca_dir    = '{}pca_cut/'.format(tomo_dir)
+posv_dir    = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
+out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
+out_dir     = '{}/'.format(out_prefix)
+tomo_dir    = '{}_GPtomo/'.format(out_prefix)
+pca_dir     = '{}pca_cut/'.format(tomo_dir)
 
 # Functions
 #==========================================================
-def generate_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd):
+def generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd):
     '''
     This is used to generate origins on specific plane (fixed one band)
     This is especially for 6D case, for more/less dimension, number of list element must be modified
@@ -154,8 +151,18 @@ if __name__ == '__main__':
     band_upper_bd  = np.array([int(shape[int(ind)]) for ind in band_inp])
     band_lower_bd  = np.array([0 for ind in band_inp])
 
+    # Check lower/upper boundary of origins
+    if str(argv[8]) != 'default':
+        sc_lower_bd = [int(i) for i in str(argv[8]).split(',')]
+    else:
+        sc_lower_bd = [0 for i in range(len(band_inp))]
+    if str(argv[9]) != 'default':
+        sc_upper_bd = [int(i) for i in str(argv[9]).split(',')]
+    else:
+        sc_lower_bd = [shape[int(i)] for i in band_inp]
+
     # Use different origins to find boundaries
-    origin_list = generate_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
+    origin_list = generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
 
     #=========================================
     # List can't be stored when parallel ...
