@@ -285,3 +285,11 @@ def sort_up_lack999(X, lim, cube=0.2):
         #reu = int((float(X)-lim[0])/cube)
         reu = int(round((float(X)-lim[0])/cube))
     return reu
+
+def bin_to_mag(X, lim, cube=0.2):
+    '''
+    This function is to transform from binned data to original magnitude
+    It will return center of the bin
+    '''
+    mag = lim[0] + (X-0.5) * cube
+    return mag
