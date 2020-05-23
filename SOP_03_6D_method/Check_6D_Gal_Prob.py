@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''-------------------------------------------------------------------------
 This program is to check 6d galaxy probability and sort the candidates
 
@@ -26,7 +26,7 @@ cat = catalog.readlines()
 YSO = []; Galaxy = []; GP_IC = []
 for i in range(len(cat)):
     row_prob = cat[i].split()
-    
+
     if row_prob[242] != 'no_count':
         GP = float(row_prob[242])
         if GP <= 1:

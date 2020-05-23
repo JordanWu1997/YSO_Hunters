@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''----------------------------------------------------------------
 This program is for calculating 6-d galaxy probability (P)
 
