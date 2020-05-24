@@ -121,16 +121,20 @@ def find_gp_boundary(probe_line, gp_along_line):
         upper_gp_bound = [np.nan] * len(probe_line[0])
     return lower_gp_bound, upper_gp_bound
 
-def find_bd_of_diff_origins(origin, probe_vec, band_upper_bd, gal_pos, gal_num, gp_lower_bd_list, gp_upper_bd_list):
+def find_bd_of_diff_origins(index, len_origin, origin, probe_vec, band_upper_bd, gal_pos, gal_num, gp_lower_bd_list, gp_upper_bd_list):
     '''
     This is to combine all above functions (for parallel computation)
     '''
+    # Main calculation
     probe_line    = generate_probe_line(origin, probe_vec, band_upper_bd)
     gp_along_line = get_gp_along_line(probe_line, gal_pos, gal_num)
     gp_lower_bd, gp_upper_bd = find_gp_boundary(probe_line, gp_along_line)
     if np.nan not in gp_lower_bd:
         gp_lower_bd_list.append(gp_lower_bd)
         gp_upper_bd_list.append(gp_upper_bd)
+    # Indicator
+    if (index >= 100) and (index % 100 == 0):
+        print('{} / {}'.format(index, len_origin))
 
 # Main Program
 #==========================================================
@@ -149,15 +153,16 @@ if __name__ == '__main__':
 
     # Use different origins to find boundaries
     origin_list = generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
+    len_origin  = len(origin_list)
     print('\nFixed band id: {}\nOrigins lower bound: {}\nOrigins upper bound: {}\n# of origins: {:d}\n'.format(\
-            sc_fixed_bd, sc_lower_bd, sc_upper_bd, len(origin_list)))
+            sc_fixed_bd, sc_lower_bd, sc_upper_bd, len_origin))
 
     # Parallel Computing (Note: require='sharedmen' is essential for list parallel)
     gp_lower_bd_list, gp_upper_bd_list = [], []
     Parallel(n_jobs=n_thread, require='sharedmem')\
             (delayed(find_bd_of_diff_origins)\
-            (origin, probe_vec0, band_upper_bd, gal_pos, gal_num, gp_lower_bd_list, gp_upper_bd_list)\
-            for origin in origin_list[:50])
+            (i, len_origin, origin_list[i], probe_vec0, band_upper_bd, gal_pos, gal_num, gp_lower_bd_list, gp_upper_bd_list)\
+            for i in range(len_origin))
 
     # Non-Parallel method (Just for backup)
     # gp_lower_bd_list, gp_upper_bd_list = [], []
