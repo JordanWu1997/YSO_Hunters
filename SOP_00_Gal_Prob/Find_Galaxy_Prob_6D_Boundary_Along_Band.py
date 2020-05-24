@@ -44,8 +44,6 @@ sc_fixed_bd = int(argv[7])       # Fixed band id
 posv_dir    = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
 out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
 out_dir     = '{}/'.format(out_prefix)
-#tomo_dir    = '{}_GPtomo/'.format(out_prefix)
-#pca_dir     = '{}pca_cut/'.format(tomo_dir)
 
 # Functions
 #==========================================================
@@ -151,19 +149,8 @@ if __name__ == '__main__':
     shape          = np.load(posv_dir + 'Shape.npy')
     band_upper_bd  = np.array([int(shape[int(ind)]) for ind in band_inp])
     band_lower_bd  = np.array([0 for ind in band_inp])
-
-    sc_lower_bd = [0 for i in range(len(band_inp)-1)]
-    sc_upper_bd = [shape[int(i)] for i in band_inp if int(i) != sc_fixed_bd]
-
-    # Check lower/upper boundary of origins
-    # if str(argv[8]) != 'default':
-        # sc_lower_bd = [int(i) for i in str(argv[8]).split(',')]
-    # else:
-        # sc_lower_bd = [0 for i in range(len(band_inp)-1)]
-    # if str(argv[9]) != 'default':
-        # sc_upper_bd = [int(i) for i in str(argv[9]).split(',')]
-    # else:
-        # sc_upper_bd = [shape[int(i)] for i in band_inp if int(i) != sc_fixed_bd]
+    sc_lower_bd    = [0 for i in range(len(band_inp)-1)]
+    sc_upper_bd    = [shape[int(i)] for i in band_inp if int(i) != sc_fixed_bd]
 
     # Use different origins to find boundaries
     origin_list = generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
@@ -178,8 +165,8 @@ if __name__ == '__main__':
     gp_lower_bounds = np.array(gp_lower_bd_list)
     gp_upper_bounds = np.array(gp_upper_bd_list)
     chdir(out_dir)
-    np.save('after_smooth_{:d}D_lower_bounds_AlB{:d}'.format(dim), gp_lower_bounds, sc_fixed_bd)
-    np.save('after_smooth_{:d}D_upper_bounds_AlB{:d}'.format(dim), gp_upper_bounds, sc_fixed_bd)
+    np.save('after_smooth_{:d}D_lower_bounds_AlB{:d}'.format(dim, gp_lower_bounds, sc_fixed_bd))
+    np.save('after_smooth_{:d}D_upper_bounds_AlB{:d}'.format(dim, gp_upper_bounds, sc_fixed_bd))
     chdir('../')
 
     # Print out result ...
