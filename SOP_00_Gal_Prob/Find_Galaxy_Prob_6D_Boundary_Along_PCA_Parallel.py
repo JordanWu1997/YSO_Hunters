@@ -7,7 +7,7 @@ from sys import argv, exit
 from os import chdir
 from Useful_Functions import *
 from Hsieh_Functions import *
-from joblib import Parallel, delayed, parallel_backend
+from joblib import Parallel, delayed
 import numpy as np
 import time
 
@@ -45,7 +45,7 @@ pca_dir     = '{}pca_cut/'.format(tomo_dir)
 
 # Functions
 #==========================================================
-def generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd):
+def generate_6D_origins_on_plane(band_inp, PCA_origin, sc_fixed_bd, sc_lower_bd, sc_upper_bd):
     '''
     This is used to generate origins on specific plane (fixed one band)
     This is especially for 6D case, for more/less dimension, number of list element must be modified
@@ -59,7 +59,7 @@ def generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd
     xx0, xx1, xx2, xx3, xx4 = x0.flatten(), x1.flatten(), x2.flatten(), x3.flatten(), x4.flatten()
     for j in range(len(x0.flatten())):
         new_origin = [xx0[j], xx1[j], xx2[j], xx3[j], xx4[j]]
-        new_origin.insert(sc_fixed_bd, 0)
+        new_origin.insert(sc_fixed_bd, PCA_origin[sc_fixed_bd])
         origin_list.append(np.array(new_origin))
     return origin_list
 
@@ -67,7 +67,7 @@ def generate_pca_line(origin, pca_vec, band_upper_bd):
     '''
     This is used to generate line array along pca vector direction
     Here assuming pca vector components are "all positive" or "all negative"
-    Here input origin should start on "0" of the fixed band
+    Array: [largest -> smallest] since the pca vector direction
     '''
     # Initialize pca vector direction
     pca_vec = np.array(pca_vec)
@@ -76,12 +76,18 @@ def generate_pca_line(origin, pca_vec, band_upper_bd):
     # Prevent infinite loops
     if np.any(np.less(pca_vec, band_lower_bd)):
         exit('Wrong pca vector ...')
-    # Larger than origin
-    pca_line, pos, i = [origin], origin, 1
-    while np.all(np.less(pos, band_upper_bd)):
-        pos = origin + (i * pca_vec)
+    # Smaller than origin
+    pca_line, pos, i = [], origin, 1
+    while np.all(np.greater_equal(pos, band_lower_bd)):
         pca_line.append(pos)
+        pos = origin - (i * pca_vec)
         i += 1
+    # Larger than origin
+    pos, j = origin, 1
+    while np.all(np.less(pos, band_upper_bd)):
+        pos = origin + (j * pca_vec)
+        pca_line.insert(0, pos)
+        j += 1
     # Round and store in array
     pca_round = np.rint(pca_line)
     pca_line = np.array(pca_round, dtype=int)
@@ -113,11 +119,11 @@ def find_gp_boundary(pca_line, gp_along_line):
     loc_GE1_id = ids[gp_along_line >= 1.0]
     loc_LS1_id = ids[gp_along_line <  1.0]
     if (len(loc_GE1_id) != 0) and (len(loc_GE1_id) != len(gp_along_line)):
-        lower_gp_bound = pca_line[loc_GE1_id[0]]
-        upper_gp_bound = pca_line[loc_LS1_id[0]-1]
+        lower_gp_bound = pca_line[loc_GE1_id[-1]]
+        upper_gp_bound = pca_line[loc_LS1_id[0]+1]
     elif (len(loc_GE1_id) == len(gp_along_line)):
-        lower_gp_bound = pca_line[0]
-        upper_gp_bound = pca_line[-1]
+        lower_gp_bound = pca_line[-1]
+        upper_gp_bound = pca_line[0]
     else:
         lower_gp_bound = [np.nan] * len(pca_line[0])
         upper_gp_bound = [np.nan] * len(pca_line[0])
@@ -135,7 +141,7 @@ def find_bd_of_diff_origins(index, len_origin, origin, pca_vec, band_upper_bd, g
         gp_lower_bd_list.append(gp_lower_bd)
         gp_upper_bd_list.append(gp_upper_bd)
     # Indicator
-    if (index >= 100) and (index % 100 == 0):
+    if (index >= 10) and (index % 10 == 0):
         print('{} / {}'.format(index, len_origin))
 
 # Main Program
@@ -145,6 +151,7 @@ if __name__ == '__main__':
 
     # Load arrays for calculations
     pca_vec0       = np.load('{}PCA_components_{}.npy'.format(pca_dir, band_inp))[0]
+    PCA_origin     = np.load('{}PCA_premean_{}.npy'.format(pca_dir, band_inp))
     gal_pos        = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
     gal_num        = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
     shape          = np.load(posv_dir + 'Shape.npy')
@@ -162,7 +169,7 @@ if __name__ == '__main__':
         sc_upper_bd = [shape[int(i)] for i in band_inp if int(i) != sc_fixed_bd]
 
     # Use different origins to find boundaries
-    origin_list = generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
+    origin_list = generate_6D_origins_on_plane(band_inp, PCA_origin, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
     len_origin  = len(origin_list)
     print('\nFixed band id: {}\nOrigins lower bound: {}\nOrigins upper bound: {}\n# of origins: {:d}\n'.format(\
             sc_fixed_bd, sc_lower_bd, sc_upper_bd, len(origin_list)))
