@@ -108,7 +108,6 @@ def find_gp_boundary(probe_line, gp_along_line):
     '''
     This is used to find two boundary end in one probe cut set
     '''
-    #print(probe_line)
     ids = np.array([i for i in range(len(gp_along_line))], dtype=int)
     loc_GE1_id = ids[gp_along_line >= 1.0]
     loc_LS1_id = ids[gp_along_line <  1.0]
@@ -116,7 +115,6 @@ def find_gp_boundary(probe_line, gp_along_line):
         lower_gp_bound = probe_line[loc_GE1_id[0]]
         upper_gp_bound = probe_line[loc_LS1_id[0]-1]
     elif (len(loc_GE1_id) == len(gp_along_line)):
-        #print('test', probe_line)
         lower_gp_bound = probe_line[0]
         upper_gp_bound = probe_line[-1]
     else:
@@ -130,7 +128,6 @@ def find_bd_of_diff_origins(index, len_origin, origin, probe_vec, band_upper_bd,
     '''
     # Main calculation
     probe_line    = generate_probe_line(origin, probe_vec, band_upper_bd)
-    print('line', probe_line)
     gp_along_line = get_gp_along_line(probe_line, gal_pos, gal_num)
     gp_lower_bd, gp_upper_bd = find_gp_boundary(probe_line, gp_along_line)
     if np.nan not in gp_lower_bd:
