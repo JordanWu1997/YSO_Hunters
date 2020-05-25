@@ -1,7 +1,23 @@
 #!/usr/bin/python
 '''
+------------------------------------------------------------------------------------------------------------
+Example: [program] [dim] [cube size] [sigma] [bond] [ref-D] [band_inp] [fixed_band_id] [lower_bd] [upper_bd] [n_thread]
+    Input Variables:
+    [dim]:           dimension for smooth (for now only "6")
+    [cube size]:     length of multi-d cube in magnitude unit
+    [sigma]:         standard deviation for gaussian dist. in magnitude
+    [bond]:          boundary radius of gaussian beam unit in cell
+    [ref-D]:         reference dimension which to modulus other dimension to
+    [band_inp]:      band used to do smooth in string e.g. 012345
+    [fixed_band_id]: index of band that fixed when calculating with different origins
+    [lower_bd]:      bound of input bands except fixed one (unit:cell) e.g. "0,0,0,0,0" or "default"
+    [upper_bd]:      bound of input bands except fixed one (unit:cell) e.g. "9,9,9,9,9" or "default"
+    [n_thread]:      number of thread for parallel computation
+------------------------------------------------------------------------------------------------------------
+Latest Updated: 2020.05.26 Jordan Wu'''
 
-'''
+# Import Modules
+#==========================================================
 from __future__ import print_function
 from sys import argv, exit
 from os import chdir
@@ -10,22 +26,6 @@ from Hsieh_Functions import *
 from joblib import Parallel, delayed
 import numpy as np
 import time
-
-# Check Inputs
-#==========================================================
-if len(argv) != 11:
-    exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [band_inp] [fixed_band_id] [lower_bd] [upper_bd]\
-    \n\t[dim]: dimension for smooth (for now only "6")\
-    \n\t[cube size]: length of multi-d cube in magnitude unit\
-    \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
-    \n\t[bond]: boundary radius of gaussian beam unit in cell\
-    \n\t[ref-D]: reference dimension which to modulus other dimension to\
-    \n\t[band_inp]: band used to do smooth in string e.g. 012345\
-    \n\t[fixed_band_id]: index of band that fixed when calculating with different origins\
-    \n\t[lower_bd]: bound of input bands except fixed one (unit:cell) e.g. "0,0,0,0,0" or "default"\
-    \n\t[upper_bd]: bound of input bands except fixed one (unit:cell) e.g. "9,9,9,9,9" or "default"\
-    \n\t[n_thread]: number of thread for parallel computation\n')
 
 # Input Variables
 #==========================================================
@@ -72,13 +72,13 @@ def generate_probe_line(origin, probe_vec, band_upper_bd):
     if np.all(np.less_equal(probe_vec, np.zeros(len(band_upper_bd)))):
         probe_vec = -1 * probe_vec
     # Prevent infinite loops
-    if np.any(np.less(probe_vec, band_lower_bd)):
+    if np.any(np.less(probe_vec, np.zeros(len(band_upper_bd)))):
         exit('Wrong probe vector ...')
     # Larger than origin
-    probe_line, pos, i = [origin], origin, 1
+    probe_line, pos, i = [], origin, 1
     while np.all(np.less(pos, band_upper_bd)):
-        pos = origin + (i * probe_vec)
         probe_line.append(pos)
+        pos = origin + (i * probe_vec)
         i += 1
     # Round and store in array
     probe_round = np.rint(probe_line)
@@ -140,6 +140,21 @@ def find_bd_of_diff_origins(index, len_origin, origin, probe_vec, band_upper_bd,
 #==========================================================
 if __name__ == '__main__':
     s_start = time.time()
+
+    # Check Inputs
+    if len(argv) != 11:
+        exit('\n\tError: Wrong Arguments\
+        \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [band_inp] [fixed_band_id] [lower_bd] [upper_bd] [n_thread]\
+        \n\t[dim]: dimension for smooth (for now only "6")\
+        \n\t[cube size]: length of multi-d cube in magnitude unit\
+        \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
+        \n\t[bond]: boundary radius of gaussian beam unit in cell\
+        \n\t[ref-D]: reference dimension which to modulus other dimension to\
+        \n\t[band_inp]: band used to do smooth in string e.g. 012345\
+        \n\t[fixed_band_id]: index of band that fixed when calculating with different origins\
+        \n\t[lower_bd]: bound of input bands except fixed one (unit:cell) e.g. "0,0,0,0,0" or "default"\
+        \n\t[upper_bd]: bound of input bands except fixed one (unit:cell) e.g. "9,9,9,9,9" or "default"\
+        \n\t[n_thread]: number of thread for parallel computation\n')
 
     # Load arrays for calculations
     probe_vec0    = [0] * (len(band_inp)-1); probe_vec0.insert(sc_fixed_bd, 1)
