@@ -16,3 +16,6 @@
         - Use Galaxy Probability Dictionary with Key stored in "tuple"
 ## Part 2 - Classify YSO/Galaxy/Image_Check with calculated galaxy probabitliy
 - (1) Classify_WI_6D_Galaxy_Prob.py
+
+## TODO:
+- (1) Finish the files path in above programs
