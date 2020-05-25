@@ -96,10 +96,9 @@ def find_gp_boundary(probe_line, gp_along_line):
     '''
     ids = np.array([i for i in range(len(gp_along_line))], dtype=int)
     loc_GE1_id = ids[gp_along_line >= 1.0]
-    loc_LS1_id = ids[gp_along_line <  1.0]
     if (len(loc_GE1_id) != 0) and (len(loc_GE1_id) != len(gp_along_line)):
         lower_gp_bound = probe_line[loc_GE1_id[0]]
-        upper_gp_bound = probe_line[loc_LS1_id[0]-1]
+        upper_gp_bound = probe_line[loc_GE1_id[-1]]
     elif (len(loc_GE1_id) == len(gp_along_line)):
         lower_gp_bound = probe_line[0]
         upper_gp_bound = probe_line[-1]
