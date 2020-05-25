@@ -27,22 +27,6 @@ from joblib import Parallel, delayed
 import numpy as np
 import time
 
-# Input Variables
-#==========================================================
-dim         = int(argv[1])       # Dimension of position vector
-cube        = float(argv[2])     # Beamsize for each cube
-sigma       = int(argv[3])       # STD for Gaussian Smooth
-bond        = int(argv[4])       # Bond for Gaussian Smooth
-refD        = int(argv[5])       # Reference Beam Dimension
-band_inp    = str(argv[6])       # Input band ids
-sc_fixed_bd = int(argv[7])       # Fixed band id
-n_thread    = int(argv[10])      # Number of threads to parallel computation
-posv_dir    = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
-out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
-out_dir     = '{}/'.format(out_prefix)
-tomo_dir    = '{}_GPtomo/'.format(out_prefix)
-pca_dir     = '{}pca_cut/'.format(tomo_dir)
-
 # Functions
 #==========================================================
 def generate_6D_origins_on_plane(band_inp, PCA_origin, sc_fixed_bd, sc_lower_bd, sc_upper_bd):
@@ -150,7 +134,7 @@ def find_bd_of_diff_origins(index, len_origin, origin, pca_vec, band_upper_bd, g
 if __name__ == '__main__':
     s_start = time.time()
 
-    # Check Inputs
+    # Check inputs
     if len(argv) != 11:
         exit('\n\tError: Wrong Arguments\
         \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [band_inp] [fixed_band_id] [lower_bd] [upper_bd] [n_thread]\
@@ -164,6 +148,21 @@ if __name__ == '__main__':
         \n\t[lower_bd]: bound of input bands except fixed one (unit:cell) e.g. "0,0,0,0,0" or "default"\
         \n\t[upper_bd]: bound of input bands except fixed one (unit:cell) e.g. "9,9,9,9,9" or "default"\
         \n\t[n_thread]: number of thread for parallel computation\n')
+
+    # Input Variables
+    dim         = int(argv[1])       # Dimension of position vector
+    cube        = float(argv[2])     # Beamsize for each cube
+    sigma       = int(argv[3])       # STD for Gaussian Smooth
+    bond        = int(argv[4])       # Bond for Gaussian Smooth
+    refD        = int(argv[5])       # Reference Beam Dimension
+    band_inp    = str(argv[6])       # Input band ids
+    sc_fixed_bd = int(argv[7])       # Fixed band id
+    n_thread    = int(argv[10])      # Number of threads to parallel computation
+    posv_dir    = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
+    out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
+    out_dir     = '{}/'.format(out_prefix)
+    tomo_dir    = '{}_GPtomo/'.format(out_prefix)
+    pca_dir     = '{}pca_cut/'.format(tomo_dir)
 
     # Load arrays for calculations
     pca_vec0       = np.load('{}PCA_components_{}.npy'.format(pca_dir, band_inp))[0]

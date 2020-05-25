@@ -29,20 +29,6 @@ matplotlib.use('Agg')
 matplotlib.rc('figure', max_open_warning = 0)
 import matplotlib.pyplot as plt
 
-# Input Variables
-#=======================================================
-band_name  = band_name
-dim        = int(argv[1])       # Dimension of position vector
-cube       = float(argv[2])     # Beamsize for each cube
-sigma      = int(argv[3])       # STD for Gaussian Smooth
-bond       = int(argv[4])
-refD       = int(argv[5])       # Reference Beam Dimension
-suffix     = str(argv[6])       # Suffix of bound array
-ddim       = 6                  # Specific dimensional data to plot (projection: ddim -> 3D)
-shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
-smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
-output_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
-
 # Functions
 #=======================================================
 def generate_diff_comb_band_params(comb):
@@ -88,8 +74,7 @@ def update_num_from_bounds(cube_array, lower_bound, upper_bound):
     for i in range(len(lower_bound)):
         cube_array[lbd1_pos[i], lbd2_pos[i], lbd3_pos[i]] = 3.0
     for i in range(len(upper_bound)):
-        print(ubd1_pos[i], ubd2_pos[i], ubd3_pos[i])
-        #cube_array[ubd1_pos[i], ubd2_pos[i], ubd3_pos[i]] = 4.0
+        cube_array[ubd1_pos[i], ubd2_pos[i], ubd3_pos[i]] = 4.0
     return cube_array
 
 def plot_along_bd(cube_array, shape, bd_name, bd_axis):
@@ -146,6 +131,18 @@ if __name__ == '__main__':
             \n\t[bond]: boundary radius of gaussian beam unit in cell\
             \n\t[ref-D]: reference dimension which to modulus other dimension to\
             \n\t[suffix]: suffix to bound array ("default" is "AlB0")\n')
+
+    # Input variables
+    dim        = int(argv[1])       # Dimension of position vector
+    cube       = float(argv[2])     # Beamsize for each cube
+    sigma      = int(argv[3])       # STD for Gaussian Smooth
+    bond       = int(argv[4])
+    refD       = int(argv[5])       # Reference Beam Dimension
+    suffix     = str(argv[6])       # Suffix of bound array
+    ddim       = 6                  # Specific dimensional data to plot (projection: ddim -> 3D)
+    shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
+    smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
+    output_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
 
     # Load and print out input information
     if suffix == 'default': suffix = 'AlB0'
