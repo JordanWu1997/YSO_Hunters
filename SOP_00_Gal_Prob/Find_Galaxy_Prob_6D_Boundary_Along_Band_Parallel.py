@@ -50,7 +50,8 @@ def generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd
     '''
     bd_list = []
     for i in range(len(sc_lower_bd)):
-        bd_list.append(np.arange(sc_lower_bd[i], sc_upper_bd[i]+1, 1))
+        # Note upper_bd here already out of the 6D space, no needs to +1 in np.arange func
+        bd_list.append(np.arange(sc_lower_bd[i], sc_upper_bd[i], 1))
     origin_list = []
     xx = np.meshgrid(bd_list[0], bd_list[1], bd_list[2], bd_list[3], bd_list[4])
     x0, x1, x2, x3, x4 = xx[0], xx[1], xx[2], xx[3], xx[4]
@@ -76,13 +77,13 @@ def generate_probe_line(origin, probe_vec, band_upper_bd):
         exit('Wrong probe vector ...')
     # Larger than origin
     probe_line, pos, i = [], origin, 1
-    while np.all(np.less(pos, band_upper_bd)):
+    while np.all(np.less(pos, band_upper_bd-0.5)):
         probe_line.append(pos)
         pos = origin + (i * probe_vec)
         i += 1
     # Round and store in array
     probe_round = np.rint(probe_line)
-    probe_line = np.array(probe_round, dtype=int)
+    probe_line  = np.array(probe_round, dtype=int)
     return probe_line
 
 def get_gp_along_line(probe_line, gal_pos, gal_num):
@@ -107,6 +108,7 @@ def find_gp_boundary(probe_line, gp_along_line):
     '''
     This is used to find two boundary end in one probe cut set
     '''
+    #print(probe_line)
     ids = np.array([i for i in range(len(gp_along_line))], dtype=int)
     loc_GE1_id = ids[gp_along_line >= 1.0]
     loc_LS1_id = ids[gp_along_line <  1.0]
@@ -114,6 +116,7 @@ def find_gp_boundary(probe_line, gp_along_line):
         lower_gp_bound = probe_line[loc_GE1_id[0]]
         upper_gp_bound = probe_line[loc_LS1_id[0]-1]
     elif (len(loc_GE1_id) == len(gp_along_line)):
+        #print('test', probe_line)
         lower_gp_bound = probe_line[0]
         upper_gp_bound = probe_line[-1]
     else:
@@ -127,6 +130,7 @@ def find_bd_of_diff_origins(index, len_origin, origin, probe_vec, band_upper_bd,
     '''
     # Main calculation
     probe_line    = generate_probe_line(origin, probe_vec, band_upper_bd)
+    print('line', probe_line)
     gp_along_line = get_gp_along_line(probe_line, gal_pos, gal_num)
     gp_lower_bd, gp_upper_bd = find_gp_boundary(probe_line, gp_along_line)
     if np.nan not in gp_lower_bd:

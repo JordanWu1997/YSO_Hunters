@@ -52,6 +52,7 @@ def generate_6D_origins_on_plane(band_inp, PCA_origin, sc_fixed_bd, sc_lower_bd,
     '''
     bd_list = []
     for i in range(len(sc_lower_bd)):
+        # Note upper_bd here already out of the 6D space, no needs to +1 in np.arange func
         bd_list.append(np.arange(sc_lower_bd[i], sc_upper_bd[i]+1, 1))
     origin_list = []
     xx = np.meshgrid(bd_list[0], bd_list[1], bd_list[2], bd_list[3], bd_list[4])
@@ -76,15 +77,15 @@ def generate_pca_line(origin, pca_vec, band_upper_bd):
     # Prevent infinite loops
     if np.any(np.less(pca_vec, band_lower_bd)):
         exit('Wrong pca vector ...')
-    # Smaller than origin
+    # Smaller than origin (Origin excluded)
     pca_line, pos, i = [], origin, 1
     while np.all(np.greater_equal(pos, band_lower_bd)):
         pca_line.append(pos)
         pos = origin - (i * pca_vec)
         i += 1
-    # Larger than origin
+    # Larger than origin (Origin included)
     pos, j = (origin + pca_vec), 2
-    while np.all(np.less(pos, band_upper_bd)):
+    while np.all(np.less(pos, band_upper_bd-0.5)):
         pca_line.insert(0, pos)
         pos = origin + (j * pca_vec)
         j += 1
