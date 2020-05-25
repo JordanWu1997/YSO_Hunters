@@ -17,7 +17,7 @@ Input variables:
 -------------------------------------------------------------------
 latest update : 2020/05/25 Jordan Wu'''
 
-# Import modules
+# Import Modules
 #=============================================
 from __future__ import print_function
 from sys import argv, exit
@@ -25,7 +25,7 @@ from math import pi,sin,cos
 from Hsieh_Functions import *
 from Useful_Functions import *
 
-# Input Variables
+# Global Variables
 #=============================================
 parameter     = C_av_list         # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
 Av_coor_ID    = Av_coor_ID        # RA, Dec on extinction table
@@ -34,9 +34,6 @@ Av_ID         = Av_ID             # Av index to write on input catalog
 coor_ID       = coor_ID           # RA, Dec on input table
 mag_ID        = full_mag_ID       # [33, 54, 75, 96, 117, 138, 159, 180, 201]
 flux_ID       = full_flux_ID      # [35, 56, 77, 98, 119, 140, 161, 182, 203]
-Av_tbl_name   = str(argv[1])      # Name of input extinction table
-catalog_name  = str(argv[2])      # Name of input catalog
-cloud_name    = str(argv[3])      # Cloud name
 tolerance     = 0.5               # Radius to distinguish source point on Av_table (in radian)
 
 # Functions
@@ -117,13 +114,19 @@ def store_Av_info_to_list(far_line, minlist, min_info_list, not_found_list):
 # Main Programs
 #=============================================
 if __name__ == '__main__':
-    # Check Inputs
+
+    # Check inputs
     if len(argv) != 4:
         exit('\n\tError: Wrong Arguments\
             \n\tExample: [Program] [Av_table] [catalog] [cloud\'s Name]\
             \n\t[Av Table]: table contains specific cloud region Av values\
             \n\t[catalog]: input catalog to do extinction correction\
             \n\t[cloud\'s name] brief name of cloud e.g. CHA_II\n')
+
+    # Input variables
+    Av_tbl_name   = str(argv[1])      # Name of input extinction table
+    catalog_name  = str(argv[2])      # Name of input catalog
+    cloud_name    = str(argv[3])      # Cloud name
 
     # Print out info from inputs
     print('\nCatalog: {}\
