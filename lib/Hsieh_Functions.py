@@ -57,11 +57,12 @@ C_av_list = [['J',  0.2741],
             ['MP2', 0]]
 
 # Extinction Correction Parameters
-Av_coor_ID   = [0, 1]  # RA, Dec on extinction table
-Av_ID        = [17]
-coor_ID      = [0, 2]  # RA, Dec on input table
-full_mag_ID  = [33, 54, 75, 96, 117, 138, 159, 180, 201]
-full_flux_ID = [35, 56, 77, 98, 119, 140, 161, 182, 203]
+Av_coor_ID    = [0, 1]  # RA, Dec on extinction table
+Av_ID         = [17]
+Av_tbl_col_ID = [2, 6]  # [6] for Hsieh's old Av table
+coor_ID       = [0, 2]  # RA, Dec on input table
+full_mag_ID   = [33, 54, 75, 96, 117, 138, 159, 180, 201]
+full_flux_ID  = [35, 56, 77, 98, 119, 140, 161, 182, 203]
 
 # Band name
 band_name = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
