@@ -22,14 +22,14 @@ import os
 #=========================================================================
 if len(argv) != 3:
     exit('\n\tWrong Usage!\
-          \n\tExample: [program] [catalog] [MC cloud]\n')
+          \n\tExample: [program] [catalog] [MC cloud_name]\n')
 
 # Input Variables
 #=========================================================================
-cloud = str(argv[2])
-RA_ID  = 1
-DEC_ID = 3
-MP1_Qua_ID = 185
+cloud_name  = str(argv[2])
+RA_ID       = 0
+DEC_ID      = 2
+MP1_Qua_ID  = 184
 GP_OBJ_ID, GP_ID = 241, 242
 GPP_OBJ_ID, GPP_ID = 243, 244
 
@@ -85,24 +85,24 @@ if __name__ == '__main__':
             GP_IC.append(row_list)
 
     # Write different object catalogs
-    with open(cloud + '_6D_YSO.tbl',"w") as out_cat:
+    with open(cloud_name + '_6D_YSO.tbl',"w") as out_cat:
         for i in YSO:
             out_cat.write(str(i))
-    with open(cloud + '_6D_Galaxy.tbl',"w") as out_cat:
+    with open(cloud_name + '_6D_Galaxy.tbl',"w") as out_cat:
         for i in Galaxy:
             out_cat.write(str(i))
-    with open(cloud + '_6D_GP_to_image_check.tbl',"w") as out_cat:
+    with open(cloud_name + '_6D_GP_to_image_check.tbl',"w") as out_cat:
         for i in GP_IC:
             out_cat.write(str(i))
 
     # Print out catalog line numbers
     print('The Saturate Candiates in YSO candidates: ')
-    os.system('echo | awk \'${:d} == \"S\" {print ${:d}, ${:d}} \' {}_6D_YSO.tbl'.format(MP1_Qua_ID, RA_ID, DEC_ID, cloud))
+    os.system('echo | awk \'${:d} == \"S\" {print ${:d}, ${:d}} \' {}_6D_YSO.tbl'.format(MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
     print('The confident YSO candidates: ')
-    os.system('wc ' + cloud + '_6D_YSO.tbl')
+    os.system('wc ' + cloud_name + '_6D_YSO.tbl')
     print('The confident Galaxy candidates: ')
-    os.system('wc ' + cloud + '_6D_Galaxy.tbl')
+    os.system('wc ' + cloud_name + '_6D_Galaxy.tbl')
     print('The candidate to image check: ')
-    os.system('wc ' + cloud + '_6D_GP_to_image_check.tbl')
+    os.system('wc ' + cloud_name + '_6D_GP_to_image_check.tbl')
     s_end   = time.time()
     print('Whole {} took {:.3f} secs'.format(argv[0], s_end - s_start))
