@@ -1,37 +1,40 @@
 #!/usr/bin/python
+'''
+-------------------------------------------------------
+Example: [program] [input catalog] [mag/flux] [qua] [dimension] [cube size]
+
+Input variables:
+    [input catalog]: must include magnitudes
+    [mag/flux]:      input data in magnitude or flux (mJy)
+    [qua]:           if qua label is taken into calculation (True/False)
+    [dimension]:     dim of magnitude space (for now only "6")
+    [cube size]:     length of multi-d cube in magnitude unit
+
+TODO: Add input bands in the future
+-------------------------------------------------------
+Latest update 2020.05.26 Jordan Wu'''
+
+# Load Modules
+#======================================================
 from __future__ import print_function
-import sys
 import time
 import numpy as np
 from numba import jit
-from sys import argv, exit, stdout
+from sys import argv, exit
 from os import chdir, system, path
 from Hsieh_Functions import *
 from Useful_Functions import *
 
-#TODO Add input bands in the future
-if len(argv) != 6:
-    exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [input catalog] [mag/flux] [qua] [dimension] [cube size]\
-    \n\t[input catalog]: must include magnitudes\
-    \n\t[mag/flux]: input data in magnitude or flux (mJy)\
-    \n\t[qua]: if qua label is taken into calculation (True/False)\
-    \n\t[dimension]: dim of magnitude space (for now only "6")\
-    \n\t[cube size]: length of multi-d cube in magnitude unit\n')
-
+# Global Variables
 #======================================================
-# Set parameters
-inpcat   = str(argv[1])
-datatype = str(argv[2])
-qualabel = bool(argv[3] == 'True')
-dim      = int(argv[4])
-cube     = float(argv[5])
-
 # J, IR1, IR2, IR3, IR4, MP1
 # If input spizer catalog, just comment below 2 lines
 flux_ID = [0, 3, 4, 5, 6, 7]
 mag_ID  = [0, 3, 4, 5, 6, 7]
 band_ID = [0, 3, 4, 5, 6, 7]
+IR2_ID  = mag_ID[2]
+IR3_ID  = mag_ID[3]
+MP1_ID  = mag_ID[5]
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
 # Use Limit Stored in Hsieh_Functions
@@ -48,23 +51,22 @@ all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, M
 bins_list  = [int(round((all_axlim[i][1] - all_axlim[i][0]) / cube)) + 1 for i in band_ID]
 axlim_list = [all_axlim[i] for i in band_ID]
 
-print('\ncubesize: ', cube)
-print('flux_ID: ', flux_ID)
-print('mag_ID: ', mag_ID)
-print('Qua/Qua_ID: ', qualabel, qua_ID)
-print('Shape: ', bins_list)
-
-# Check Directory
-if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
-    #exit('\nDirectory has been established ... \
-    #    \nPass to next procedure ...\n')
-    system('rm -fr GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
-    system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
-else:
-    system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
-
-# Main Functions
+# Functions
 #======================================================
+def Remove_AGB(mag_list, IR2_ID=IR2_ID, IR3_ID=IR3_ID, MP1_ID=MP1_ID):
+    '''
+    This is to check if object in input catalog is AGB
+    Input datatype: magnitude, int, int, int
+    '''
+    # Remove AGB
+    AGB_flag = 'Not_AGB'
+    if (mag_list[IR2_ID] != 'no') and (mag_list[IR3_ID] != 'no') and (mag_list[MP1_ID] != 'no'):
+        X23 = mag_list[IR2_ID] - mag_list[IR3_ID]
+        Y35 = mag_list[IR3_ID] - mag_list[MP1_ID]
+        if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
+            AGB_flag = 'AGB'
+    return AGB_flag
+
 @jit(nopython=True)
 def filter_bright_faint(pos_vec_array):
     '''
@@ -114,6 +116,34 @@ def cascade_array_pos(sort_position):
 #======================================================
 if __name__ == '__main__':
 
+    # Check inputs
+    if len(argv) != 6:
+        exit('\n\tError: Wrong Arguments\
+        \n\tExample: [program] [input catalog] [mag/flux] [qua] [dimension] [cube size]\
+        \n\t[input catalog]: must include magnitudes\
+        \n\t[mag/flux]: input data in magnitude or flux (mJy)\
+        \n\t[qua]: if qua label is taken into calculation (True/False)\
+        \n\t[dimension]: dim of magnitude space (for now only "6")\
+        \n\t[cube size]: length of multi-d cube in magnitude unit\n')
+
+    # Input variables
+    inpcat   = str(argv[1])
+    datatype = str(argv[2])
+    qualabel = bool(argv[3] == 'True')
+    dim      = int(argv[4])
+    cube     = float(argv[5])
+
+    # Check Directory
+    if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
+        system('rm -fr GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
+        system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
+    else:
+        system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
+
+    # Print out input information
+    print('\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua__ID: {}, {}\nQua_ID: {}\nShape: {}'.format(\
+            cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))
+
     # Load Galaxy Catalog
     l_start = time.time()
     print("\nLoading input catalog ...")
@@ -135,22 +165,11 @@ if __name__ == '__main__':
         elif datatype == 'mag':
             mag_list = mag_to_mag(lines, mag_ID=mag_ID, Qua=qualabel, system=JHK_system)
         else:
-            print('Input type error')
-        #magJ, magIR1, magIR2, magIR3, magIR4, magMP1 = mag_list
-        SEQ = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-        pos_vec.append(SEQ)
-        #======================================================
-        # Remove AGB sources (NOT considered in SEIP catalog)
-        #AGB = 0
-        #if magIR2 != 'no' and magIR3 != 'no' and magMP1 != 'no':
-        #    X23 = magIR2 - magIR3
-        #    Y35 = magIR3 - magMP1
-        #    if index_AGB(X23, Y35, [0,0,2,5], [-1,0,2,2]) < 0:
-        #        AGB = 1
-        #if AGB != 1:
-        #    SEQ = [sort_up(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-        #    pos_vec.append(SEQ)
-        #======================================================
+            exit('Input type error')
+        SEQ_vector = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
+        AGB_flag   = Remove_AGB(mag_list, IR2_ID=IR2_ID, IR3_ID=IR3_ID, MP1_ID=MP1_ID)
+        if AGB_flag != 'AGB':
+            pos_vec.append(SEQ_vector)
     c_end   = time.time()
     print("\n\nCalculate all sources position in n-dim space took {:.3f} secs\n".format(c_end-c_start))
 
