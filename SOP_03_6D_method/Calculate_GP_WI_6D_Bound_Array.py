@@ -58,16 +58,20 @@ axlim_list = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
 #TODO Finish the path in SPP
 #=====================================
 # Galaxy_Bound_Path
-GP_OBJ_ID, GP_ID = -4, -3
-GPP_OBJ_ID, GPP_ID = -2, -1
+GP_OBJ_ID, GP_ID = 241, 242
+GPP_OBJ_ID, GPP_ID = 243, 244
 bound_path = spp.Selfmade_6D_GP_Path
-lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_lower_bounds_AlB{:d}'.format(\
-                    bound_path, dim, cube, sigma, bond, refD, dim, 0)
-upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_upper_bounds_AlB{:d}'.format(\
-                    bound_path, dim, cube, sigma, bond, refD, dim, 0)
+
+# Different suffix for different methods to create bound array
+# suffix = 'PCA0'
+suffix = 'AlB{:d}'.format(0)
+
+lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_lower_bounds_{}'.format(\
+                    bound_path, dim, cube, sigma, bond, refD, suffix)
+upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_upper_bounds_{}'.format(\
+                    bound_path, dim, cube, sigma, bond, refD, suffix)
 #=====================================
 
-#======================================================================================
 # Functions
 #======================================================================================
 def Remove_AGB(mag_list, IR2_ID=IR2_ID, IR3_ID=IR3_ID, MP1_ID=MP1_ID):
@@ -178,7 +182,15 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
             OBJ_type += 'FYSOc'
     return OBJ_type, Count
 
-#======================================================================================
+def fill_up_list_WI_z(input_list, max_length):
+    '''
+    This is to fill up list with "z" to prevent list index error
+    '''
+    if len(input_list) != max_length:
+        while len(input_list) <= max_length:
+            input_list.append('z')
+    return input_list
+
 # Main Programs
 #======================================================================================
 if __name__ == '__main__':
@@ -186,8 +198,8 @@ if __name__ == '__main__':
     # Load catalog and bounds ...
     l_start = time.time()
     print('\nLoading bounds and input catalogs ...')
-    GP_lower_bound = np.load(lower_bound_array)
-    GP_upper_bound = np.load(upper_bound_array)
+    GP_Lower_Bound = np.load(lower_bound_array)
+    GP_Upper_Bound = np.load(upper_bound_array)
     with open(catalog_name, 'r') as table:
         catalog = table.readlines()
     l_end   = time.time()
@@ -205,6 +217,7 @@ if __name__ == '__main__':
         GPP_OBJ_type, GPP_Count = Classification_Pipeline(\
                                 GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='flux', Qua=True, GP_PSF=True, system='ukidss')
 
+        row_list = fill_up_list_WI_z(row_list)
         row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GPP_Count)
         row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)
         GP_tot_out.append('\t'.join(row_list))
