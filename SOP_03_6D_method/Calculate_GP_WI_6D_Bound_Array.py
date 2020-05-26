@@ -1,11 +1,21 @@
 #!/usr/bin/python
 '''
 ----------------------------------------------------------------
-
+Example: [program] [catalog] [cloud\'s name] [inp_data_type] [galaxy lower bd] [galaxy upper bd] [cube size] [sigma] [bond] [refD]
+Input Variables:
+    [catalog]: input catalog for classification
+    [cloud's name]: name of molecular cloud e.g. CHA_II
+    [inp_data_type]: flux or mag [Note: flux unit "mJy"]
+    [galaxy lower bd]: direct point to file or "default"
+    [galaxy upper bd]: direct point to file or "default"
+    [cube size]: length of multi-d cube in magnitude unit
+    [sigma]: standard deviation for gaussian dist. in magnitude
+    [bond]: boundary radius of gaussian beam unit in cell
+    [ref-D]: reference dimension which to modulus other dimension to
 ----------------------------------------------------------------
-latest update: Jordan Wu'''
-#======================================================================================
-# Setup initial environment
+Latest update: 2020/05/26 Jordan Wu'''
+
+# Import Modules
 #======================================================================================
 from __future__ import print_function
 from Hsieh_Functions import *
@@ -15,36 +25,12 @@ from sys import argv, exit
 import numpy as np
 import time
 
+# Global Variables
 #======================================================================================
-# Input variables
-#======================================================================================
-# Check inputs
-if len(argv) != 8:
-    exit('\n\tError: Wrong Usage!\
-          \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] [cube size] [sigma] [bond] [refD]\
-          \n\t[catalog]: input catalog for classification\
-          \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
-          \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\
-          \n\t[cube size]: length of multi-d cube in magnitude unit\
-          \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
-          \n\t[bond]: boundary radius of gaussian beam unit in cell\
-          \n\t[ref-D]: reference dimension which to modulus other dimension to\n')
-
-# ARGV Inputs
-catalog_name = str(argv[1])
-cloud_name   = str(argv[2])
-data_type    = str(argv[3])
-# Galaxy Bound Quantity
-dim   = 6
-cube  = float(argv[4])
-sigma = int(argv[5])
-bond  = int(argv[6])
-refD  = int(argv[7])
 # Input Catalog Quantity IDs
 mag_ID = [35, 98, 119, 140, 161, 182]
 qua_ID = [37, 100, 121, 142, 163, 184]
 psf_ID = [38, 102, 123, 144, 165, 186]
-IR2_ID, IR3_ID, MP1_ID = mag_ID[2], mag_ID[3], mag_ID[5]
 # Hsieh's limit
 Jaxlim     = Hsieh_Jaxlim
 IR1axlim   = Hsieh_IR1axlim
@@ -53,23 +39,14 @@ IR3axlim   = Hsieh_IR3axlim
 IR4axlim   = Hsieh_IR4axlim
 MP1axlim   = Hsieh_MP1axlim
 axlim_list = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-
 #=====================================
 #TODO Finish the path in SPP
 #=====================================
 # Galaxy_Bound_Path
 GP_OBJ_ID, GP_ID = 241, 242
 GPP_OBJ_ID, GPP_ID = 243, 244
-bound_path = spp.Selfmade_6D_GP_Path
-
-# Different suffix for different methods to create bound array
-# suffix = 'PCA0'
-suffix = 'AlB{:d}'.format(0)
-
-lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_lower_bounds_{}'.format(\
-                    bound_path, dim, cube, sigma, bond, refD, suffix)
-upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_upper_bounds_{}'.format(\
-                    bound_path, dim, cube, sigma, bond, refD, suffix)
+max_column_num = 244
+bound_path = spp.Selfmade_6D_GP_BD_Path
 #=====================================
 
 # Functions
@@ -88,7 +65,7 @@ def Remove_AGB(mag_list, IR2_mag=2, IR3_mag=3, MP1_mag=5):
             AGB_flag = 'AGB'
     return AGB_flag
 
-def Find_MP1_Saturate(row_list, MP1_qua_ID=MP1_qua_ID):
+def Find_MP1_Saturate(row_list, MP1_qua_ID=qua_ID[5]):
     '''
     This is to check if object in input catalog is saturate in MP1 band
     '''
@@ -108,11 +85,11 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
         # Command below is for UKIDSS-SWIRE type catalog
         mag_list = mag_to_mag(row_list, mag_ID=mag_ID, qua_ID=qua_ID, Qua=Qua, Psf=Psf, system=system)
 
-    SEQ_vec      = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
+    SEQ_vec      = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(mag_list))]
     AGB_flag     = Remove_AGB(mag_list)
-    MP1_Sat_flag = Find_MP1_Saturate(mag_list)
+    MP1_Sat_flag = Find_MP1_Saturate(row_list)
     OBS_num      = len(axlim_list) - SEQ_vec.count(-999)
-    OBJ_type     = str(num) + 'bands_'
+    OBJ_type     = str(OBS_num) + 'bands_'
     Count        = 'no_count'
     POS_vector   = np.array(SEQ_vec)
 
@@ -134,7 +111,7 @@ def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
     '''
     This is to check if input is larger than the lower bound of galaxy probability
     '''
-    no_lack_id_list = np.arange(0, len(GP_Lower_Bound))[POS_vector != -999]
+    no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
     GP_Lower_Bound_flag = False
     for no_lack_id in no_lack_id_list:
         if GP_Lower_Bound_flag == True:
@@ -150,7 +127,7 @@ def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
     '''
     This is to check if input is smaller than the lower bound of galaxy probability
     '''
-    no_lack_id_list = np.arange(0, len(GP_Upper_Bound))[POS_vector != -999]
+    no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
     GP_Upper_Bound_flag = False
     for no_lack_id in no_lack_id_list:
         if GP_Upper_Bound_flag == True:
@@ -162,7 +139,7 @@ def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
                     break
     return GP_Upper_Bound_flag
 
-def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='flux', Qua=True, GP_PSF=False, system='ukidss'):
+def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False, system='ukidss'):
     '''
     This is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
@@ -182,7 +159,7 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
             OBJ_type += 'FYSOc'
     return OBJ_type, Count
 
-def fill_up_list_WI_z(input_list, max_length):
+def fill_up_list_WI_z(input_list, max_length=max_column_num):
     '''
     This is to fill up list with "z" to prevent list index error
     '''
@@ -194,6 +171,52 @@ def fill_up_list_WI_z(input_list, max_length):
 # Main Programs
 #======================================================================================
 if __name__ == '__main__':
+    t_start = time.time()
+
+    # Check inputs
+    if len(argv) != 10:
+        exit('\n\tError: Wrong Usage!\
+            \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] [galaxy lower bd] [galaxy upper bd] [cube size] [sigma] [bond] [refD]\
+            \n\t[catalog]: input catalog for classification\
+            \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
+            \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\
+            \n\t[galaxy lower bd]: direct point to file or "default"\
+            \n\t[galaxy upper bd]: direct point to file or "default"\
+            \n\t[cube size]: length of multi-d cube in magnitude unit\
+            \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
+            \n\t[bond]: boundary radius of gaussian beam unit in cell\
+            \n\t[ref-D]: reference dimension which to modulus other dimension to\n')
+    else:
+        print('\nStart calculating GP with 6D bound array ...')
+
+    # Input variables
+    catalog_name = str(argv[1])
+    cloud_name   = str(argv[2])
+    data_type    = str(argv[3])
+    galaxy_lower = str(argv[4])
+    galaxy_upper = str(argv[5])
+    # Galaxy Bound Quantity
+    dim          = 6
+    cube         = float(argv[6])
+    sigma        = int(argv[7])
+    bond         = int(argv[8])
+    refD         = int(argv[9])
+
+    # Lower bound array
+    if galaxy_lower == 'default':
+        suffix = 'AlB{:d}'.format(0) # suffix = 'PCA0'
+        lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_lower_bounds_{}'.format(\
+                            bound_path, dim, cube, sigma, bond, refD, suffix)
+    else:
+        lower_bound_array = galaxy_lower
+
+    # Upper bound array
+    if galaxy_upper == 'default':
+        suffix = 'AlB{:d}'.format(0) # suffix = 'PCA0'
+        upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_upper_bounds_{}'.format(\
+                            bound_path, dim, cube, sigma, bond, refD, suffix)
+    else:
+        upper_bound_array = galaxy_upper
 
     # Load catalog and bounds ...
     l_start = time.time()
@@ -203,20 +226,18 @@ if __name__ == '__main__':
     with open(catalog_name, 'r') as table:
         catalog = table.readlines()
     l_end   = time.time()
-    print("\nLoading arrays took {:.3f} secs".format(l_end - l_start))
+    print("Loading arrays took {:.3f} secs".format(l_end - l_start))
 
     # Start calculating 6D galaxy probability and 6D galaxy probability PSF
     t_start = time.time()
-    print('\nStart Calculating ...')
+    print('\nStart Calculating 6D GP/GPP...')
     GP_tot_out = []
     for i in range(len(catalog)):
         row_list = catalog[i].split()
-
         GP_OBJ_type, GP_Count = Classification_Pipeline(\
-                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='flux', Qua=True, GP_PSF=False, system='ukidss')
+                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False, system='ukidss')
         GPP_OBJ_type, GPP_Count = Classification_Pipeline(\
-                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='flux', Qua=True, GP_PSF=True, system='ukidss')
-
+                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=True, system='ukidss')
         row_list = fill_up_list_WI_z(row_list)
         row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GPP_Count)
         row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)
@@ -227,10 +248,11 @@ if __name__ == '__main__':
 
     # Save galaxy probability results ...
     s_start = time.time()
-    with open(cloud_name + '_6D_GP_out_catalog.tbl', 'w') as GP_tot_out_catalog:
+    with open('{}_6D_BD_GP_out_catalog.tbl'.format(cloud_name), 'w') as GP_tot_out_catalog:
         GP_tot_out_catalog.write('\n'.join(GP_tot_out) + '\n')
     s_end   = time.time()
     print('Saving result took {:.3f} secs'.format(s_end - s_start))
 
     # Conclude all program time consumption
-    print('\n{} all programs took {:.3f} secs\n'.format(s_end - l_start))
+    t_end   = time.time()
+    print('\nWhole {} process took {:.3f} secs\n'.format(str(argv[0]), t_end - t_start))
