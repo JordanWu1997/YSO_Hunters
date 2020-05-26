@@ -74,16 +74,16 @@ upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{
 
 # Functions
 #======================================================================================
-def Remove_AGB(mag_list, IR2_ID=IR2_ID, IR3_ID=IR3_ID, MP1_ID=MP1_ID):
+def Remove_AGB(mag_list, IR2_mag=2, IR3_mag=3, MP1_mag=5):
     '''
     This is to check if object in input catalog is AGB
     Input datatype: magnitude, int, int, int
     '''
     # Remove AGB
     AGB_flag = 'Not_AGB'
-    if (mag_list[IR2_ID] != 'no') and (mag_list[IR3_ID] != 'no') and (mag_list[MP1_ID] != 'no'):
-        X23 = mag_list[IR2_ID] - mag_list[IR3_ID]
-        Y35 = mag_list[IR3_ID] - mag_list[MP1_ID]
+    if (mag_list[IR2_mag] != 'no') and (mag_list[IR3_mag] != 'no') and (mag_list[MP1_mag] != 'no'):
+        X23 = mag_list[IR2_mag] - mag_list[IR3_mag]
+        Y35 = mag_list[IR3_mag] - mag_list[MP1_mag]
         if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
             AGB_flag = 'AGB'
     return AGB_flag
@@ -109,7 +109,7 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
         mag_list = mag_to_mag(row_list, mag_ID=mag_ID, qua_ID=qua_ID, Qua=Qua, Psf=Psf, system=system)
 
     SEQ_vec      = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-    AGB_flag     = Remove(mag_list)
+    AGB_flag     = Remove_AGB(mag_list)
     MP1_Sat_flag = Find_MP1_Saturate(mag_list)
     OBS_num      = len(axlim_list) - SEQ_vec.count(-999)
     OBJ_type     = str(num) + 'bands_'
