@@ -12,10 +12,11 @@ Note : Av_table's header must be removed before starting
 Usage Example: [Program] [Av_table] [catalog] [cloud Name]
 Input variables:
         [Av Table]:  table contains specific cloud region Av values
+        [Av table type]: "Self_made" or "Hsieh"
         [catalog]:   input catalog to do extinction correction
         [cloud name] brief name of cloud e.g. CHA_II
 -------------------------------------------------------------------
-latest update : 2020/05/25 Jordan Wu'''
+Latest update : 2020/05/25 Jordan Wu'''
 
 # Import Modules
 #=============================================
@@ -24,12 +25,14 @@ from sys import argv, exit
 from math import pi,sin,cos
 from Hsieh_Functions import *
 from Useful_Functions import *
+import numpy as np
+import time
 
 # Global Variables
 #=============================================
 parameter  = C_av_list         # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
 Av_coor_ID = Av_coor_ID        # RA, Dec on extinction table
-Av_ID      = Av_ID             # Av index to write on input catalog
+Av_ID      = Av_ID[0]          # Av index to write on input catalog
 coor_ID    = coor_ID           # RA, Dec on input table
 mag_ID     = full_mag_ID       # [33, 54, 75, 96, 117, 138, 159, 180, 201]
 flux_ID    = full_flux_ID      # [35, 56, 77, 98, 119, 140, 161, 182, 203]
@@ -51,7 +54,7 @@ def calculate_min_angular_dist(Ra_catalog_degree, Dec_catalog_degree, Av_table_l
     Ra_catalog_rad  = deg_to_rad(Ra_catalog_degree)
     Dec_catalog_rad = deg_to_rad(Dec_catalog_degree)
     # Loop through all Av table
-    minlist, min_info_list = []
+    minlist, min_info_list = [], []
     for line in Av_table_lines:
         line = line.split()
         # Check if input object in Av table
@@ -80,9 +83,9 @@ def store_Av_info_to_list(far_line, minlist, min_info_list, not_found_list):
         minSQ        = min(minlist)
         minnumber    = minlist.index(minSQ)
         correct_line = min_info_list[minnumber]
-        Av = correct_line.split()[Av_tbl_col_ID]
+        Av = correct_line[Av_tbl_col_ID]
         # Store Av value on catalog
-        far_line[Av_ID[0]] = Av
+        far_line[Av_ID] = Av
         for i, band in enumerate(parameter):
             flux = float(far_line[flux_ID[i]])
             mag  = float(far_line[mag_ID[i]])
@@ -106,62 +109,77 @@ def store_Av_info_to_list(far_line, minlist, min_info_list, not_found_list):
         # If Av value not found
         for j, band in enumerate(parameter):
             far_line[mag_ID[j]] = 'NOT_FOUND'
-        not_found_list.appendi("\t".join(far_line))
-        print('RA:{}, DEC:{} Not on this extinction map'.format(far_line[coor_ID[0]], far_line[coor_ID[1]]))
+        new_far_line = 'NOT_FOUND'
+        not_found_list.append("\t".join(far_line))
     return new_far_line, not_found_list
 
 # Main Programs
 #=============================================
 if __name__ == '__main__':
+    t_start = time.time()
 
     # Check inputs
-    if len(argv) != 4:
+    if len(argv) != 5:
         exit('\n\tError: Wrong Arguments\
-            \n\tExample: [Program] [Av_table] [catalog] [cloud\'s Name]\
-            \n\t[Av Table]: table contains specific cloud region Av values\
+            \n\tExample: [Program] [Av_table] [Av_table_type] [catalog] [cloud\'s Name]\
+            \n\t[Av table]: table contains specific cloud region Av values\
+            \n\t[Av table type]: "Self_made" or "Hsieh"\
             \n\t[catalog]: input catalog to do extinction correction\
             \n\t[cloud\'s name] brief name of cloud e.g. CHA_II\n')
 
     # Input variables
     Av_tbl_name   = str(argv[1])      # Name of input extinction table
-    catalog_name  = str(argv[2])      # Name of input catalog
-    cloud_name    = str(argv[3])      # Cloud name
+    Av_tbl_type   = str(argv[2])      # Type of extinction table selfmade or Hsieh's
+    catalog_name  = str(argv[3])      # Name of input catalog
+    cloud_name    = str(argv[4])      # Cloud name
 
-    if Av_map == 'Hsieh':
+    if Av_tbl_name == 'Hsieh':
         Av_tbl_col_ID = Av_tbl_col_ID[1]
     else:
-        # Here 0 for new Av table (Default)
+        # Here 0 for new made Av table (Default)
         Av_tbl_col_ID = Av_tbl_col_ID[0]
 
     # Print out info from inputs
     print('\nCatalog: {}\
            \nAv table: {}\
+           \nAv table type: {}\
            \nAv_ID on Catalog (write): {:d}\
            \nAv_ID on Av table (read): {:d}\
-           \nCloud: {}\
-           \nRaidus of tolerance = {:.1f} rad'.format(catalog_name, Av_tbl_name, Av_ID, Av_tbl_col_ID, cloud_name, tolerance))
+           \nCloud name: {}\
+           \nRadius of tolerance (rad): {:.1f}\n'.format(\
+           catalog_name, Av_tbl_name, Av_tbl_type, Av_ID, Av_tbl_col_ID, cloud_name, tolerance))
 
     # Load Av table and read files
     with open(Av_tbl_name, 'r') as Av_table:
         Av_table_lines = Av_table.readlines()
     with open(catalog_name, 'r') as catalogs:
         catalog = catalogs.readlines()
-        object_num = len(catalog)
 
     # Main Calculation
-    not_found_list = []
-    new_far_line_list = []
+    print('Start extinction correction ...')
+    not_found_list, new_far_line_list = [], []
     for i, objects in enumerate(catalog):
         objects = objects.split()
         Ra_catalog_degree  = float(objects[coor_ID[0]])
         Dec_catalog_degree = float(objects[coor_ID[1]])
         minlist, min_info_list = calculate_min_angular_dist(Ra_catalog_degree, Dec_catalog_degree, Av_table_lines, tolerance)
         far_line, not_found_list = store_Av_info_to_list(objects, minlist, min_info_list, not_found_list)
-        new_far_line_list.append(far_line)
+        if far_line != 'NOT_FOUND':
+            new_far_line_list.append(far_line)
+        drawProgressBar(float(i+1)/len(catalog))
+
+    # Print out not found list
+    print('\nNOT FOUND INPUTS:')
+    for not_found in not_found_list:
+        not_found = not_found.split()
+        print('RA:{}, DEC:{} Not on this extinction map'.format(not_found[coor_ID[0]], not_found[coor_ID[1]]))
 
     # Write results
+    print('\nSave extinction correction result ...')
     with open(cloud_name + '_Deredden.tbl','w') as out_Avfar:
         out_Avfar.write("\n".join(new_far_line_list) + "\n")
     if len(not_found_list) != 0:
         with open(cloud_name + '_AvNotFound.tbl','w') as out_NotFound:
             out_NotFound.write("\n".join(not_found_list) + "\n")
+    t_end   = time.time()
+    print('\nWhole {} process took {:.3f} secs'.format(argv[0], t_end-t_start))

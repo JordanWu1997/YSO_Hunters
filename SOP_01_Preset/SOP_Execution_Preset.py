@@ -56,18 +56,18 @@ if __name__ == '__main__':
         cloud1, cloud2 = 'LUP', cloud
     else:
         cloud1, cloud2 = cloud, cloud
-    print('Extinction Map: {}{}_Av_table.tbl'.format(path_Av_table + cloud1))
     #=======================================================================
-    print('\nStart Extinction Correction ...')
-    system('Extinction_Correction.py {}{}_Av_table.tbl catalog-{}-HREL_all_star_removal.tbl {} {}'.format(\
-            path_Av_table, cloud1, cloud2, cloud, emap))
+    # print('\nStart Extinction Correction ...')
+    system('Extinction_Correction.py {}{}_Av_table.tbl {} catalog-{}-HREL_all_star_removal.tbl {}'.format(\
+            path_Av_table, cloud1, emap, cloud2, cloud))
     t_deredden_end = time.time()
-    print('Extinction Correction took {:.3f} secs'.format(t_deredden_end - t_deredden_start))
+    # print('Extinction Correction took {:.3f} secs'.format(t_deredden_end - t_deredden_start))
 
     # Step3: Correct MP1 Saturation
     # MP1 saturate source will be noted with MP1_Q = 'S'
     print('\nStart Finding Saturate Source ...')
-    system('Find_Saturate.py ' + cloud + '_Deredden.tbl ' + cloud)
+    print('For now, spitzer data is lost ...')
+    print(str(system('Find_Saturate.py ' + cloud + '_Deredden.tbl ' + cloud)))
 
     t_end = time.time()
-    print("Whole Preset process {} took {:.3f} secs".format(argv[0], t_end - t_start))
+    print("\nWhole Preset process {} took {:.3f} secs".format(argv[0], t_end - t_start))

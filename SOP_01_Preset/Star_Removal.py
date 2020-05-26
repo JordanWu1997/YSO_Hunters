@@ -11,6 +11,7 @@ latest update: 2019/01/02 Jordan Wu'''
 
 # Import Modules
 #====================================
+from __future__ import print_function
 from os import system, path
 from sys import argv, exit
 
@@ -32,7 +33,7 @@ if __name__ == '__main__':
     table  = str(argv[1])
     cloud  = str(argv[2])
     delete = bool(argv[3] == True)
-    print('\ncloud name: {}\ncatalog: {}\nobjecttype_ID: {:d}'.format(cloud, table, objecttype_ID))
+    print('\nCloud name: {}\nCatalog: {}\nObject type ID: {:d}'.format(cloud, table, objecttype_ID))
 
     # Check temporary directories
     if path.isdir('tables'):
@@ -58,6 +59,7 @@ if __name__ == '__main__':
             system('awk \'${:d}!=\"{}\"\' {} > {}'.format(objecttype_ID, remove_seq_list[i], table_name_list[i-1], table_name_list[i]))
 
     # Print out results and deal with temporary files
+    print('\n# of lines in tables:')
     for table in all_table_list:
         system('wc -l {}'.format(table))
     if delete: system('rm -rf tables')
