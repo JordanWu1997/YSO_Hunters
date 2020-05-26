@@ -32,9 +32,6 @@ from Useful_Functions import *
 flux_ID = [0, 3, 4, 5, 6, 7]
 mag_ID  = [0, 3, 4, 5, 6, 7]
 band_ID = [0, 3, 4, 5, 6, 7]
-IR2_ID  = mag_ID[2]
-IR3_ID  = mag_ID[3]
-MP1_ID  = mag_ID[5]
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
 # Use Limit Stored in Hsieh_Functions
@@ -48,21 +45,20 @@ IR4axlim = Hsieh_IR4axlim
 MP1axlim = Hsieh_MP1axlim
 # For now, only 6 out of 8 bands used
 all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-bins_list  = [int(round((all_axlim[i][1] - all_axlim[i][0]) / cube)) + 1 for i in band_ID]
 axlim_list = [all_axlim[i] for i in band_ID]
 
 # Functions
 #======================================================
-def Remove_AGB(mag_list, IR2_ID=IR2_ID, IR3_ID=IR3_ID, MP1_ID=MP1_ID):
+def Remove_AGB(mag_list, IR2_mag=2, IR3_mag=3, MP1_mag=5):
     '''
     This is to check if object in input catalog is AGB
     Input datatype: magnitude, int, int, int
     '''
     # Remove AGB
     AGB_flag = 'Not_AGB'
-    if (mag_list[IR2_ID] != 'no') and (mag_list[IR3_ID] != 'no') and (mag_list[MP1_ID] != 'no'):
-        X23 = mag_list[IR2_ID] - mag_list[IR3_ID]
-        Y35 = mag_list[IR3_ID] - mag_list[MP1_ID]
+    if (mag_list[IR2_mag] != 'no') and (mag_list[IR3_mag] != 'no') and (mag_list[MP1_mag] != 'no'):
+        X23 = mag_list[IR2_mag] - mag_list[IR3_mag]
+        Y35 = mag_list[IR3_mag] - mag_list[MP1_mag]
         if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
             AGB_flag = 'AGB'
     return AGB_flag
@@ -140,8 +136,9 @@ if __name__ == '__main__':
     else:
         system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 
+    bins_list = [int(round((all_axlim[i][1] - all_axlim[i][0]) / cube)) + 1 for i in band_ID]
     # Print out input information
-    print('\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua__ID: {}, {}\nQua_ID: {}\nShape: {}'.format(\
+    print('\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua__ID: {}, {}\nShape: {}'.format(\
             cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))
 
     # Load Galaxy Catalog
@@ -167,7 +164,7 @@ if __name__ == '__main__':
         else:
             exit('Input type error')
         SEQ_vector = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-        AGB_flag   = Remove_AGB(mag_list, IR2_ID=IR2_ID, IR3_ID=IR3_ID, MP1_ID=MP1_ID)
+        AGB_flag   = Remove_AGB(mag_list)
         if AGB_flag != 'AGB':
             pos_vec.append(SEQ_vector)
     c_end   = time.time()
