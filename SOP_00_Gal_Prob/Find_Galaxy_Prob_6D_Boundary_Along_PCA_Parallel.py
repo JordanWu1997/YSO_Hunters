@@ -48,7 +48,7 @@ def generate_6D_origins_on_plane(band_inp, PCA_origin, sc_fixed_bd, sc_lower_bd,
         origin_list.append(np.array(new_origin))
     return origin_list
 
-def generate_pca_line(origin, pca_vec, band_upper_bd):
+def generate_pca_line(origin, pca_vec, band_lower_bd, band_upper_bd):
     '''
     This is used to generate line array along pca vector direction
     Here assuming pca vector components are "all positive" or "all negative"
@@ -75,7 +75,8 @@ def generate_pca_line(origin, pca_vec, band_upper_bd):
         j += 1
     # Round and store in array
     pca_round = np.rint(pca_line)
-    pca_line  = np.array(pca_round, dtype=int)
+    pca_int   = np.array(pca_round, dtype=int)
+    pca_line  = cascade_array_same_pos(pca_int)
     return pca_line
 
 def get_gp_along_line(pca_line, gal_pos, gal_num):
@@ -118,14 +119,14 @@ def find_bd_of_diff_origins(index, len_origin, origin, pca_vec, band_upper_bd, g
     This is to combine all above functions (for parallel computation)
     '''
     # Main calculation
-    pca_line      = generate_pca_line(origin, pca_vec, band_upper_bd)
+    pca_line      = generate_pca_line(origin, pca_vec, band_lower_bd, band_upper_bd)
     gp_along_line = get_gp_along_line(pca_line, gal_pos, gal_num)
     gp_lower_bd, gp_upper_bd = find_gp_boundary(pca_line, gp_along_line)
     if np.nan not in gp_lower_bd:
         gp_lower_bd_list.append(gp_lower_bd)
         gp_upper_bd_list.append(gp_upper_bd)
     # Indicator
-    if (index >= 10) and (index % 10 == 0):
+    if (index >= 100) and (index % 100 == 0):
         print('{} / {}'.format(index, len_origin))
 
 # Main Program
