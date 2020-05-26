@@ -21,6 +21,7 @@ Hsieh_5D_GP2_Array_path = "/cosmo/users/inchone/Remove_Av_sources_in_whole_cloud
 #Selfmade_6D_GP_Dict_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/6D_GPM_WI_2MASSBR/GPV_grid_6D_bin0.4_sigma2_refD5/"
 #Selfmade_6D_GP_Dict_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/6D_GPM_WI_2MASSBR_tuple/GPV_grid_6D_bin0.4_sigma2_refD5/"
 Selfmade_6D_GP_Dict_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Galaxy_Test/6D_BS0.4_REFD5_tuple/Small_test/GPV_grid_6D_bin0.4_sigma2_refD5/"
+Selfmade_6D_GP_BD_Path = " "
 
 # SOP_Program_6D_method/SOP_Execution_6D_method.py
 Hsieh_YSO_List_path = '/home/jordan/YSO_Project/C2D-SWIRE_20180710/Table_to_Compare/Table_From_Hsieh/'
