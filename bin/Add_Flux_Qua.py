@@ -29,7 +29,7 @@ for i in range(len(data)):
     row = data[i].split()
     for qua_id in qua_list:
         if row[qua_id] == 'N':
-            row[qua_id] = 'A'
+            row[qua_id] = 'A_fake'
     new_row = '\t'.join(row) + '\n'
     out_catalog.append(new_row)
     drawProgressBar(float(i+1)/len(data))
