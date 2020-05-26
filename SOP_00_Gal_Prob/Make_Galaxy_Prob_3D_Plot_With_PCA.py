@@ -1,8 +1,22 @@
 #!/usr/bin/python
-'''----------------------------------------------------------------
--------------------------------------------------------------------
-latest update :  Jordan Wu'''
+'''
+----------------------------------------------------------------
+ Example: [program] [dim] [cube size] [sigma] [bond] [ref-D] [deg_slice] [inclination] [weighted] [maxd_pca]
+ Input Variables:
+    [dim]:         dimension for smooth (for now only "6")
+    [cube size]:   length of multi-d cube in magnitude unit
+    [sigma]:       standard deviation for gaussian dist. in magnitude
+    [bond]:        boundary radius of gaussian beam unit in cell
+    [ref-D]:       reference dimension which to modulus other dimension to
+    [deg_slice]:   number of slices of position angle
+    [inclination]: inclination degree of viewing angle
+    [weighted]:    Weighted PCA or not (True/False)
+    [maxd_pca]:    Use Max Dimensional PCA or not (True/False)
+----------------------------------------------------------------
+Latest update: 2020/05/26  Jordan Wu'''
 
+# Load Modules
+#=======================================================
 from __future__ import print_function
 import time
 import numpy as np
@@ -11,7 +25,6 @@ from os import system, chdir, path
 from itertools import combinations
 from Hsieh_Functions import *
 from Useful_Functions import *
-
 # For non-interactive backend (No request for showing pictures)
 import matplotlib
 matplotlib.use('Agg')
@@ -19,46 +32,29 @@ matplotlib.rc('figure', max_open_warning = 0)
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-if len(argv) != 10:
-    exit('\n\tError: Wrong Arguments\
-    \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [num_slice] [inclination] [weighted] [maxd_pca]\
-    \n\t[dim]: dimension for smooth (for now only "6")\
-    \n\t[cube size]: length of multi-d cube in magnitude unit\
-    \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
-    \n\t[bond]: boundary radius of gaussian beam unit in cell\
-    \n\t[ref-D]: reference dimension which to modulus other dimension to\
-    \n\t[deg_slice]: number of slices of position angle\
-    \n\t[inclination]: inclination degree of viewing angle\
-    \n\t[weighted]: Weighted PCA or not (True/False)\
-    \n\t[maxd_pca]: Use Max Dimensional PCA or not (True/False)\n')
-
+# Global Variables
 #=======================================================
-# Input variables
-band_name  = band_name
-dim        = int(argv[1])       # Dimension of position vector
-cube       = float(argv[2])     # Beamsize for each cube
-sigma      = int(argv[3])       # STD for Gaussian Smooth
-bond       = int(argv[4])
-refD       = int(argv[5])       # Reference Beam Dimension
-deg_slice  = int(argv[6])
-incli      = int(argv[7])
-weighted   = str(argv[8])
-maxd_pca   = str(argv[9])
 
-ddim       = 6                  # Specific dimensional data to plot
-shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
-all_shape  = np.load(shape_dir + 'Shape.npy')
-print('\n', all_shape, ddim)
-
-smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(\
-                dim, cube, sigma, bond, refD)
-output_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(\
-                dim, cube, sigma, bond, refD)
-pca_dir    = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/pca_cut/'.format(\
-                dim, cube, sigma, bond, refD)
-
-#=======================================================
 # Functions
+#=======================================================
+def generate_diff_comb_band_params(comb):
+    '''
+    This is to generate band parameters for different input combinations
+    band_ind: band indice stored in "str"
+    bd_id:    band indice stored in "int" in a LIST
+    shape:    shape of selected 3 band dimensional magnitude space, stored in LIST
+    bd_name:  name of band store in "str" in a LIST
+    '''
+    band_ind = ''
+    for band in comb:
+        band_ind += str(band)
+    bd_ind, shape, bd_name = [], [], []
+    for ind in band_ind:
+        bd_ind.append(int(ind))
+        shape.append(all_shape[int(ind)])
+        bd_name.append(band_name[int(ind)])
+    return band_ind, bd_ind, shape, bd_name
+
 def sort_inp_gal(gal_pos, gal_num):
     '''
     sort gal_pos, gal_num and then return list after sorting
@@ -94,16 +90,16 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
         ax  = fig.add_subplot(111, projection='3d')
         # Data Scatter
         #ax.scatter(bd0, bd1, bd2, s=0.5, alpha=0.8)
-        ax.scatter(bd0_g1, bd1_g1, bd2_g1, s=0.5, c='steelblue', alpha=0.3)
-        ax.scatter(bd0_e1, bd1_e1, bd2_e1, s=0.5, c='g', alpha=1.0)
+        ax.scatter(bd0_e1, bd1_e1, bd2_e1, s=dot_size, c='g', alpha=0.5, label='Scatter (GP=1)')
+        ax.scatter(bd0_g1, bd1_g1, bd2_g1, s=dot_size, c='steelblue', alpha=0.5, label='Scatter (GP>1)')
         # PCA eigenvector
         for j in range(len(evectors)):
             evector = evectors[j]
             mean_x, mean_y, mean_z = mean[bd_ind[0]], mean[bd_ind[1]], mean[bd_ind[2]]
             evector_x, evector_y, evector_z = evector[bd_ind[0]], evector[bd_ind[1]], evector[bd_ind[2]]
-            ax.quiver(mean_x, mean_y, mean_z, # <-- starting point of vector
-                      evector_x, evector_y, evector_z, # <-- directions of vector
-                      length=100*eratio[j], color='r')
+            ax.quiver(mean_x, mean_y, mean_z,           # <-- starting point of vector
+                      evector_x, evector_y, evector_z,  # <-- directions of vector
+                      length = magnify_F * eratio[j], color='r')
         ax.set_title('{}{}{}_{}'.format(bd_name[0], bd_name[1], bd_name[2], bd_name[0]))
         ax.set_xlabel('{} ({:d})'.format(bd_name[0], shape[0]))
         ax.set_ylabel('{} ({:d})'.format(bd_name[1], shape[1]))
@@ -119,26 +115,55 @@ def plot_3d_scatter_with_PCA(pos_array, num_array, shape, bd_ind, bd_name, \
         plt.savefig('{}{}{}_{:0>3d}_WI_{}_{}'.format(bd_name[0], bd_name[1], bd_name[2], i, method, pca_band_ind))
         plt.clf()
 
-#=======================================================
 # Main Programs
+#=======================================================
 if __name__ == '__main__':
-
-    ##=======================================================
-    # Just for debugging test: band_ind_list = np.array([0, 1, 2]) band_ind_list = np.array([3, 4, 5])
     m_start = time.time()
+
+    # Check inputs
+    if len(argv) != 10:
+        exit('\n\tError: Wrong Arguments\
+        \n\tExample: [program] [dim] [cube size] [sigma] [bond] [ref-D] [deg_slice] [inclination] [weighted] [maxd_pca]\
+        \n\t[dim]: dimension for smooth (for now only "6")\
+        \n\t[cube size]: length of multi-d cube in magnitude unit\
+        \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
+        \n\t[bond]: boundary radius of gaussian beam unit in cell\
+        \n\t[ref-D]: reference dimension which to modulus other dimension to\
+        \n\t[deg_slice]: number of slices of position angle\
+        \n\t[inclination]: inclination degree of viewing angle\
+        \n\t[weighted]: Weighted PCA or not (True/False)\
+        \n\t[maxd_pca]: Use Max Dimensional PCA or not (True/False)\n')
+
+    # Input variables
+    band_name  = band_name
+    dim        = int(argv[1])        # Dimension of position vector
+    cube       = float(argv[2])      # Beamsize for each cube
+    sigma      = int(argv[3])        # STD for Gaussian Smooth
+    bond       = int(argv[4])
+    refD       = int(argv[5])        # Reference Beam Dimension
+    deg_slice  = int(argv[6])
+    incli      = int(argv[7])
+    weighted   = str(argv[8])
+    maxd_pca   = str(argv[9])
+    ddim       = 6                   # Specific dimensional data to plot
+    dot_size   = 0.5 * (cube/0.2)**3 # Size of scatter dots (refer to cube=0.2 case)
+    magnify_F  = 100 * (0.2/cube)    # Magnify factor for PCA arrow (refer to cube=0.2 case)
+    shape_dir  = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
+    smooth_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
+    output_dir = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/'.format(dim, cube, sigma, bond, refD)
+    pca_dir    = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}_GPtomo/pca_cut/'.format(dim, cube, sigma, bond, refD)
+
+    # Load and print out input information
+    all_shape  = np.load(shape_dir + 'Shape.npy')
+    print('\nGalaxy Prob Data shape: {}\
+           \nPlot Galaxy Prob Data Dim: {:d}D'.format(str(all_shape), ddim))
+
+    # Generate diff band combinations
     band_ind_list = np.arange(0, dim, 1)
     for comb in combinations(band_ind_list, 3):
 
-        #=======================================================
         # Generate band input
-        band_ind = ''
-        for band in comb:
-            band_ind += str(band)
-        bd_ind, shape, bd_name = [], [], []
-        for ind in band_ind:
-            bd_ind.append(int(ind))
-            shape.append(all_shape[int(ind)])
-            bd_name.append(band_name[int(ind)])
+        band_ind, bd_ind, shape, bd_name = generate_diff_comb_band_params(comb)
         print('\n# band: ' + band_ind)
 
         # Generate PCA input
@@ -149,28 +174,19 @@ if __name__ == '__main__':
         if maxd_pca == 'True':
             pca_band_ind = ''.join([str(i) for i in range(dim)])
 
-        #=======================================================
         # Load galaxy pos/num
-        l_start = time.time()
         if ddim == dim:
-            gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(0, ''.join([str(i) for i in range(ddim)])))
-            gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(0, ''.join([str(i) for i in range(ddim)])))
-            gal_pos_1, gal_pos_2, gal_pos_3 = np.array([gal_pos[:, bd_ind[0]]]), \
-                                              np.array([gal_pos[:, bd_ind[1]]]), \
-                                              np.array([gal_pos[:, bd_ind[2]]])
-            gal_con = np.concatenate((gal_pos_1, gal_pos_2, gal_pos_3), axis=0)
-            gal_pos = np.transpose(gal_con)
+            gal_pos = np.load('{}after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(smooth_dir, 0, ''.join([str(i) for i in range(ddim)])))
+            gal_num = np.load('{}after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(smooth_dir, 0, ''.join([str(i) for i in range(ddim)])))
+            gal_pos = gal_pos[:, [bd_ind[0], bd_ind[1], bd_ind[2]]]
         else:
-            gal_pos = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(dim-len(band_ind), band_ind))
-            gal_num = np.load(smooth_dir + 'after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(dim-len(band_ind), band_ind))
-        out_pos, out_num = sort_inp_gal(gal_pos, gal_num) # only include gp>=1 data points
-        pos_array, num_array = np.array(out_pos), np.array(out_num)
-        # Load PCA data
-        mean, evectors, eratio = load_pca_data(method, pca_band_ind)
-        l_end   = time.time()
-        #print('Loading took {:.3f} secs'.format(l_end-l_start))
+            gal_pos = np.load('{}after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(smooth_dir, dim-len(band_ind), band_ind))
+            gal_num = np.load('{}after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(smooth_dir, dim-len(band_ind), band_ind))
 
-        #=======================================================
+        out_pos, out_num = sort_inp_gal(gal_pos, gal_num)            # only include gp>=1 data points
+        pos_array, num_array = np.array(out_pos), np.array(out_num)  # transform to arrays
+        mean, evectors, eratio = load_pca_data(method, pca_band_ind) # Load PCA data
+
         # Start plotting
         p_start = time.time()
         chdir(output_dir)
@@ -191,6 +207,5 @@ if __name__ == '__main__':
         p_end   = time.time()
         print('\nPlotting took {:.3f} secs'.format(p_end-p_start))
 
-    #=======================================================
     m_end   = time.time()
-    print('\nWhole Process took {:.3f} secs\n'.format(m_end-m_start))
+    print('\nWhole {} process took {:.3f} secs\n'.format(str(argv[0]), m_end-m_start))
