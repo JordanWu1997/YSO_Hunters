@@ -27,14 +27,13 @@ from Useful_Functions import *
 
 # Global Variables
 #=============================================
-parameter     = C_av_list         # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
-Av_coor_ID    = Av_coor_ID        # RA, Dec on extinction table
-Av_tbl_col_ID = Av_tbl_col_ID[0]  # Here 0 for new Av table
-Av_ID         = Av_ID             # Av index to write on input catalog
-coor_ID       = coor_ID           # RA, Dec on input table
-mag_ID        = full_mag_ID       # [33, 54, 75, 96, 117, 138, 159, 180, 201]
-flux_ID       = full_flux_ID      # [35, 56, 77, 98, 119, 140, 161, 182, 203]
-tolerance     = 0.5               # Radius to distinguish source point on Av_table (in radian)
+parameter  = C_av_list         # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
+Av_coor_ID = Av_coor_ID        # RA, Dec on extinction table
+Av_ID      = Av_ID             # Av index to write on input catalog
+coor_ID    = coor_ID           # RA, Dec on input table
+mag_ID     = full_mag_ID       # [33, 54, 75, 96, 117, 138, 159, 180, 201]
+flux_ID    = full_flux_ID      # [35, 56, 77, 98, 119, 140, 161, 182, 203]
+tolerance  = 0.5               # Radius to distinguish source point on Av_table (in radian)
 
 # Functions
 #=============================================
@@ -127,6 +126,12 @@ if __name__ == '__main__':
     Av_tbl_name   = str(argv[1])      # Name of input extinction table
     catalog_name  = str(argv[2])      # Name of input catalog
     cloud_name    = str(argv[3])      # Cloud name
+
+    if Av_map == 'Hsieh':
+        Av_tbl_col_ID = Av_tbl_col_ID[1]
+    else:
+        # Here 0 for new Av table (Default)
+        Av_tbl_col_ID = Av_tbl_col_ID[0]
 
     # Print out info from inputs
     print('\nCatalog: {}\
