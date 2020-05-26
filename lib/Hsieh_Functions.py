@@ -99,32 +99,33 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="t
     elif system == 'ukidss':
         F0_list = f0_UKIDSS_Spitzer
     # Assign Qua, PSF index
-    if Qua:
-        flux_Qua  = [x[ID] for ID in qua_ID]
-    if Psf:
-        PSF_list  = [x[ID] for ID in psf_ID]
+    if Qua: flux_Qua  = [x[ID] for ID in qua_ID]
+    if Psf: PSF_list  = [x[ID] for ID in psf_ID]
     # Start calculating magnitude
-    flux_list, mag_list = [float(x[ID]) for ID in flux_ID], []
+    flux_list = [float(x[ID]) for ID in flux_ID]
     if Qua:
-        for i in range(len(flux_list)):
-            # PSF Check activated
-            if Psf and PSF_list[i] != "1" and flux_Qua[i] != "S":
-                mag_list.append('no')
-            # IR1,IR2,IR3,IR4,MP1 band
-            elif flux_Qua[i] == "A" or  flux_Qua[i] == "B" or flux_Qua[i] == "C" or flux_Qua[i] == "D" or flux_Qua[i] == "K":
-                if flux_list[i] > 0.0:
-                    mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
-            # Qua labeled as 'S' (saturate candidate)
-            elif flux_Qua[i] == "S":
-                mag_list.append(-100.0)
-            # Qua labeled as 'N' (not detected)
-            elif flux_Qua[i] == "N":
-                mag_list = ['no'] * len(flux_list)
-                break
-            # Qua labeled as 'U' (upper-limit)
-            else:
-                mag_list.append('no')
+        if "N" in flux_Qua:
+            mag_list = [0] * len(flux_list)
+        else:
+            mag_list = []
+            for i in range(len(flux_list)):
+                # PSF Check activated
+                if Psf and PSF_list[i] != "1" and flux_Qua[i] != "S":
+                    mag_list.append('no')
+                # IR1, IR2, IR3, IR4, MP1 band ("A_fake for J,H,K)
+                elif flux_Qua[i] in ["A_fake", "A", "B", "C", "D", "K"]:
+                    if flux_list[i] > 0.0:
+                        mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
+                    else:
+                        mag_list.append('no')
+                # Qua labeled as 'S' (saturate candidate)
+                elif flux_Qua[i] == "S":
+                    mag_list.append(-100.0)
+                # Qua labeled as 'U' (upper-limit)
+                else:
+                    mag_list.append('no')
     else:
+        mag_list = []
         for i in range(len(flux_list)):
             if flux_list[i] > 0.0:
                 mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
@@ -173,32 +174,34 @@ def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="two
     elif system == 'ukidss':
         F0_list = f0_UKIDSS_Spitzer
     # Assign Qua, PSF index
-    if Qua:
-        flux_Qua = [x[ID] for ID in qua_ID]
-    if Psf:
-        PSF_list  = [x[ID] for ID in psf_ID]
+    if Qua: flux_Qua = [x[ID] for ID in qua_ID]
+    if Psf: PSF_list = [x[ID] for ID in psf_ID]
     # Start calculating magnitude
-    mag_list, select_mag_list = [float(x[ID]) for ID in mag_ID], []
+    mag_list = [float(x[ID]) for ID in mag_ID]
     if Qua:
-        for i in range(len(mag_list)):
-            # PSF Check activated
-            if Psf and PSF_list[i] != "1" and flux_Qua[i] != "S":
-                select_mag_list.append('no')
-            # IR1, IR2, IR3, IR4, MP1 band
-            elif flux_Qua[i] == "A" or  flux_Qua[i] == "B" or flux_Qua[i] == "C" or flux_Qua[i] == "D" or flux_Qua[i] == "K":
-                if mag_list[i] > 0.0:
-                    select_mag_list.append(mag_list[i])
-            # Qua labeled as 'S' (saturate candidate)
-            elif flux_Qua[i] == "S":
-                select_mag_list.append(-100.0)
-            # Qua labeled as 'N' (not detected)
-            elif flux_Qua[i] == "N":
-                select_mag_list=['no'] * len(flux_list)
-                break
-            # Qua labeled as 'U' (upper-limit)
-            else:
-                select_mag_list.append('no')
+        # Qua labeled as 'N' (not detected)
+        if "N" in flux_Qua:
+            select_mag_list = ['no'] * len(mag_list)
+        else:
+            select_mag_list = []
+            for i in range(len(mag_list)):
+                # PSF Check activated
+                if Psf and PSF_list[i] != "1" and flux_Qua[i] != "S":
+                    select_mag_list.append('no')
+                # IR1, IR2, IR3, IR4, MP1 band ("A_fake for J,H,K)
+                elif flux_Qua[i] in ["A_fake", "A", "B", "C", "D", "K"]:
+                    if mag_list[i] > 0.0:
+                        select_mag_list.append(mag_list[i])
+                    else:
+                        select_mag_list.append('no')
+                # Qua labeled as 'S' (saturate candidate)
+                elif flux_Qua[i] == "S":
+                    select_mag_list.append(-100.0)
+                # Qua labeled as 'U' (upper-limit)
+                else:
+                    select_mag_list.append('no')
     else:
+        select_mag_list = []
         for i in range(len(mag_list)):
             if mag_list[i] > 0.0:
                 select_mag_list.append(mag_list[i])
