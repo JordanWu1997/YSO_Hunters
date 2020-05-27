@@ -2,9 +2,10 @@
 '''
 ----------------------------------------------------------------
 This stores useful functions in YSO Hunter project
--------------------------------------------------------------------
-latest update : Jordan Wu'''
+----------------------------------------------------------------
+Latest update : Jordan Wu'''
 
+from __future__ import print_function
 import math as mh
 import numpy as np
 from numba import jit
