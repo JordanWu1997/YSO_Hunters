@@ -17,6 +17,9 @@ import math as mh
 import numpy as np
 
 #==============================================================================
+# Add on (Not in Hsieh_Functions Modules)
+c2d_lab_ID = [16]
+
 # Flux ID: J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
 flux_ID = [33, 96, 117, 138, 159, 180]
 flux_err_ID = [34, 97, 118, 139, 160, 181]
