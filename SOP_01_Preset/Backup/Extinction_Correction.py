@@ -119,11 +119,11 @@ for objects in catalog:
             #=============================
             # Flux Correction
             #=============================
-            if flux < 0.0:
-                new_far_flux = str(flux)
-            else:
+            if flux > 0.0:
                 Av = float(Av)
-                new_far_flux = str(flux*10**(Av*C_av/2.5))
+                new_far_flux = str(flux * 10**(Av * C_av / 2.5))
+            else:
+                new_far_flux = str(np.nan) #str(flux)
             far_line[flux_ID[i]] = new_far_flux
 
             #=============================
@@ -133,7 +133,7 @@ for objects in catalog:
                 Av = float(Av)
                 new_far_mag = str(mag - C_av*Av) #from def of Av, Cv
             else:
-                new_far_mag = str(mag)
+                new_far_mag = str(np.nan) #str(mag)
             far_line[mag_ID[i]] = new_far_mag
 
         new_far_line = "\t".join(far_line) + "\n"
