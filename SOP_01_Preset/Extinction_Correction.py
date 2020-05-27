@@ -91,18 +91,18 @@ def store_Av_info_to_list(far_line, minlist, min_info_list, not_found_list):
             mag  = float(far_line[mag_ID[i]])
             C_av = float(band[1])
             # Start Flux Correction
-            if flux < 0.0:
-                new_far_flux = str(flux)
-            else:
+            if flux > 0.0:
                 Av = float(Av)
                 new_far_flux = str(flux * 10 ** (Av * C_av/2.5))
+            else:
+                new_far_flux = str(0.0) #str(flux)
             far_line[flux_ID[i]] = new_far_flux
             # Start Magnitude Correction
             if mag > 0.0:
                 Av = float(Av)
                 new_far_mag = str(mag - C_av * Av) #from def of Av, Cv
             else:
-                new_far_mag = str(mag)
+                new_far_mag = str(0.0) #str(mag)
             far_line[mag_ID[i]] = new_far_mag
         new_far_line = "\t".join(far_line)
     else:
