@@ -33,6 +33,7 @@ flux_err_ID_2Mass = [34, 55, 76]
 # Mag ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS/UKIDSS + Spitzer)
 mag_ID  = [35, 98, 119, 140, 161, 182]
 mag_ID_2Mass = [35, 56, 77]
+mag_err_ID_2Mass = [36, 57, 78]
 mag_ID_Spitzer = [98, 119, 140, 161, 182]
 mag_err_ID_Spitzer = [99, 120, 141, 162, 183]
 
@@ -45,7 +46,8 @@ psf_ID  = [38, 102, 123, 144, 165, 186]
 psf_ID_Spitzer = [102, 123, 144, 165, 186]
 
 # F0 (mJy): J, IR1, IR2, IR3, IR4, MP1
-f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]  # H: 1024000
+f0_full_C2D = [1594000, 1024000, 666700, 280900, 179700, 115000, 64130, 7140, 778]
+f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]  # H: 1024000, K: 666700
 f0_UKIDSS_Spitzer = [1530000, 280900, 179700, 115000, 64130, 7140] # H: 1019000
 f0_Spitzer = [280900, 179700, 115000, 64130, 7140]
 
@@ -61,12 +63,14 @@ C_av_list = [['J',  0.2741],
             ['MP2', 0]]
 
 # Extinction Correction Parameters
-Av_coor_ID    = [0, 1]  # RA, Dec on extinction table
-Av_ID         = [17]
-Av_tbl_col_ID = [2, 6]  # [6] for Hsieh's old Av table
-coor_ID       = [0, 2]  # RA, Dec on input table
-full_mag_ID   = [33, 54, 75, 96, 117, 138, 159, 180, 201]
-full_flux_ID  = [35, 56, 77, 98, 119, 140, 161, 182, 203]
+Av_coor_ID       = [0, 1]  # RA, Dec on extinction table
+Av_ID            = [17]
+Av_tbl_col_ID    = [2, 6]  # [6] for Hsieh's old Av table
+coor_ID          = [0, 2]  # RA, Dec on input table
+full_flux_ID     = [33, 54, 75, 96, 117, 138, 159, 180, 201]
+full_mag_ID      = [35, 56, 77, 98, 119, 140, 161, 182, 203]
+full_flux_err_ID = [34, 55, 76, 97, 118, 139, 160, 181, 202]
+full_mag_err_ID  = [36, 57, 78, 99, 120, 141, 162, 183, 204]
 
 # Band name
 band_name = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
@@ -140,28 +144,63 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="t
 def mJy_to_mag_ONLY_Spitzer(x):
     '''
     This function is to change fluxes on the catalog to magnitudes
+    IR1, IR2, IR3, IR4, MP1 (SPITZER)
     '''
     flux_list = [float(x[ID]) for ID in flux_ID_Spitzer]
     flux_Qua  = [x[ID] for ID in qua_ID_Spitzer]
-    F0_list = f0_Spitzer
-    mag_list = []
+    F0_list   = f0_Spitzer
+    mag_list  = []
     for i in range(len(F0_list)):
         if float(flux_list[i]) > 0.0:
-            mag_list.append(-2.5*np.log10(float(flux_list[i])/F0_list[i]))
+            mag_list.append(-2.5 * mh.log10(float(flux_list[i])/F0_list[i]))
         else:
             mag_list.append(0.0)
     return mag_list
 
 def flux_error_to_mag_ONLY_Spitzer(x):
+    '''
+    This function is to change flux error on the catalog to magnitudes error
+    IR1, IR2, IR3, IR4, MP1 (SPITZER)
+    '''
+    df_list = [float(x[ID]) for ID in flux_err_ID_Spitzer]
     F0_list = f0_Spitzer
-    df_list = [x[ID] for ID in flux_err_ID_Spitzer]
     dm_list = []
     for i in range(len(F0_list)):
         if df_list[i] > 0.0:
-            dm = float(df_list[i])/F0_list[i] * 2.5*np.log10(np.e)
+            dm = float(df_list[i])/F0_list[i] * 2.5 * mh.log10(mh.e)
         else :
             dm = 0.0
         dm_list.append(dm)
+    return dm_list
+
+def mJy_to_mag_FULL_C2D(x):
+    '''
+    This function is to change fluxes on the catalog to magnitudes
+    J, H, Ks, IR1, IR2, IR3, IR4, MP1 (2MASS + SPITZER)
+    '''
+    flux_list = [float(x[ID]) for ID in full_flux_ID]
+    F0_list   = f0_full_C2D
+    mag_list  = []
+    for i in range(len(F0_list)):
+        if float(flux_list[i]) > 0.0:
+            mag_list.append(-2.5 * mh.log10(float(flux_list[i])/F0_list[i]))
+        else:
+            mag_list.append(0.0)
+    return mag_list
+
+def mag_error_to_mag_FULL_C2D(x):
+    '''
+    This function is to change flux error on the catalog to magnitudes error
+    J, H, Ks, IR1, IR2, IR3, IR4, MP1 (2MASS + SPITZER)
+    '''
+    df_list = [float(x[ID]) for ID in full_flux_ID]
+    F0_list = f0_full_C2D
+    dm_list = []
+    for i in range(len(F0_list)):
+        if df_list[i] > 0.0:
+            dm_list.append(float(df_list[i])/F0_list[i] * 2.5 * mh.log10(mh.e))
+        else:
+            dm_list.append(0.0)
     return dm_list
 
 #==============================================================================
