@@ -30,7 +30,7 @@ for i in range(len(cat)):
     #GP1 != no_count, GP2 == no_count
     if row_prob[234] != 'no_count' and row_prob[236] == 'no_count':
         GP1 = float(row_prob[234])
-        if GP1 <= 1: 
+        if GP1 <= 1:
             if row_prob[238] != 'no_count':
                 GPP1 = float(row_prob[238])
                 if GPP1 > 1:
@@ -56,7 +56,7 @@ for i in range(len(cat)):
                 GP_IC.append(cat[i])
         else:
             Galaxy.append(cat[i])
-            
+
     #GP1 != no_count, GP2 != no_count
     elif row_prob[234] != 'no_count' and row_prob[236] != 'no_count':
         GP1, GP2 = float(row_prob[234]), float(row_prob[236])

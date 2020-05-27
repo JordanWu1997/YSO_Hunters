@@ -39,20 +39,20 @@ else:
 print('Image Checking ...')
 
 # (1)Gal Prob P UNCERTAIN
-os.system('degree_to_wcs.py ' + cloud + '_GP_to_image_check.tbl ' + cloud + ' Image_Check')
-os.system('getfits.py ' + cloud + '_cans_to_wcs_image_check.tbl ' + cloud + ' Image_Check')
+os.system('Deg_To_WCS.py ' + cloud + '_GP_to_image_check.tbl ' + cloud + ' Image_Check')
+os.system('Get_Fits.py ' + cloud + '_cans_to_wcs_image_check.tbl ' + cloud + ' Image_Check')
 
 # (2)Saturate candidates in YSO candidates
 print('\nThe Saturate Candiates in YSO candidates:')
 os.system('echo | awk \'$185 == \"S\" {print $1, $3} \' '+ cloud + '_YSO.tbl')
 os.system('echo | awk \'$185 == \"S\" \' '+ cloud + '_YSO.tbl' + ' > ' + cloud + '_saturate_candidates.tbl')
-os.system('degree_to_wcs.py ' + cloud + '_saturate_candidates.tbl ' + cloud + ' Saturate')
-os.system('getfits.py ' + cloud + '_cans_to_wcs_saturate.tbl ' + cloud + ' Saturate')
+os.system('Deg_To_WCS.py ' + cloud + '_saturate_candidates.tbl ' + cloud + ' Saturate')
+os.system('Get_Fits.py ' + cloud + '_cans_to_wcs_saturate.tbl ' + cloud + ' Saturate')
 
 # (3)All YSO candidate's IR1 check excluding (2)
 os.system('echo | awk \'$185 != \"S\" \' '+ cloud + '_YSO.tbl' + ' > ' + cloud + '_YSO_candidates.tbl')
-os.system('degree_to_wcs.py ' + cloud + '_YSO_candidates.tbl ' + cloud + ' IR1_Check')
-os.system('getfits.py ' + cloud + '_cans_to_wcs_IR1_check.tbl ' + cloud + ' IR1_Check')
+os.system('Deg_To_WCS.py ' + cloud + '_YSO_candidates.tbl ' + cloud + ' IR1_Check')
+os.system('Get_Fits.py ' + cloud + '_cans_to_wcs_IR1_check.tbl ' + cloud + ' IR1_Check')
 
 # (4)Remove deg_to_wcs_catalog
 os.system('rm '+ cloud + '_cans_to_wcs_image_check.tbl')
