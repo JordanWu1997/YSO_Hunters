@@ -12,6 +12,7 @@ This program is for packing all functions needed for calculating galaxy probabil
 -------------------------------------------------------------------
 latest update : 2019/02/20 Jordan Wu'''
 
+from __future__ import print_function
 import math as mh
 import numpy as np
 
