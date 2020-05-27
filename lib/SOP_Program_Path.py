@@ -6,7 +6,7 @@ Selfmade_Av_Table_path = "/home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Extinc
 
 # SOP_Program_Preset/Find_Saturate.py
 # SOP_Program_5D_method/getfits.py
-Mosaic_path = "/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/"
+Mosaic_path = "/brick/pangu/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/"
 
 # SOP_Program_5D_method/multi-d_Prob_J_MP1.py
 # SOP_Program_5D_method/PSF1_detection_multi-d_Prob_J_MP1.py
