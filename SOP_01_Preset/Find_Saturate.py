@@ -134,9 +134,9 @@ if __name__ == '__main__':
         # Load pixel xy coordinate table
         with open(band_li[i] + '_sources_pix','r') as coor_table:
             cats = coor_table.readlines()
-
         for j in range(len(cats)):
             pos_line = cats[j].split()
+            # Indicate if input object off-image
             if len(pos_line) == 8:
                 break
             pos_pix = [round(float(pos_line[4])), round(float(pos_line[5]))]
