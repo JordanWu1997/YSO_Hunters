@@ -19,8 +19,11 @@ import time
 
 # Global Variables
 #======================================================
+GP_OBJ_ID,  GP_VAL_ID   = 241, 242
+GPP_OBJ_ID, GPP_VAL_ID  = 243, 244
+GP_GPP_ID = [241, 242, 243, 244, 245]
 VAR_list = [var for var in dir() if 'ID' in var]
-ID_list  = ['flux_ID', 'mag_ID', 'qua_ID', 'psf_ID', 'Av_ID', 'c2d_lab_ID']
+ID_list  = ['flux_ID', 'mag_ID', 'qua_ID', 'psf_ID', 'Av_ID', 'c2d_lab_ID', 'GP_GPP_ID']
 
 # Functions
 #======================================================
