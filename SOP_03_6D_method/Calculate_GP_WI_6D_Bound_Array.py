@@ -8,6 +8,7 @@ Input Variables:
     [inp_data_type]: flux or mag [Note: flux unit "mJy"]
     [galaxy lower bd]: direct point to file or "default"
     [galaxy upper bd]: direct point to file or "default"
+    [band_inp]: band used to do smooth in string e.g. 012345
     [cube size]: length of multi-d cube in magnitude unit
     [sigma]: standard deviation for gaussian dist. in magnitude
     [bond]: boundary radius of gaussian beam unit in cell
@@ -174,14 +175,16 @@ if __name__ == '__main__':
     t_start = time.time()
 
     # Check inputs
-    if len(argv) != 10:
+    if len(argv) != 11:
         exit('\n\tError: Wrong Usage!\
-            \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] [galaxy lower bd] [galaxy upper bd] [cube size] [sigma] [bond] [refD]\
+            \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] \\\
+            \n\t\t [galaxy lower bd] [galaxy upper bd] [band_inp] [cube size] [sigma] [bond] [refD]\
             \n\t[catalog]: input catalog for classification\
             \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
             \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\
             \n\t[galaxy lower bd]: direct point to file or "default"\
             \n\t[galaxy upper bd]: direct point to file or "default"\
+            \n\t[band_inp]: band used to do smooth in string e.g. 012345\
             \n\t[cube size]: length of multi-d cube in magnitude unit\
             \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
             \n\t[bond]: boundary radius of gaussian beam unit in cell\
@@ -197,24 +200,27 @@ if __name__ == '__main__':
     galaxy_upper = str(argv[5])
     # Galaxy Bound Quantity
     dim          = 6
-    cube         = float(argv[6])
-    sigma        = int(argv[7])
-    bond         = int(argv[8])
-    refD         = int(argv[9])
+    band_inp     = str(argv[6])
+    cube         = float(argv[7])
+    sigma        = int(argv[8])
+    bond         = int(argv[9])
+    refD         = int(argv[10])
 
     # Lower bound array
     if galaxy_lower == 'default':
         suffix = 'AlB{:d}'.format(0) # suffix = 'PCA0'
-        lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_lower_bounds_{}'.format(\
-                            bound_path, dim, cube, sigma, bond, refD, suffix)
+        lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
+                            after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_{}'.format(\
+                            bound_path, dim, cube, sigma, bond, refD, dim-len(band_inp), band_inp, dim, suffix)
     else:
         lower_bound_array = galaxy_lower
 
     # Upper bound array
     if galaxy_upper == 'default':
         suffix = 'AlB{:d}'.format(0) # suffix = 'PCA0'
-        upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_{:d}D_upper_bounds_{}'.format(\
-                            bound_path, dim, cube, sigma, bond, refD, suffix)
+        upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
+                            after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_{}'.format(\
+                            bound_path, dim, cube, sigma, bond, refD, dim-len(band_inp), band_inp, dim, suffix)
     else:
         upper_bound_array = galaxy_upper
 
