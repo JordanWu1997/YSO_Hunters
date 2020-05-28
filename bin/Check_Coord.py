@@ -8,15 +8,15 @@ Abstract:
     This program can also provide (1)Interaction of two catalogs
                                   (2)different catalogs' Complement
 
-Example: [program] [input] [reference] [input_name] [ref_name] [round_to] [only_coor]
+Example: [program] [input catalog] [reference] [input_name] [ref_name] [round_to] [only_coor]
 
 Input Variables:
-    [input]:      input catalog
-    [reference]:  catalog as reference (default Hsieh all YSO catalog (1310))
-    [input_name]: assign name to input catalog (default "A")
-    [ref_name]:   assign name to reference catalog (default "B")
-    [round_to]:   decimal digits round to
-    [only_coor]:  print out catalog only with coordinates RA, DEC [True/False]\n')
+    [input catalog]: input catalog
+    [reference]:     catalog as reference (default Hsieh all YSO catalog (1310))
+    [input_name]:    assign name to input catalog (default "A")
+    [ref_name]:      assign name to reference catalog (default "B")
+    [round_to]:      decimal digits round to
+    [only_coor]:     print out catalog only with coordinates RA, DEC [True/False]\n')
 
 ------------------------------------------------------------------------------
 Latest update: 2020/05/27 Jordan Wu
@@ -27,6 +27,7 @@ Latest update: 2020/05/27 Jordan Wu
 from __future__ import print_function
 from sys import argv, exit
 import SOP_Program_Path as spp
+from Useful_Functions import *
 import time
 
 # Global Variables
@@ -54,7 +55,8 @@ def find_input_same(inp_lines, ref_lines):
     This is to find same (INP^REF)
     '''
     SAME_num, SAME_list = 0, []
-    for inp_line in inp_lines:
+    for i, inp_line in enumerate(inp_lines):
+        drawProgressBar(float(i+1)/len(inp_lines))
         inp = inp_line.split()
         for ref_line in ref_lines:
             ref = ref_line.split()
@@ -69,7 +71,8 @@ def find_input_diff(inp_lines, same_lines):
     This is to find diff (INP-SAME)
     '''
     DIFF_num, DIFF_list = 0, []
-    for inp_line in inp_lines:
+    for i, inp_line in enumerate(inp_lines):
+        drawProgressBar(float(i+1)/len(inp_lines))
         inp = inp_line.split()
         flag = 'DIFF'
         for same_line in same_lines:
@@ -88,8 +91,8 @@ if __name__ == '__main__':
     # Check inputs
     if len(argv) != 7:
         exit('\n\tERROR! Wrong Arguments!\
-              \n\tExample: [Program] [input] [reference] [input_name] [ref_name] [round_to] [only_coor]\
-              \n\t[input]: input catalog\
+              \n\tExample: [Program] [input catalog] [reference] [input_name] [ref_name] [round_to] [only_coor]\
+              \n\t[input catalog]: input catalog\
               \n\t[reference]: catalog as reference (default Hsieh all YSO catalog (1310))\
               \n\t[input_name]: assign name to input catalog (default "A")\
               \n\t[ref_name]: assign name to reference catalog (default "B")\
@@ -110,7 +113,8 @@ if __name__ == '__main__':
     if ref_catalog == 'default':
         ref_catalog = '{}all_candidates.tbl'.format(spp.Hsieh_YSO_List_path)
         ref_name    = 'all_Hsieh_YSOc'
-    # Print info
+
+   # Print info
     print('\nRunning {}'.format(str(argv[0])))
     print('\nInput        : {:20} ({:10})\
            \nRefer        : {:20} ({:10})\
@@ -126,12 +130,16 @@ if __name__ == '__main__':
         ref_lines = ref.readlines()
 
     # Start find intersection and minus ...
-    INP_num, REF_num            = len(inp_lines), len(ref_lines)
-    SAME_num, SAME_list         = find_input_same(inp_lines, ref_lines)
+    INP_num, REF_num = len(inp_lines), len(ref_lines)
+    print('\nIntersection {} ^ {}...'.format(inp_name, ref_name))
+    SAME_num, SAME_list = find_input_same(inp_lines, ref_lines)
+    print('\nMinus {} ...'.format(inp_name))
     INP_DIFF_num, INP_DIFF_list = find_input_diff(inp_lines, SAME_list)
+    print('\nMinus {} ...'.format(ref_name))
     REF_DIFF_num, REF_DIFF_list = find_input_diff(ref_lines, SAME_list)
+
     # Print statistics ...
-    print('\n{:30}: {:<10d}\
+    print('\n\n{:30}: {:<10d}\
            \n{:30}: {:<10d}\
            \n{:30}: {:<10d}\
            \n{:30}: {:<10d}\
@@ -147,19 +155,19 @@ if __name__ == '__main__':
     with open('AND_{}_{}.tbl'.format(inp_name, ref_name), 'w') as output:
         for i in range(len(SAME_list)):
             if only_coor:
-                output.write('{}\n'.format('\t'.join(SAME_list[i][inp_coor_ID[0]], SAME_list[i][inp_coor_ID[1]])))
+                output.write('{}\n'.format('\t'.join([SAME_list[i][inp_coor_ID[0]], SAME_list[i][inp_coor_ID[1]]])))
             else:
                 output.write('{}\n'.format('\t'.join(SAME_list[i])))
     with open('DIFF_{}.tbl'.format(inp_name), 'w') as output:
         for i in range(len(INP_DIFF_list)):
             if only_coor:
-                output.write('{}\n'.format('\t'.join(INP_DIFF_list[i][inp_coor_ID[0]], INP_DIFF_list[i][inp_coor_ID[1]])))
+                output.write('{}\n'.format('\t'.join([INP_DIFF_list[i][inp_coor_ID[0]], INP_DIFF_list[i][inp_coor_ID[1]]])))
             else:
                 output.write('{}\n'.format('\t'.join(INP_DIFF_list[i])))
     with open('DIFF_{}.tbl'.format(ref_name), 'w') as output:
         for i in range(len(REF_DIFF_list)):
             if only_coor:
-                output.write('{}\n'.format('\t'.join(REF_DIFF_list[i][inp_coor_ID[0]], REF_DIFF_list[i][inp_coor_ID[1]])))
+                output.write('{}\n'.format('\t'.join([REF_DIFF_list[i][inp_coor_ID[0]], REF_DIFF_list[i][inp_coor_ID[1]]])))
             else:
                 output.write('{}\n'.format('\t'.join(REF_DIFF_list[i])))
 
