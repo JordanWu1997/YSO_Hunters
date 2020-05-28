@@ -39,6 +39,7 @@ mag_err_ID_Spitzer = [99, 120, 141, 162, 183]
 
 # Qua ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
 qua_ID  = [37, 100, 121, 142, 163, 184]
+qua_ID_2Mass = [37, 58, 79]
 qua_ID_Spitzer = [100, 121, 142, 163, 184]
 
 # PSF_ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
@@ -53,8 +54,8 @@ f0_Spitzer = [280900, 179700, 115000, 64130, 7140]
 
 # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
 C_av_list = [['J',  0.2741],
-            ['H',  0.1622],
-            ['K',  0.1119],
+            ['H',   0.1622],
+            ['K',   0.1119],
             ['IR1', 0.0671],
             ['IR2', 0.0543],
             ['IR3', 0.0444],
@@ -120,8 +121,8 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="t
                 # PSF Check activated
                 if Psf and PSF_list[i] != "1" and flux_Qua[i] != "S":
                     mag_list.append('no')
-                # IR1, IR2, IR3, IR4, MP1 band ("A_fake for J,H,K)
-                elif flux_Qua[i] in ["A_fake", "A", "B", "C", "D", "K"]:
+                # IR1, IR2, IR3, IR4, MP1 band ("A_fake", "U_fake" for J,H,K)
+                elif flux_Qua[i] in ["A_fake", "U_fake", "A", "B", "C", "D", "K"]:
                     if flux_list[i] > 0.0:
                         mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
                     else:
@@ -258,7 +259,7 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
     This function is to (1)change fluxes on the catalog to magnitudes
                         (2)transform magnitudes from 2MASS to UKIDSS
     '''
-    if float(J_flux) > 0 and float(H_flux) > 0 and float(K_flux) > 0:
+    if float(J_flux) > 0.0 and float(H_flux) > 0.0 and float(K_flux) > 0.0:
         F0_list = [1594000, 1024000, 666700]
         mag_J = -2.5 * np.log10(float(J_flux)/F0_list[0])
         mag_H = -2.5 * np.log10(float(H_flux)/F0_list[1])

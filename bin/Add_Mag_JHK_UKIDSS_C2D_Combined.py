@@ -92,7 +92,7 @@ def merge_repeated(catalog, outfile='out.tbl', store=False):
         with open(outfile, 'w') as output:
             for i, row in enumerate(no_rpt_catalog):
                 if i > 1000 and i % 1000 == 0:
-                    output.write(str(row))
+                    output.write('{}\n'.format(row))
                     print('%.6f' % (100*float(i)/float(len(no_rpt_catalog))) + '%')
     return no_rpt_catalog
 
@@ -170,7 +170,7 @@ if __name__ == '__main__':
         err_uJ, err_uH, err_uK = row_u[UErr_ID[0]], row_u[UErr_ID[1]], row_u[UErr_ID[2]].strip('\n')
 
         # If No Detection => Transform from 2MASS to UKIDSS
-        if float(row_u[UCoor_ID[0]]) == 0.0 or float(row_u[UCoor_ID[1]]) == 0.0:
+        if float(row_u[UCoor_ID[0]]) <= 0.0 or float(row_u[UCoor_ID[1]]) <= 0.0:
             num1 += 1
             mag_J, mag_H, mag_K = JHK_flux_to_mag(row_s[flux_J_ID], row_s[flux_H_ID], row_s[flux_K_ID])
             row_s[mag_J_ID], row_s[mag_H_ID], row_s[mag_K_ID] = str(mag_J), str(mag_H), str(mag_K)

@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''------------------------------------------------------------------------------------
 This program is to transform 2MASS J,H,K bands to UKIDSS Jw, Hw, Kw bands
 
@@ -11,52 +11,55 @@ Output: catalog with J, H, K band magnitude value in UKIDSS format
 ---------------------------------------------------------------------------------------
 latest update : 20200311 Jordan Wu'''
 
+# Load Modules
+#======================================================
+from __future__ import print_function
 from sys import argv, exit
 from os import system
 import numpy as np
 from Hsieh_Functions import *
 from Useful_Functions import *
 
-if len(argv) != 3:
-    exit('Wrong Input Argument!\
-        \nExample: python [program] [input table] [output file name]')
-else:
-    print('Start ...')
+# Global Variables
+#======================================================
+flux_ID_2Mass = flux_ID_2Mass
+mag_ID_2Mass  = mag_ID_2Mass
 
-#=========================================================
-data = open(str(argv[1]), 'r')
-system('wc ' + str(argv[1]))
-two_mass_cat = data.readlines()
-data.close()
+# Main Programs
+#======================================================
+if __name__ == '__main__':
 
-if str(argv[2]) == '':
-    output_name = 'output.tbl'
-else:
-    output_name = str(argv[2])
+    # Check inputs
+    if len(argv) != 3:
+        exit('\n\tWrong Input Argument!\
+              \n\tExample: [program] [input table] [output file name]\
+              \n\t[output file name]: filename or "default"\n')
+    else:
+        print('\nStart Transform from 2MASS to UKIDSS ...')
 
-#=========================================================
-Ukidss = []
-for i, row in enumerate(two_mass_cat):
-    # Transform 2MASS detection to UKIDSS
-    cols = row.split()
-    mag_J, mag_K, mag_H = JHK_flux_to_mag(float(cols[33]), float(cols[54]), float(cols[75]))
-    cols[35], cols[56], cols[77] = str(mag_J), str(mag_H), str(mag_K)
-    # Calculate magnitude from old c2d catalog
-    mag_list = mJy_to_mag_ONLY_Spitzer(cols)
-    err_list = flux_error_to_mag_ONLY_Spitzer(cols)
-    for i, ID in enumerate(mag_ID_Spitzer):
-        cols[ID] = str(mag_list[i])
-    for j, ID in enumerate(mag_err_ID_Spitzer):
-        cols[ID] = str(err_list[j])
-    # Glue all cols in a long line
-    new_row = '\t'.join(cols) + '\n'
-    Ukidss.append(str(new_row))
-    # Percentage Indicator
-    drawProgressBar(float(i+1)/len(two_mass_cat))
+    two_mass_cat_name = str(argv[1])
+    output_cat_name   = str(argv[2])
+    if output_cat_name == 'default':
+        output_name = 'output.tbl'
 
-#=========================================================
-out_file = open(output_name, 'w')
-for row in Ukidss:
-    out_file.write(row)
-out_file.close()
-system('wc ' + output_name)
+    print('\nInput: ')
+    with open(two_mass_cat_name, 'r') as cat:
+        system('wc -l {}'.format(two_mass_cat_name))
+        two_mass_cat = cat.readlines()
+
+    ukidss_cat = []
+    for i, line in enumerate(two_mass_cat):
+        # Transform 2MASS detection to UKIDSS
+        cols = line.split()
+        mag_J, mag_K, mag_H = JHK_flux_to_mag(float(cols[flux_ID_2Mass[0]]), float(cols[flux_ID_2Mass[1]]), float(cols[flux_ID_2Mass[2]]))
+        cols[mag_ID_2Mass[0]], cols[mag_ID_2Mass[1]], cols[mag_ID_2Mass[2]] = str(mag_J), str(mag_H), str(mag_K)
+        ukidss_cat.append(format('\t'.join(cols)))
+        # Percentage Indicator
+        drawProgressBar(float(i+1)/len(two_mass_cat))
+
+    print('\nOutput: ')
+    with open(output_cat_name, 'w') as output:
+        for line in ukidss_cat:
+            output.write('{}\n'.format(line))
+        system('wc -l {}'.format(output_cat_name))
+    print()

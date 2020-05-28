@@ -32,6 +32,7 @@ band_cut_li = [50, 50, 300, 300, 800]
 FWHM_in     = [1.66, 1.72, 1.88, 1.98, 6] # arcsec
 pixel_size  = 1.22 # arcsec
 coor_ID     = coor_ID  # RA, Dec on input table
+
 # Functions
 #======================================================
 def generate_mosaic_name_list(cloud):
@@ -111,19 +112,19 @@ if __name__ == '__main__':
 
     # Load input catalog
     with open(catalog_name, 'r') as inp:
-        catalog = inp.readlines()
+        inp_lines = inp.readlines()
+    catalog = [inp_line.split() for inp_line in inp_lines]
 
     # Write out RA, DEC for input catalog
     with open('step', 'w') as cats:
-        for i in range(len(catalog)):
-            line = catalog[i].split()
+        for i in range(len(inp_lines)):
+            line = inp_lines[i].split()
             # Must remove sources that only detected in 2mass from previous steps
             cats.write('{}\t{}\n'.format(line[coor_ID[0]], line[coor_ID[1]]))
 
     # Load mosaic
     mosaic_path, mosaic_name_li = generate_mosaic_name_list(cloud)
     mosaic_li = load_mosaic(mosaic_path, mosaic_name_li)
-
     # Generate saturate check region
     SatR_li = generate_saturate_region_for_all_bands(FWHM_in)
 
@@ -142,7 +143,7 @@ if __name__ == '__main__':
             pos_pix = [round(float(pos_line[4])), round(float(pos_line[5]))]
             for k in range(len(SatR_li[i])):
                 vec = SatR_li[i][k]
-                if (catalog[j][Qua_in[i]] == "U") or (catalog[Qua_in[i]] == "N"):
+                if (catalog[j][Qua_in[i]] == "U") or (catalog[j][Qua_in[i]] == "N"):
                     if (mosaic_li[i][int(pos_pix[1] + vec[1])][int(pos_pix[0] + vec[0])] > band_cut_li[i]):
                         catalog[j][Qua_in[i]] = "S"
 
