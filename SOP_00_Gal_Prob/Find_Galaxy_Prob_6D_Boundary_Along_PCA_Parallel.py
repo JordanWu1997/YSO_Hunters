@@ -206,8 +206,8 @@ if __name__ == '__main__':
     gp_lower_bounds = np.array(gp_lower_bd_list)
     gp_upper_bounds = np.array(gp_upper_bd_list)
     chdir(out_dir)
-    np.save('after_smooth_{:d}D_lower_bounds_PCA0'.format(dim), gp_lower_bounds)
-    np.save('after_smooth_{:d}D_upper_bounds_PCA0'.format(dim), gp_upper_bounds)
+    np.save('after_smooth_lack_{}_{}_{:d}D_lower_bounds_PCA0'.format(dim-len(band_inp), band_inp, dim), gp_lower_bounds)
+    np.save('after_smooth_lack_{}_{}_{:d}D_upper_bounds_PCA0'.format(dim-len(band_inp), band_inp, dim), gp_upper_bounds)
     chdir('../')
     s_end   = time.time()
     print('\nFinding {:d}D boundary took {:.3f} secs\

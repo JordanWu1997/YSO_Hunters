@@ -188,8 +188,8 @@ if __name__ == '__main__':
     gp_lower_bounds = np.array(gp_lower_bd_list)
     gp_upper_bounds = np.array(gp_upper_bd_list)
     chdir(out_dir)
-    np.save('after_smooth_{:d}D_lower_bounds_AlB{:d}'.format(dim, sc_fixed_bd), gp_lower_bounds)
-    np.save('after_smooth_{:d}D_upper_bounds_AlB{:d}'.format(dim, sc_fixed_bd), gp_upper_bounds)
+    np.save('after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_AlB{:d}'.format(dim-len(band_inp), band_inp, dim, sc_fixed_bd), gp_lower_bounds)
+    np.save('after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_AlB{:d}'.format(dim-len(band_inp), band_inp, dim, sc_fixed_bd), gp_upper_bounds)
     chdir('../')
 
     # Print out result ...
