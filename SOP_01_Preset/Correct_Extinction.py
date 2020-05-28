@@ -32,7 +32,7 @@ import time
 #=============================================
 parameter  = C_av_list         # parameters [band, flux index, mag index, C_av(Exctintion_coef)]
 Av_coor_ID = Av_coor_ID        # RA, Dec on extinction table
-Av_ID      = Av_ID[0]          # Av index to write on input catalog
+Av_ID      = Av_ID[0]
 coor_ID    = coor_ID           # RA, Dec on input table
 mag_ID     = full_mag_ID       # [33, 54, 75, 96, 117, 138, 159, 180, 201]
 flux_ID    = full_flux_ID      # [35, 56, 77, 98, 119, 140, 161, 182, 203]
@@ -73,7 +73,7 @@ def calculate_min_angular_dist(Ra_catalog_degree, Dec_catalog_degree, Av_table_l
             min_info_list.append(line)
     return minlist, min_info_list
 
-def store_Av_info_to_list(far_line, minlist, min_info_list, not_found_list):
+def store_Av_info_to_list(far_line, minlist, min_info_list, not_found_list, flux_ID=flux_ID, mag_ID=mag_ID):
     '''
     This is to store Av value and correct mag/flux to input line
     not_found_list: list to store lines that not found in Av table
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     catalog_name  = str(argv[3])      # Name of input catalog
     cloud_name    = str(argv[4])      # Cloud name
 
-    if Av_tbl_name == 'Hsieh':
+    if Av_tbl_type == 'Hsieh':
         Av_tbl_col_ID = Av_tbl_col_ID[1]
     else:
         # Here 0 for new made Av table (Default)
@@ -156,7 +156,7 @@ if __name__ == '__main__':
         catalog = catalogs.readlines()
 
     # Main Calculation
-    print('Start extinction correction ...')
+    print('Start Correcting Extinction ...')
     not_found_list, new_far_line_list = [], []
     for i, objects in enumerate(catalog):
         objects = objects.split()
@@ -175,7 +175,7 @@ if __name__ == '__main__':
         print('RA:{}, DEC:{} Not on this extinction map'.format(not_found[coor_ID[0]], not_found[coor_ID[1]]))
 
     # Write results
-    print('\nSave extinction correction result ...')
+    print('\nSave Extinction Correction result ...')
     with open(cloud_name + '_Deredden.tbl','w') as out_Avfar:
         out_Avfar.write("\n".join(new_far_line_list) + "\n")
     if len(not_found_list) != 0:
