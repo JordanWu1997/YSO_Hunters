@@ -34,30 +34,33 @@ GPP_OBJ_ID, GPP_ID = 243, 244
 def classify_by_GP(row_list):
     '''
     This is to classify input object by GP and GPP and return object label
+    Count:
+    Count:
+        "not_count" : LESS3BD
+        "not_count" : AGB
+        1e-5        : MP1_Sat
+        1e-4        : Bright
+        1e-3        : YSO
+        1e4         : Faint
+        1e3         : Galaxy
     '''
-    if row_list[GP_ID] != 'no_count':
-        label = 'empty'
+    GP = row_list[GP_ID]
+    if GP != 'no_count':
         GP = float(row_list[GP_ID])
-        if GP <= 1:
-            if row_list[GPP_ID] != 'no_count':
-                GPP = float(row_list[GPP_ID])
-                if GPP > 1:
+        if GP < 1.:
+            GPP = row_list[GPP_ID]
+            if GPP != 'no_count':
+                GPP = float(row_list[GP_ID])
+                if GPP > 1.:
                     label = 'GP_IC'
-                elif GPP <= 1:
+                else:
                     label = 'YSO'
             else:
-                label = 'GP_IC'
-        elif GP > 1:
-            if row_list[GPP_ID] != 'no_count':
-                GPP = float(row_list[GPP_ID])
-                if GP <= 1:
-                    label = 'GP_IC'
-                elif GP > 1:
-                    label = 'Galaxy'
-            else:
-                label = 'Galaxy'
+                label = 'YSO'
+        else:
+            label = 'GALAXY'
     else:
-        label = 'Galaxy'
+        label = 'OTHER'
     return label
 
 # Main Programs
@@ -80,37 +83,45 @@ if __name__ == '__main__':
 
     print('\nStart classifying ...')
     # Classify input objects
-    YSO, Galaxy, GP_IC = [], [], []
+    YSOc, Galaxyc, GP_IC, Others = [], [], [], []
     for i in range(len(catalog)):
         row_list = catalog[i].split()
         label = classify_by_GP(row_list)
         if label == 'YSO':
-            YSO.append(catalog[i])
-        elif label == 'Galaxy':
-            Galaxy.append(catalog[i])
+            YSOc.append(catalog[i])
+        elif label == 'GALAXY':
+            Galaxyc.append(catalog[i])
         elif label == 'GP_IC':
             GP_IC.append(catalog[i])
+        else:
+            Others.append(catalog[i])
         drawProgressBar(float(i+1)/len(catalog))
 
     # Write different object catalogs
-    with open(cloud_name + '_6D_YSO.tbl',"w") as out_cat:
-        for i in YSO:
-            out_cat.write(str(i))
-    with open(cloud_name + '_6D_Galaxy.tbl',"w") as out_cat:
-        for i in Galaxy:
-            out_cat.write(str(i))
-    with open(cloud_name + '_6D_GP_to_image_check.tbl',"w") as out_cat:
-        for i in GP_IC:
-            out_cat.write(str(i))
+    # Note "NO NEED \n when write since there already is one from loading catalog"
+    with open('{}_6D_YSO.tbl'.format(cloud_name), "w") as out_cat:
+        for line in YSOc:
+            out_cat.write('{}'.format(line))
+    with open('{}_6D_Galaxy.tbl'.format(cloud_name), "w") as out_cat:
+        for line in Galaxyc:
+            out_cat.write('{}'.format(line))
+    with open('{}_6D_GP_to_image_check.tbl'.format(cloud_name), "w") as out_cat:
+        for line in GP_IC:
+            out_cat.write('{}'.format(line))
+    with open('{}_6D_GP_others.tbl'.format(cloud_name), "w") as out_cat:
+        for line in Others:
+            out_cat.write('{}'.format(line))
 
     # Print out catalog line numbers
-    print('\nThe Saturate Candiates in YSO candidates: ')
+    print('\n\nThe Saturate Candiates in YSO candidates: ')
     os.system("awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl".format(MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
-    print('The confident YSO candidates: ')
-    os.system('wc ' + cloud_name + '_6D_YSO.tbl')
-    print('The confident Galaxy candidates: ')
-    os.system('wc ' + cloud_name + '_6D_Galaxy.tbl')
-    print('The candidate to image check: ')
-    os.system('wc ' + cloud_name + '_6D_GP_to_image_check.tbl')
+    print('\nThe confident YSO candidates: ')
+    os.system('wc -l {}_6D_YSO.tbl'.format(cloud_name))
+    print('\nThe confident Galaxy candidates: ')
+    os.system('wc -l {}_6D_Galaxy.tbl'.format(cloud_name))
+    print('\nThe candidate to image check: ')
+    os.system('wc -l {}_6D_GP_to_image_check.tbl'.format(cloud_name))
+    print('\nOthers: ')
+    os.system('wc -l {}_6D_GP_others.tbl'.format(cloud_name))
     s_end   = time.time()
-    print('\nWhole {} process took {:.3f} secs'.format(argv[0], s_end - s_start))
+    print('\nWhole {} process took {:.3f} secs\n'.format(argv[0], s_end - s_start))
