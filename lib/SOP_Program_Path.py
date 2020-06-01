@@ -1,16 +1,17 @@
 #!/usr/bin/python
 '''
 ---------------------------------------------------------------------
-
+Abstract:
+    This is to store all paths of programs/catalogs
 ---------------------------------------------------------------------
 Latest update : 2019/05/27 Jordan Wu
 '''
 
 # All_Table_Prefix
 #====================================================================
-Hsieh_Table_Prefix = "/brick/pangu/cosmo/users/inchone/"
-SPITZER_Prefix     = "/brick/pangu/data/public/spitzer/"
-New_Table_Prefix   = '/mazu/users/jordan/YSO_Project/YSO_Hunters_Table/'
+Hsieh_Table_Prefix  = "/brick/pangu/cosmo/users/inchone/"
+SPITZER_Prefix      = "/brick/pangu/data/public/spitzer/"
+New_Table_Prefix    = "/mazu/users/jordan/YSO_Project/YSO_Hunters_Table/"
 
 # PATH FOR
 #   - SOP_Program_Preset/SOP_Execution_Preset.py
@@ -58,7 +59,19 @@ Hsieh_YSO_Coor_path = '{}All_Table_To_Compare/HL_YSOs_2013/'.format(New_Table_Pr
 # SEIP catalog from Jacob
 # J, Ks, H, IR1, IR2, IR3, IR4, MP1
 #====================================================================
-SEIP_catalog_path = '{}All_Converted_Catalog/SEIP_pred_catalog'.format(New_Table_Prefix)
+SEIP_Catalog_path = '{}All_Converted_Catalog/SEIP_pred_catalog/'.format(New_Table_Prefix)
+
+# SPITZER HREL catalog in SWIRE format (CHA_II, LUP_I, LUP_III, LUP_IV, OPH, SER, PER)
+HREL_Catalog_path = '{}All_Converted_Catalog/SPITZER/'.format(New_Table_Prefix)
+
+# SPITZER + UKIDSS DR10 WITH BRIGHT 2MASS
+SPITZER_UKIDSS_SWIRE_N1_path = '{}All_Converted_Catalog/UKIDSS_DR10PLUS/ADD_UKIDSS'.format(New_Table_Prefix)
+
+# SPITZER HREL catalog + UKIDSS and BRIGHT 2MASS
+SPITZER_UKIDSS_2MASS_BR_path = '{}All_Converted_Catalog/UKIDSS_DR11PLUS_WI_2MASS_BR/ADD_UKIDSS'.format(New_Table_Prefix)
+
+# SPITZER HREL catalog + 2MASS transformed to UKIDSS system
+SPITER_2MASS_To_UKIDSS_path  = '{}All_Converted_Catalog/2MASS_TO_UKIDSS'.format(New_Table_Prefix)
 
 # Main Programs
 #====================================================================
