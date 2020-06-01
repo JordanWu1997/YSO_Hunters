@@ -1,6 +1,7 @@
 #!/usr/bin/python
 '''----------------------------------------------------------------
-This program is for packing all functions needed for calculating galaxy probability (P)
+Abstract:
+    This program is for packing all functions needed for calculating galaxy probability (P)
 
 *Note:
     (1)6 bands are J, IR1, IR2, IR3, IR4, MP1
