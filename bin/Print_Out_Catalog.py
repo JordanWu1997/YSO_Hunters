@@ -1,10 +1,12 @@
 #!/usr/bin/python
 '''
 -------------------------------------------------------
-Example [program] [catalog] [content]
+Example [program] [catalog] [content] [index]
 Input Variables:
     [catalog]: input catalog
     [content]: "default" or specific content name
+    [Index]  : "all" or a specific range e.g "1~10"\
+
 -------------------------------------------------------
 Latest update: 2020/05/27 Jordan Wu'''
 
@@ -74,7 +76,7 @@ if __name__ == '__main__':
     # Check inputs
     if len(argv) != 4:
         exit('\n\tWrong Usage\
-              \n\tExample [program] [catalog] [content]\
+              \n\tExample [program] [catalog] [content] [index]\
               \n\t[catalog]: input catalog\
               \n\t[content]: "default" or specific content name\
               \n\t[Index]  : "all" or a specific range e.g "1~10"\
