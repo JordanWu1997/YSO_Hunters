@@ -105,6 +105,7 @@ if __name__ == '__main__':
         print(' ')
         for i in indice:
             line = catalog[i].split()
+            print(len(line))
             print_out_one_line_default(line, index=i)
     else:
         if content in dir():

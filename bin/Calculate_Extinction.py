@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''
 Abstract:
     This is a program for calculate the extinction of each source with NICER

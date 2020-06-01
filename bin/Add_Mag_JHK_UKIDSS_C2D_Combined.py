@@ -161,10 +161,16 @@ if __name__ == '__main__':
         row_u = ukidss_cat[i].split(',')
         # Write SWIRE Format IR1~MP1 magnitude and error
         mag_list = mJy_to_mag_ONLY_Spitzer(row_s)
+        print(mag_list)
         err_list = flux_error_to_mag_ONLY_Spitzer(row_s)
         for j in range(len(mag_list)):
             row_s[mag_ID_Spitzer[j]]     = str(mag_list[j])
             row_s[mag_err_ID_Spitzer[j]] = str(err_list[j])
+
+        for j in range(len(mag_list)):
+            row_s[mag_ID_Spitzer[j]]
+
+
         # Write UKIDSS JHK magnitude and error
         mag_uJ, mag_uH, mag_uK = row_u[UMag_ID[0]], row_u[UMag_ID[1]], row_u[UMag_ID[2]]
         err_uJ, err_uH, err_uK = row_u[UErr_ID[0]], row_u[UErr_ID[1]], row_u[UErr_ID[2]].strip('\n')
