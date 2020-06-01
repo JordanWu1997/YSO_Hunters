@@ -1,5 +1,5 @@
 # Sequence of executing programs
-### Part 0 - All in one (Combine 1->3)
+### Part 0 - All in one (Combine Part 1 to 3)
 - SOP_Execution_Preset.py
 ### Part 1 - Remove stars
 - Remove_Star.py
