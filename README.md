@@ -19,7 +19,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 ## **IV. How To Use SOP Programs**
 #### 0. Catalog on zeus (Optional)
 - All used catalog stored under:
-    - ``` /home/jordan/YSO_Project/C2D-SWIRE_20180710/All_Converted_Catalog ```
+    - ``` /mazu/users/jordan/YSO_Project/YSO_Hunters_Table/All_Converted_Catalog ```
     1.  Purpose: Construct galaxy probabilties and find boundaries
         - SEIP_pred_catalog: SEIP catalog to construct galaxy probabilities and find boundaries
         - UKIDSS_DR10PLUS: c2d catalog for ELAIS N1 region
