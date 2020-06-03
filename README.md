@@ -55,6 +55,7 @@ setenv PYTHONPYCACHEPREFIX $HOME/.cache/cpython
 
 - e.g. In .bashrc file:
 
+
 ```
 #====================================================================
 # Set Storage Path (Directory where you store YSO_Hunter)
@@ -77,12 +78,12 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 ```
 
 #### 2. Revise Locations of Some Programs if **No such file** error happens.
-    - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
-    - Then , change some path or file that may be needed to revised
-    	- e.g. location where multi-D galaxy probability array stored
+- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
+- Then , change some path or file that may be needed to revised
+	- e.g. location where multi-D galaxy probability array stored
 
 #### 3. Standard Sequence for Execution:
-    - **Note This Command Must Execute Under Specific Binsize Directory**
+- **Note This Command Must Execute Under Specific Binsize Directory**
     1. ~SOP_Execution_GPM_Construct.py (Still working ...)~
     2. SOP_Execution_Preset.py
     3. SOP_Execution_5D_method.py
