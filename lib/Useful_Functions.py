@@ -117,3 +117,15 @@ def find_pos_id_in_gal_pos(gal_pos, target):
             id_list.append(i)
     id_array = np.array(id_list)
     return id_array
+
+# Main Programs
+if __name__ == '__main__':
+
+    from inspect import isfunction
+
+    print('\nPrint All Functions')
+    print('#===================================\n')
+    for name in dir():
+        if isfunction(eval(name)):
+            print('{:30}:{:100}'.format(name, str(eval(name))))
+    print('\n#===================================\n')

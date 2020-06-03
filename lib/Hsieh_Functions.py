@@ -11,90 +11,16 @@ Abstract:
     (1)function that sets critierion on magnitude with flux_qua of different sources.
     (2)function that sets critierion on magnitude with imtype of different sources.
 -------------------------------------------------------------------
-latest update : 2019/02/20 Jordan Wu'''
+Latest update: 2020/06/04 Jordan Wu'''
 
+# Import Modules
+#==============================================================================
 from __future__ import print_function
 import math as mh
 import numpy as np
+from All_Variables import *
 
-#==============================================================================
-# Add on (Not in Hsieh_Functions Modules)
-c2d_lab_ID = [16]
-
-# Flux ID: J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
-flux_ID = [33, 96, 117, 138, 159, 180]
-flux_err_ID = [34, 97, 118, 139, 160, 181]
-# Flux ID: J, IR1, IR2, IR3, IR4, MP1 (ONLY Spitzer)
-flux_ID_Spitzer = [96, 117, 138, 159, 180]
-flux_err_ID_Spitzer = [97, 118, 139, 160, 181]
-# Flux ID: J, H, K (ONLY 2MASS)
-flux_ID_2Mass = [33, 54, 75]
-flux_err_ID_2Mass = [34, 55, 76]
-
-# Mag ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS/UKIDSS + Spitzer)
-mag_ID  = [35, 98, 119, 140, 161, 182]
-mag_ID_2Mass = [35, 56, 77]
-mag_err_ID_2Mass = [36, 57, 78]
-mag_ID_Spitzer = [98, 119, 140, 161, 182]
-mag_err_ID_Spitzer = [99, 120, 141, 162, 183]
-
-# Qua ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
-qua_ID  = [37, 100, 121, 142, 163, 184]
-qua_ID_2Mass = [37, 58, 79]
-qua_ID_Spitzer = [100, 121, 142, 163, 184]
-
-# PSF_ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
-psf_ID  = [38, 102, 123, 144, 165, 186]
-psf_ID_Spitzer = [102, 123, 144, 165, 186]
-
-# F0 (mJy): J, IR1, IR2, IR3, IR4, MP1
-f0_full_C2D = [1594000, 1024000, 666700, 280900, 179700, 115000, 64130, 7140, 778]
-f0_2MASS_Spitzer = [1594000, 280900, 179700, 115000, 64130, 7140]  # H: 1024000, K: 666700
-f0_UKIDSS_Spitzer = [1530000, 280900, 179700, 115000, 64130, 7140] # H: 1019000
-f0_Spitzer = [280900, 179700, 115000, 64130, 7140]
-
-# parameters [band, flux index, mag index, C_av(Exctintion_coef)]
-C_av_list = [['J',  0.2741],
-            ['H',   0.1622],
-            ['K',   0.1119],
-            ['IR1', 0.0671],
-            ['IR2', 0.0543],
-            ['IR3', 0.0444],
-            ['IR4', 0.0463],
-            ['MP1', 0.0259],
-            ['MP2', 0]]
-
-# Extinction Correction Parameters
-Av_coor_ID       = [0, 1]  # RA, Dec on extinction table
-Av_ID            = [17]
-Av_tbl_col_ID    = [2, 6]  # [6] for Hsieh's old Av table
-coor_ID          = [0, 2]  # RA, Dec on input table
-full_flux_ID     = [33, 54, 75, 96, 117, 138, 159, 180, 201]
-full_mag_ID      = [35, 56, 77, 98, 119, 140, 161, 182, 203]
-full_flux_err_ID = [34, 55, 76, 97, 118, 139, 160, 181, 202]
-full_mag_err_ID  = [36, 57, 78, 99, 120, 141, 162, 183, 204]
-
-# Band name
-band_name = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
-#==============================================================================
-
-# HSIEH'S BOUNDARY
-Hsieh_Jaxlim   = [4.0, 18.0]
-Hsieh_Ksaxlim  = [8.0, 18.0]
-Hsieh_IR1axlim = [8.0, 18.0]
-Hsieh_IR2axlim = [7.0, 18.0]
-Hsieh_IR3axlim = [5.0, 18.0]
-Hsieh_IR4axlim = [5.0, 18.0]
-Hsieh_MP1axlim = [3.5, 11.0]
-# NEW BOUNDARY WI UKIDSS CATALOG
-Jaxlim   = [3.5, 22.0]
-Ksaxlim  = [8.0, 18.0]
-IR1axlim = [8.0, 20.0]
-IR2axlim = [7.0, 19.0]
-IR3axlim = [5.0, 18.0]
-IR4axlim = [5.0, 18.0]
-MP1axlim = [3.5, 12.0]
-
+# Functions
 #==============================================================================
 def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="twomass"):
     """
@@ -205,7 +131,6 @@ def mag_error_to_mag_FULL_C2D(x):
             dm_list.append(0.0)
     return dm_list
 
-#==============================================================================
 def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="twomass"):
     """
     This function is for classifying different band's magnitude by flux_Qua
@@ -254,14 +179,13 @@ def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="two
                 select_mag_list.append('no')
     return select_mag_list
 
-#==============================================================================
 def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
     '''
     This function is to (1)change fluxes on the catalog to magnitudes
                         (2)transform magnitudes from 2MASS to UKIDSS
     '''
+    F0_list = f0_2MASS
     if float(J_flux) > 0.0 and float(H_flux) > 0.0 and float(K_flux) > 0.0:
-        F0_list = [1594000, 1024000, 666700]
         mag_J = -2.5 * np.log10(float(J_flux)/F0_list[0])
         mag_H = -2.5 * np.log10(float(H_flux)/F0_list[1])
         mag_K = -2.5 * np.log10(float(K_flux)/F0_list[2])
@@ -276,7 +200,22 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
             mag_K = mag_K + 0.01  * (mag_J - mag_K)
     return mag_J, mag_H, mag_K
 
-#==============================================================================
+def JHK_mag_to_flux_ONLY_UKIDSS(J_mag, H_mag, K_mag):
+    '''
+    Since UKIDSS survey only provide J, H, K band magnitude,
+    This function is to add J, H, K band flux from magnitude
+    Note: flux unit is mili-Jansky
+    '''
+    F0_list = f0_UKIDSS
+    JHK_flux_list = []
+    for mag, f0 in zip([J_mag, H_mag, K_mag], F0_list):
+        if float(mag) > 0.0:
+            flux = f0 * 10**(-float(mag)/2.5)
+        else:
+            flux = 0.0
+        JHK_flux_list.append(flux)
+    return JHK_flux_list
+
 def index_AGB(X, Y, a=[0,0,2,5], b=[-1,0,2,2]):
     """
     This function is to determine if the object is an AGB or not
@@ -297,7 +236,6 @@ def index_AGB(X, Y, a=[0,0,2,5], b=[-1,0,2,2]):
         result = Y - cutY
     return result
 
-#==============================================================================
 def sort_up(X, lim, cube=0.2):
     '''
     This function is to put criterions we set for multi-d spaces onto the object
@@ -342,3 +280,16 @@ def bin_to_mag(X, lim, cube=0.2):
     '''
     mag = lim[0] + (X-0.5) * cube
     return mag
+
+# Main Programs
+#==============================================================================
+if __name__ == '__main__':
+
+    from inspect import isfunction
+
+    print('\nPrint All Functions')
+    print('#===================================\n')
+    for name in dir():
+        if isfunction(eval(name)):
+            print('{:30}:{:100}'.format(name, str(eval(name))))
+    print('\n#===================================\n')
