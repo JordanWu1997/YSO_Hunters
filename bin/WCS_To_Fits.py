@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 
 '''-------------------------------------------------------------------
 This program is for getting fits from catalog with ra, dec in deg
@@ -12,21 +12,20 @@ Output : Fits_and_shape directory with mosaics of different bands
 ----------------------------------------------------------------------
 latest update: 2019/03/04 by Jordan Wu'''
 
-from sys import argv
-from sys import exit
+from sys import argv, exit
 from os import system
 
 if len(argv) != 8:
-    print('Example: python [program] [catalog] [cloud\'s name] [Output Name] [horizontal_pix_num] [vertical_pix_num] [option] [save table]')
-    print('Require: [horizontal_pix_num] [vertical_pix_num] must both be integers')
-    print(' option: Saturate / Image_Check / IR1_Check/ NAN')
-    print(' save table: save transformed RA DEC table [yes/no]')
-    exit()
+    exit('\n\tExample: python [program] [catalog] [cloud\'s name] [Output Name]\
+                                        [horizontal_pix_num] [vertical_pix_num] [option] [save table]\
+          \n\tRequire: [horizontal_pix_num] [vertical_pix_num] must both be integers\
+          \n\t[option]: Saturate / Image_Check / IR1_Check/ NAN\
+          \n\t[save table]: save transformed RA DEC table [yes/no]')
 
-cloud = str(argv[2])
-name = str(argv[3])
-option = str(argv[6])
-save = str(argv[7])
+cloud   = str(argv[2])
+name    = str(argv[3])
+option  = str(argv[6])
+save    = str(argv[7])
 catalog = open(argv[1],'r')
 catalog = catalog.readlines()
 

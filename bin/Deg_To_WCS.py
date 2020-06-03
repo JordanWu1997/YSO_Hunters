@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''
 -------------------------------------------------------------------
 This program is a part of program for Step6 (Image_Check)
@@ -12,17 +12,14 @@ Output : catalog_to_Image_Check with (ra/dec) , wcs , imagetype
 latest update : 2018/09/18
 '''
 
-from sys import argv
-from sys import exit
+from sys import argv, exit
 
 if len(argv) != 4:
-    print('Example: python [catalog] [cloud\'s name] [option]')
-    print('option: Saturate / Image_Check / IR1_Check')
-    exit()
+    exit('\n\tExample: python [catalog] [cloud\'s name] [option] \
+          \n\t[option]: Saturate / Image_Check / IR1_Check\n')
 
-cloud = str(argv[-2])
-option = str(argv[-1])
-
+cloud   = str(argv[-2])
+option  = str(argv[-1])
 catalog = open(argv[-3],'r')
 catalog = catalog.readlines()
 

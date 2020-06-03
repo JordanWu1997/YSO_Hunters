@@ -14,6 +14,7 @@ Latest update: 2020/05/27 Jordan Wu'''
 #======================================================
 from __future__ import print_function
 from sys import argv, exit
+from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
 import inspect
@@ -83,7 +84,8 @@ if __name__ == '__main__':
               \n\n\t***available content***\
               \n\t\t{}\
               \n\t***********************\n'.format(
-              '\n\t\t'.join([name for name in dir() if ('ID' in name) and ('f0' not in name)])))
+              '\n\t\t'.join([name for name in dir()\
+              if ('ID' in name) and ('f0' not in name) and ('UKIDSS' not in name) and (name != 'ID_list')])))
 
     # Input variables
     catalogs = str(argv[1])

@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 
 '''----------------------------------------------------------------
 This program is a part of program for Step6 (Image_Check)
@@ -14,9 +14,8 @@ from sys import argv, exit
 import SOP_Program_Path as spp
 
 if len(argv) != 4:
-    print('Eample: python [catalog] [cloud\'s name] [option]')
-    print('option: Saturate / Image_Check / IR1_Check / NAN')
-    exit()
+    exit('\n\tEample: python [catalog] [cloud\'s name] [option] \
+          \n\t[option]: Saturate / Image_Check / IR1_Check / NAN\n')
 
 catalog = open(argv[1],'r')
 coor = catalog.readlines()
