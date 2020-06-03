@@ -63,4 +63,4 @@ if __name__ == '__main__':
 
     # Print out input information
     t_end   = time.time()
-    print("{} took {:.3f} secs\n".format(str(argv[0]), s_end-s_start))
+    print("{} took {:.3f} secs\n".format(str(argv[0]), t_end-t_start))
