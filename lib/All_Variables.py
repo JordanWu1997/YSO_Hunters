@@ -32,10 +32,10 @@ mag_ID_Spitzer     = [98, 119, 140, 161, 182]
 mag_err_ID_Spitzer = [99, 120, 141, 162, 183]
 
 # Qua ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
-qua_ID         = [37, 100, 121, 142, 163, 184]
-qua_ID_2Mass   = [37, 58, 79]
-qua_ID_Spitzer = [100, 121, 142, 163, 184]
-
+qua_ID              = [37, 100, 121, 142, 163, 184]
+qua_ID_2Mass        = [37, 58, 79]
+qua_ID_Spitzer      = [100, 121, 142, 163, 184]
+qua_ID_Spitzer_full = [37, 58, 79, 100, 121, 142, 163, 184, 205]
 # PSF_ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
 psf_ID         = [38, 102, 123, 144, 165, 186]
 psf_ID_Spitzer = [102, 123, 144, 165, 186]
