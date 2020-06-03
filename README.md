@@ -31,6 +31,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 #### 1. Add Directories started with SOP to current working environments
 - e.g. In .cshrc file:
+
 ```
 #====================================================================
 # Set Storage Path (Directory where you store YSO_Hunter)
@@ -51,7 +52,9 @@ setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/lib
 setenv PYTHONPYCACHEPREFIX $HOME/.cache/cpython
 #====================================================================
 ```
+
 - e.g. In .bashrc file:
+
 ```
 #====================================================================
 # Set Storage Path (Directory where you store YSO_Hunter)
