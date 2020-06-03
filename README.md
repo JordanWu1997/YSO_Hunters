@@ -31,7 +31,6 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 
 #### 1. Add Directories started with SOP to current working environments
 - e.g. In .cshrc file:
-
 ```
 #====================================================================
 # Set Storage Path (Directory where you store YSO_Hunter)
@@ -52,9 +51,7 @@ setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/lib
 setenv PYTHONPYCACHEPREFIX $HOME/.cache/cpython
 #====================================================================
 ```
-
 - e.g. In .bashrc file:
-
 
 ```
 #====================================================================
@@ -83,8 +80,9 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 	- e.g. location where multi-D galaxy probability array stored
 
 #### 3. Standard Sequence for Execution:
-- **Note This Command Must Execute Under Specific Binsize Directory**
-    1. ~SOP_Execution_GPM_Construct.py (Still working ...)~
+- **Note: This Command Must Execute Under Specific Binsize Directory**
+- **Note: For cross-out terms, please check specific directories**
+    1. ~SOP_Execution_GPM_Construct.py~
     2. SOP_Execution_Preset.py
     3. SOP_Execution_5D_method.py
     4. ~SOP_Execution_6D_method.py~
