@@ -19,6 +19,7 @@ from os import system
 from sys import argv, exit
 import pyfits
 import SOP_Program_Path as spp
+from All_Variables import *
 from Hsieh_Functions import *
 
 # Global Variables
