@@ -34,12 +34,12 @@
   - Plot histograms of the extinction maps of seven different molecular clouds
 
 ### Part 4 - Others
-- Make_GIF.sh
+- #### Make_GIF.sh
   - Make png images to gif animations
-- Check_Coord.py
+- #### Check_Coord.py
   - Check same sources of two input catalogs
-- Make_SED_Plot.py
+- #### Make_SED_Plot.py
   - Make SED for sources of input catalog
-- Print_Out_Catalog.py
+- #### Print_Out_Catalog.py
   - Print out contents of input catalog in specific order
   
