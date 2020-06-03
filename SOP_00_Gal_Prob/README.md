@@ -28,7 +28,6 @@
 
 ### Part3 - Visualize galaxy probability
 - (1) Make_Galaxy_Prob_Plot_Execution_All.py
-	- Make_Galaxy_Prob_Plot_Execution_All.py
 	- Make_Galaxy_Prob_3D_Plot.py
 	- Make_Galaxy_Prob_PCA_Cut_Plot.py
 	- Make_Galaxy_Prob_3D_Plot_With_PCA.py
