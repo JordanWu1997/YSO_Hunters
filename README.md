@@ -79,9 +79,9 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 		- e.g. location where multi-D galaxy probability array stored
 
 #### 3. Standard Sequence for Execution:
-	1. SOP_Execution_GPM_Construct.py (Still working ...)
+ **Note This Command Must Execute Under Specific Binsize Directory**
+	1. ~SOP_Execution_GPM_Construct.py (Still working ...)~
 	2. SOP_Execution_Preset.py
 	3. SOP_Execution_5D_method.py
-	4. SOP_Execution_6D_method.py
-	5. SOP_Execution_Extinction_check.py
-		- **Note This Command Must Execute Under Specific Binsize Directory**
+	4. ~SOP_Execution_6D_method.py~
+	5. ~SOP_Execution_Extinction_check.py~
