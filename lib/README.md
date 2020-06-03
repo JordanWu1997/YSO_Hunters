@@ -1,5 +1,5 @@
 # Programs Library of YSO Hunters
-- Here stores all template, functions and paths
+- Here stores all templates, functions and paths
 ### Part 1 - Templates
 - Code_Template.py
   - General code template
