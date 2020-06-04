@@ -5,7 +5,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 ## **II.Goal**
 - Repeat the procession of Hsieh & Lai (2013) and get the same result
 - Use marginal plane on multi-dimensional space to save RAM
-- Make the program construct mroe dimension space at same time
+- Make the program construct more dimension space at same time
 
 ## **III.Improvement**
 - ~~Reduce the errors about extinction correction~~
