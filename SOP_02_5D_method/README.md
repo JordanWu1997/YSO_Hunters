@@ -1,5 +1,5 @@
 # Sequence of executing programs
-### Part 0 - All in one (Combine Part 1 to Part 3)
+### Part 0 - All in one (Combine Part 1 to Part 2)
 - SOP_Execution_5D_method.py
 
 ### Part 1 - Calculate Galaxy Probability GP and GPP
