@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''
 #-----------------------------------------------------------
 Lastest Change: (1) Change value of Gal_Prob for case (GP=0)
