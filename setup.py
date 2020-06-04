@@ -7,7 +7,8 @@ Abstract:
 Example: [program] [python path]
 
 Input Variables:
-    [python path]: python working path
+    [python path]: python working path or "default"
+    [default]    : /usr/bin/python
 ----------------------------------------------------------------------
 Latest updated: 2020/06/04 Jordan Wu'''
 
@@ -20,7 +21,8 @@ if __name__ == '__main__':
     # Check inputs
     if len(argv) != 2:
         exit('\n\tExample: [program] [python path]\
-              \n\t[python path]: python working path\n')
+              \n\t[python path]: python working path or "default"\
+              \n\t[default]: /usr/bin/python\n')
 
     # Get file list
     print('\nFiles to change head line')
