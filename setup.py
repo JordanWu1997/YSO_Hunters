@@ -36,6 +36,6 @@ if __name__ == '__main__':
     if headline == 'default':
         headline = '#!/usr/bin/python'
     for files in exec_file_list:
-        system("sed -i \'1s/.*/{}/\' {}".format(headline, files))
+        system("sed -i '1s/.*/{}/' {}".format(headline, files))
     print('\nDefault HL: #!/usr/bin/python\
            \nNew HL    : {}'.format(headline))
