@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 from glob import glob
 from sys import argv
 
