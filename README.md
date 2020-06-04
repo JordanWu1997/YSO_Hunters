@@ -75,7 +75,8 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 ```
 
 #### 2. Execute ```python setup.py [path_to_python]```
-- To setup python working path. If not, default is **/usr/bin/python**
+- Use ```which python``` to find currently working python
+- Setup python working path. If not, the default is **/usr/bin/python**
 
 #### 3. Revise Locations of Some Programs/Files if ```Error: No such file``` occurs.
 - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if **all paths/files** exist
