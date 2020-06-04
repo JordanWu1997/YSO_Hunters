@@ -1,4 +1,4 @@
-#!/usr/bin/ipython
+#!/usr/bin/python
 '''
 ------------------------------------------------------------------------------
 This program is for comparing two different catalogs.

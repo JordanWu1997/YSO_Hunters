@@ -1,4 +1,4 @@
-#!usr/bin/ipython
+#!/usr/bin/python
 from sys import argv
 
 if len(argv) != 3:
