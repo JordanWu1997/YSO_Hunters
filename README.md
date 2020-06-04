@@ -74,12 +74,15 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 #====================================================================
 ```
 
-#### 2. Revise Locations of Some Programs if **No such file** error happens.
-- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if all path exist
+#### 2. Execute ```python setup.py [path_to_python]```
+- To setup python working path. If not, default is **/usr/bin/python**
+
+#### 3. Revise Locations of Some Programs if **No such file** error happens.
+- First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if **all paths/files** exist
 - Then , change some path or file that may be needed to revised
 	- e.g. location where multi-D galaxy probability array stored
 
-#### 3. Standard Sequence for Execution:
+#### 4. Standard Sequence for Execution:
 - **Note: This Command Must Execute Under Specific Binsize Directory**
 - **Note: For cross-out terms, please check specific directories README.md**
     1. ~SOP_Execution_GPM_Construct.py~
