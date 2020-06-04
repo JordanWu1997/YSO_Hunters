@@ -77,7 +77,7 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 #### 2. Execute ```python setup.py [path_to_python]```
 - To setup python working path. If not, default is **/usr/bin/python**
 
-#### 3. Revise Locations of Some Programs if **No such file** error happens.
+#### 3. Revise Locations of Some Programs/Files if ```Error: No such file``` occurs.
 - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if **all paths/files** exist
 - Then , change some path or file that may be needed to revised
 	- e.g. location where multi-D galaxy probability array stored
