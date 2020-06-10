@@ -1,11 +1,11 @@
 #!/usr/bin/python
 '''
 -------------------------------------------------------
-Example: [program] [input catalog] [mag/flux] [qua] [dimension] [cube size]
+Example: [program] [input catalog] [datatype] [qua] [dimension] [cube size]
 
 Input variables:
     [input catalog]: must include magnitudes
-    [mag/flux]:      input data in magnitude or flux (mJy)
+    [datatype]:      "mag" or "flux" input data in magnitude or flux (mJy)
     [qua]:           if qua label is taken into calculation (True/False)
     [dimension]:     dim of magnitude space (for now only "6")
     [cube size]:     length of multi-d cube in magnitude unit
@@ -22,6 +22,7 @@ import numpy as np
 from numba import jit
 from sys import argv, exit
 from os import chdir, system, path
+from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
 
@@ -115,9 +116,9 @@ if __name__ == '__main__':
     # Check inputs
     if len(argv) != 6:
         exit('\n\tError: Wrong Arguments\
-        \n\tExample: [program] [input catalog] [mag/flux] [qua] [dimension] [cube size]\
+        \n\tExample: [program] [input catalog] [datatype] [qua] [dimension] [cube size]\
         \n\t[input catalog]: must include magnitudes\
-        \n\t[mag/flux]: input data in magnitude or flux (mJy)\
+        \n\t[datatype]: "mag" or "flux" input data in magnitude or flux (mJy)\
         \n\t[qua]: if qua label is taken into calculation (True/False)\
         \n\t[dimension]: dim of magnitude space (for now only "6")\
         \n\t[cube size]: length of multi-d cube in magnitude unit\n')
