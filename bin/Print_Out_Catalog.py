@@ -52,13 +52,14 @@ def print_out_one_line_default(line, index=0, ID_list=ID_list, VAR_list=VAR_list
         if IDs in VAR_list:
             try:
                 output = '\t'.join(['{:.7f}'.format(float(line[ID])) for ID in eval(IDs)])
-                print('#{}\t{}\t{}'.format('{:<10d}'.format(index), '{:10}'.format(IDs.strip('_ID')), output))
-            except ValueError:
-                output = '\t'.join(['{:10}'.format(str(line[ID])) for ID in eval(IDs)])
-                print('#{}\t{}\t{}'.format('{:<10d}'.format(index), '{:10}'.format(IDs.strip('_ID')), output))
             except IndexError:
                 output = 'NOT FOUND'
-                print('#{}\t{}\t{}'.format('{:10}'.format(index), '{:10}'.format(IDs.strip('_ID')), output))
+            except ValueError:
+                try:
+                    output = '\t'.join(['{:10}'.format(str(line[ID])) for ID in eval(IDs)])
+                except IndexError:
+                    output = 'NOT FOUND'
+            print('#{}\t{}\t{}'.format('{:<10d}'.format(index), '{:10}'.format(IDs.strip('_ID')), output))
     print('{:120}'.format(''.join(['='] * 120)))
 
 def print_out_one_line_content(line, content, index=0, coor_ID=coor_ID):
@@ -109,7 +110,6 @@ if __name__ == '__main__':
         print(' ')
         for i in indice:
             line = catalog[i].split()
-            print(len(line))
             print_out_one_line_default(line, index=i)
     else:
         if content in dir():
