@@ -21,7 +21,7 @@ Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely 
 - All used catalog stored under:
     - ``` /mazu/users/jordan/YSO_Project/YSO_Hunters_Table/All_Converted_Catalog ```
     1.  Purpose: Construct galaxy probabilties and find boundaries
-        - SEIP_pred_catalog: SEIP catalog to construct galaxy probabilities and find boundaries
+        - SEIP_MODEL_II_GALAXY: galaxy catalog (from SEIP catalog classified by SCAO model II) to construct galaxy probabilities and find boundaries
         - UKIDSS_DR10PLUS: c2d catalog for ELAIS N1 region
     2.  Purpose: Try to find out new YSO in molecular cloud regions
         - 2MASS_TO_UKIDSS: For region where no UKIDSS observation, just transform c2d catalog to UKIDSS system (MC: CHA_II, LUP_I, LUP_III, LUP_IV)
