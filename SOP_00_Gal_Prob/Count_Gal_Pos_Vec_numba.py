@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
     bins_list = [int(round((all_axlim[i][1] - all_axlim[i][0]) / cube)) + 1 for i in band_ID]
     # Print out input information
-    print('\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua__ID: {}, {}\nShape: {}'.format(\
+    print('\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua_ID: {}, {}\nShape: {}'.format(\
             cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))
 
     # Load Galaxy Catalog
