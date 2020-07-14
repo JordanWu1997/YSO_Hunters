@@ -19,3 +19,14 @@
 
 ### TODO:
 - (1) Finish the files path in above programs
+
+### Galaxy Probability Assignment Policy For Boundary Method
+- Galaxy position vector: -999 component-> lack of detection
+- Galaxy Probability (type: value)
+    - "not_count" : LESS3BD
+    - "not_count" : AGB
+    - 1e-5        : MP1_Sat
+    - 1e-4        : Bright
+    - 1e-3        : YSO
+    - 1e4         : Faint
+    - 1e3         : Galaxy
