@@ -95,6 +95,12 @@ IR3axlim = [5.0, 18.0]
 IR4axlim = [5.0, 18.0]
 MP1axlim = [3.5, 12.0]
 
+# GP/GPP Index
+GP_OBJ_ID, GP_ID = 241, 242
+GPP_OBJ_ID, GPP_ID = 243, 244
+KEY_ID = 245
+max_column_num = 246
+
 # Main Programs
 #==============================================================================
 if __name__ == '__main__':
