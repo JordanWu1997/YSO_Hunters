@@ -2,10 +2,11 @@
 '''-----------------------------------------------------------------------------------
 This program is for calculating 6D galaxy probability (P) by GP Dict
 
-Example: [program] [dimension] [GP_dict] [input catalog] [cloud name] [datatype] [qua]
+Example: [program] [dimension] [cube size] [GP_dict] [input catalog] [cloud name] [datatype] [qua]
 
 Input Variables:
-    [dimension]: dim of magnitude space (for now only "6")
+    [dimension]:     dim of magnitude space (for now only "6")
+    [cube size]:     length of cube (unit: mag)
     [GP_dict]:       Galaxy probability dictionary (specific file or "default")
     [input catalog]: must include magnitudes
     [cloud name]:    cloud name of input catalog
@@ -32,7 +33,9 @@ import time
 # Global Variables
 #==============================================================================
 # Parameters
+band_ID = [0, 3, 4, 5, 6, 7]
 band_name  = band_name
+psf_ID     = psf_ID
 flux_ID    = flux_ID
 mag_ID     = mag_ID
 MP1_ID     = qua_ID_Spitzer[4]
@@ -40,11 +43,14 @@ JHK_system = 'ukidss'
 # Use Limit Stored in Hsieh_Functions
 Jaxlim   = Hsieh_Jaxlim
 Ksaxlim  = Hsieh_Ksaxlim
+Haxlim   = [0, 0]         # Not Mentioned in Hsieh
 IR1axlim = Hsieh_IR1axlim
 IR2axlim = Hsieh_IR2axlim
 IR3axlim = Hsieh_IR3axlim
 IR4axlim = Hsieh_IR4axlim
 MP1axlim = Hsieh_MP1axlim
+all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+axlim_list = [all_axlim[i] for i in band_ID]
 # Galaxy Probability IDs
 GP_OBJ_ID, GP_ID = 241, 242
 GPP_OBJ_ID, GPP_ID = 243, 244
@@ -62,7 +68,7 @@ def fill_up_list_WI_z(input_list, max_column_num=max_column_num):
             input_list.append('z')
     return input_list
 
-def GP_Dict_Pipeline(line, mag_list, PSF_list, cube=cube, axlim_list=axlim_list, PSF_ID=PSF_ID):
+def GP_Dict_Pipeline(line, mag_list, PSF_list, cube, axlim_list=axlim_list):
     '''
     This is to generate objecttype and count by input magnitude list
     '''
@@ -116,10 +122,11 @@ if __name__ == '__main__':
     t_start = time.time()
 
     # Check Input Variables
-    if len(argv) != 7:
+    if len(argv) != 8:
         exit('\n\tWrong Usage!\
-              \n\tExample: [program] [dimension] [GP_dict] [input catalog] [cloud name] [datatype] [qua]\
+              \n\tExample: [program] [dimension] [cube size] [GP_dict] [input catalog] [cloud name] [datatype] [qua]\
               \n\t[dimension]: dim of magnitude space (for now only "6")\
+              \n\t[cube size]: length of cube (unit: mag)\
               \n\t[GP_dict]: Galaxy probability dictionary (specific file or "default")\
               \n\t[input catalog]: must include magnitudes\
               \n\t[cloud name]: cloud name of input catalog\
@@ -128,11 +135,12 @@ if __name__ == '__main__':
 
     # Input Variables
     dim          = int(argv[1])
-    GP_Dict_Path = str(argv[2])
-    inp_catalog  = str(argv[3])
-    Cloud_name   = str(argv[4])
-    datatype     = str(argv[5])
-    qualabel     = bool(argv[6] == 'True')
+    cube         = float(argv[2])
+    GP_Dict_Path = str(argv[3])
+    inp_catalog  = str(argv[4])
+    Cloud_name   = str(argv[5])
+    datatype     = str(argv[6])
+    qualabel     = bool(argv[7] == 'True')
 
     # Setup Galaxy Probability Dictionary Path
     if GP_Dict_Path == 'default':
@@ -171,9 +179,9 @@ if __name__ == '__main__':
             exit('Input type error')
 
         # Generate GP/GPP from pipeline procedure
-        PSF_list = [int(lines[PSF_ID[i]]) for i in range(len(GP_mag_list))]
-        GP_Ob_type,  GP_Count  = GP_Dict_Pipeline(lines, GP_mag_list, PSF_list)
-        GPP_Ob_type, GPP_Count = GP_Dict_Pipeline(lines, GPP_mg_list, PSF_list)
+        PSF_list = [int(lines[psf_ID[i]]) for i in range(len(GP_mag_list))]
+        GP_Ob_type,  GP_Count  = GP_Dict_Pipeline(lines, GP_mag_list, PSF_list, cube)
+        GPP_Ob_type, GPP_Count = GP_Dict_Pipeline(lines, GPP_mg_list, PSF_list, cube)
 
         # Create some empty columns and Write GP/GPP type/value
         lines = fill_up_list_WI_z(lines, max_column_num=max_column_num)
