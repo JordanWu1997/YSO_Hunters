@@ -40,6 +40,14 @@
     - (2) Construct GP Dictionary
         - Update_GP_Dict_Key_Tuple.py
 
+### Part5 - Pipeline from Part1 to Part4
+- Pipeline_Galaxy_Prob.csh
+    - (1) Count_Gal_Pos_Vec_numba.py
+    - (2) Sort_Source_Lack999_Execution_All.py
+    - (3) Do_Gaussian_Smooth_Construct_Bin.py
+    - (4) Do_Gaussian_Smooth_Execution_All.py
+    - (5*) Update_GP_Dict_Key_Tuple.py (Only for GP Dictionary)
+
 ### APPENDIX -  Output File Structure
 #### In "Working Directory" (where all above programs should be excecuted and input catalogs should be stored)
 ```
