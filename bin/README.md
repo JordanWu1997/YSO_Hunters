@@ -1,5 +1,8 @@
 # Executable Programs for YSO Hunters
 
+### Part 0 - About Pipelines
+- #### Pipeline_Classification.csh
+  - Pipeline for galaxy probability classification
 ### Part 1 - About Catalogs
 - #### TF_To_C2D_Format_Catalog.py
   - Transform to unified catalog for usage in YSO Hunters
