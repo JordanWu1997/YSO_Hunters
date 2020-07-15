@@ -84,8 +84,6 @@ if __name__ == '__main__':
         for i in range(len(lack_num_list)):
             out = {tuple(lack_pos_list[i]): float(lack_num_list[i])}
             out_dict.update(out)
-
-        print(out_dict)
         np.save('{}all_detect_grid_Full_{:d}d.npy'.format(out_dir, dim-lack), out_dict)
         print('{}all_detect_grid_Full_{:d}d.npy'.format(out_dir, dim-lack))
 
