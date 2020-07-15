@@ -45,6 +45,8 @@ set ukidss_obs=(0 0 0 0 1 1 1 )
 
 # Main Program
 # ======================================================
+set out_dir=$dim\D_bin$cube\_sigma$sigma\_bond$bond\_refD$refD
+if (! -d $out_dir) mkdir $out_dir && cd $out_dir
 foreach i ($indice)
     # Initialization
     # --------------------------------------------------------------------------------------------------------
