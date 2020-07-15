@@ -50,8 +50,8 @@ def classify_by_GP(row_list):
         if GP < 1.:
             GPP = row_list[GPP_ID]
             if GPP != 'no_count':
-                GPP = float(row_list[GP_ID])
-                if GPP > 1.:
+                GPP = float(row_list[GPP_ID])
+                if GPP >= 1.:
                     label = 'GP_IC'
                 else:
                     label = 'YSO'
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     # Check inputs
     if len(argv) != 3:
         exit('\n\tWrong Usage!\
-            \n\tExample: [program] [catalog] [MC cloud_name]\n')
+              \n\tExample: [program] [catalog] [MC cloud_name]\n')
 
     # Input Variables
     catalog_name = str(argv[1])
@@ -114,7 +114,8 @@ if __name__ == '__main__':
 
     # Print out catalog line numbers
     print('\n\nThe Saturate Candiates in YSO candidates: ')
-    os.system("awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl".format(MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
+    os.system("awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl".format(\
+                                        MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
     print('\nThe confident YSO candidates: ')
     os.system('wc -l {}_6D_YSO.tbl'.format(cloud_name))
     print('\nThe confident Galaxy candidates: ')

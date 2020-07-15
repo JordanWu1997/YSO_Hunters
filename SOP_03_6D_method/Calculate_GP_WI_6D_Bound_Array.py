@@ -49,7 +49,7 @@ GP_OBJ_ID, GP_ID = 241, 242
 GPP_OBJ_ID, GPP_ID = 243, 244
 POS_VEC_ID = 245
 max_column_num = 246
-bound_path = spp.Selfmade_6D_GP_BD_Path
+bound_path = spp.Selfmade_6D_GP_BD_path
 #=====================================
 
 # Functions
