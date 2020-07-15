@@ -32,7 +32,15 @@
 	- Make_Galaxy_Prob_PCA_Cut_Plot.py
 	- Make_Galaxy_Prob_3D_Plot_With_PCA.py
 
-### Part4 -  Output File Structure
+### Part4 - Galaxy Probability
+- Pick Method (1) or (2)
+    - (1) Find GP Boundary (Along with Axis or PCA, Axis is recommended)
+        - Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py
+        - Find_Galaxy_Prob_6D_Boundary_Along_PCA_Parallel.py
+    - (2) Construct GP Dictionary
+        - Update_GP_Dict_Key_Tuple.py
+
+### APPENDIX -  Output File Structure
 #### In "Working Directory" (where all above programs should be excecuted and input catalogs should be stored)
 ```
 ├── GPV_6Dposvec_bin0.2/                                    #
