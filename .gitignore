@@ -1,2 +1,4 @@
 /lib/*.pyc
 /lib/__pycache__
+/SOP_03_6D_method/*.pyc
+/SOP_03_6D_method/__pycache__
