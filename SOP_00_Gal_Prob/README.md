@@ -1,7 +1,7 @@
 # Sequence of executing programs
 ### Part 0 - _Catalogs_
 - (1) SEIP catalog (Used now)
-    - ``` /mazu/users/jordan/YSO_Project/YSO_Hunters_Table/All_Converted_Catalog/SEIP_pred_catalog/SEIP_sed.txt ```
+    - ``` /mazu/users/jordan/YSO_Project/YSO_Hunters_Table/All_Converted_Catalog/SEIP_MODEL_II_GALAXY/SEIP_sed_exXUS_Galaxy.txt ```
     - Band: J, H, K, IR1, IR2, IR3, IR4, MP1 (unit: mJy)
     - Note: J, H, K have already transform from 2mass system to ukidss system
 - (2) UKIDSS + c2d catalog (Not used now)
