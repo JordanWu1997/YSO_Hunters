@@ -6,7 +6,6 @@ This stores useful functions in YSO Hunter project
 Latest update : Jordan Wu'''
 
 from __future__ import print_function
-import math as mh
 import numpy as np
 from numba import jit
 import sys
@@ -117,6 +116,15 @@ def find_pos_id_in_gal_pos(gal_pos, target):
             id_list.append(i)
     id_array = np.array(id_list)
     return id_array
+
+def fill_up_list_WI_z(input_list, max_column_num=246):
+    '''
+    This is to fill up list with "z" to prevent list index error
+    '''
+    if len(input_list) != max_column_num:
+        while len(input_list) <= max_column_num:
+            input_list.append('z')
+    return input_list
 
 # Main Programs
 if __name__ == '__main__':

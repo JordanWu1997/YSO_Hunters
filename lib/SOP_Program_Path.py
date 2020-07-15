@@ -40,11 +40,12 @@ Hsieh_5D_GP2_Array_path = "{}Remove_Av_sources_in_whole_clouds/SWI_c2d_PSD_new_p
 # PATH FOR
 #   - SOP_Program_6D_method/new_dict_6D_method.py
 #====================================================================
-Selfmade_6D_GP_Dict_path = "{}All_6D_GP_Dict/6D_BS0.4_REFD5_tuple/Small_test/GPV_grid_6D_bin0.4_sigma2_refD5/".format(New_Table_Prefix)
+#Selfmade_6D_GP_Dict_path = "{}All_6D_GP_Dict/6D_BS0.4_REFD5_tuple/Small_test/GPV_grid_6D_bin0.4_sigma2_refD5/".format(New_Table_Prefix)
+Selfmade_6D_GP_Dict_path = '/mazu/users/jordan/YSO_Project/SEIP_GP_Bound/GPV_after_smooth_6D_bin0.5_sigma2_bond3_refD5/'
 
 # PATH FOR
 #   - SOP_Program_6D_method/new_dict_6D_method.py
-Selfmade_6D_GP_BD_Path = "{}".format(New_Table_Prefix)
+Selfmade_6D_GP_BD_path = "{}".format(New_Table_Prefix)
 
 # PATH FOR
 #   - SOP_Program_6D_method/SOP_Execution_6D_method.py
