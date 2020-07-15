@@ -17,7 +17,7 @@
 # Variables
 # ======================================================
 # Help for input arguments
-if ( $1 == help ) then
+if ($#argv != 6) then
     echo "\n\tExample: Pipeline.csh [dimension] [cube size] [sigma] [bond] [refD] [GP method]"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
     echo "\t[cube size]: length of multi-d cube in magnitude unit"
@@ -47,20 +47,28 @@ set ukidss_obs=(0 0 0 0 1 1 1 )
 # ======================================================
 foreach i ($indice)
     # Initialization
+    # --------------------------------------------------------------------------------------------------------
     set cloud=$clouds[$i]
     echo "\nInitializing $cloud ..."
+    # Add artificial quality label and Start Preset Procedure
     # --------------------------------------------------------------------------------------------------------
     if (! -d $cloud ) mkdir $cloud && cd $cloud
     if ( -f $logfile ) rm $logfile
     /usr/bin/cp -f $YSO_table/All_Converted_Catalog/SPITZER/catalog-$cloud-HREL.tbl catalog-$cloud-HREL.tbl >> $logfile
     # WO/WI UKIDSS observation
-    echo "Adding magnitudes ..."
     # --------------------------------------------------------------------------------------------------------
+    echo "Adding magnitudes ..."
     if ( $ukidss_obs[$i] == 0 ) then
         Add_Mag_To_C2D_Full.py catalog-$cloud-HREL.tbl catalog-$cloud-HREL-Add_Mag.tbl >> $logfile
         TF_From_2MASS_To_UKIDSS_System.py catalog-$cloud-HREL-Add_Mag.tbl catalog-$cloud-HREL-Add_Mag-TF_UKIDSS.tbl >> $logfile
+        echo "Adding artificial quality labels ..."
+        Add_Mag_Qua_JHK_UKIDSS.py catalog-$cloud-HREL-Add_Mag-TF_UKIDSS.tbl default N A_fake >> $logfile
+        Add_Mag_Qua_JHK_UKIDSS.py catalog-$cloud-HREL-Add_Mag-TF_UKIDSS-Add_JHK_Qua.tbl default U A_fake >> $logfile
+        echo "Start setting neeed presets ..."
+        SOP_Execution_Preset.py catalog-$cloud-HREL-Add_Mag-TF_UKIDSS-Add_JHK_Qua-Add_JHK_Qua.tbl $cloud Self_made >> $logfile
     else if ( $ukidss_obs[$i] == 1 ) then
         # Different UKIDSS observation programs
+        # --------------------------------------------------------------------------------------------------------
         if ( $cloud == OPH ) then
             set ukidss_catalog="$YSO_table/All_UKIDSS_Catalog/UKIDSS_OBSERVATION/DR11PLUS/UKIDSS_GCS/UKIDSS_GCS_$cloud.csv"
             set header=13
@@ -73,19 +81,17 @@ foreach i ($indice)
         endif
         Add_Mag_JHK_UKIDSS_C2D_Combined.py catalog-$cloud-HREL.tbl $ukidss_catalog $header \
                                            catalog-$cloud-HREL-Add_Mag-Add_UKIDSS_JHK_2MASSBR.tbl 2MASSBR >> $logfile
+        echo "Adding artificial quality labels ..."
+        Add_Mag_Qua_JHK_UKIDSS.py catalog-$cloud-HREL-Add_Mag-Add_UKIDSS_JHK_2MASSBR.tbl N A_fake >> $logfile
+        Add_Mag_Qua_JHK_UKIDSS.py catalog-$cloud-HREL-Add_Mag-Add_UKIDSS_JHK_2MASSBR-Add_JHK_Qua.tbl default U A_fake >> $logfile
+        echo "Start setting neeed presets ..."
+        SOP_Execution_Preset.py catalog-$cloud-HREL-Add_Mag-Add_UKIDSS_JHK_2MASSBR-Add_JHK_Qua.tbl $cloud Self_made >> $logfile
     else
         echo "Please check UKIDSS observation data ..."
     endif
-    # Add artificial quality label and Start Preset Procedure
-    # --------------------------------------------------------------------------------------------------------
-    echo "Adding artificial quality labels ..."
-    Add_Mag_Qua_JHK_UKIDSS.py catalog-$cloud-HREL-Add_Mag-TF_UKIDSS.tbl default N A_fake >> $logfile
-    Add_Mag_Qua_JHK_UKIDSS.py catalog-$cloud-HREL-Add_Mag-TF_UKIDSS-Add_JHK_Qua.tbl default U A_fake >> $logfile
-    echo "Start setting neeed presets ..."
-    SOP_Execution_Preset.py catalog-$cloud-HREL-Add_Mag-TF_UKIDSS-Add_JHK_Qua-Add_JHK_Qua.tbl $cloud Self_made >> $logfile
     # Method to calculate galaxy probability (BD or GP)
-    echo "Calculating GP by $method method ..."
     # --------------------------------------------------------------------------------------------------------
+    echo "Calculating GP by $method method ..."
     if ( $method == BD ) then
         Calculate_GP_WI_6D_Bound_Array.py $cloud\_saturate_correct_file.tbl \
         $cloud mag $SEIP_dir/GPV_after_smooth_$dim\D_bin$cube\_sigma$sigma\_bond$bond\_refD$refD/after_smooth_$dim\D_lower_bounds_AlB0.npy \
