@@ -41,7 +41,7 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="t
     flux_list = [float(x[ID]) for ID in flux_ID]
     if Qua:
         if "N" in flux_Qua:
-            mag_list = [0] * len(flux_list)
+            mag_list = ['no'] * len(flux_list)
         else:
             mag_list = []
             for i in range(len(flux_list)):
