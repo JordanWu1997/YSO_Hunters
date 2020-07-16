@@ -50,8 +50,9 @@
 
 ### APPENDIX -  Output File Structure
 #### In "Working Directory" (where all above programs should be excecuted and input catalogs should be stored)
+
 ```
-├── GPV_6Dposvec_bin0.2/                                    #
+├── GPV_6Dposvec_bin0.2/                                #
 	├── Band_pos_num/                                   #
 	├── Lack_pos_num/                                   #
 	├── Bright.npy                                      #
@@ -59,25 +60,25 @@
 	├── Gal_Position_numbers.npy                        #
 	├── Gal_Position_vectors.npy                        #
 	└── Shape.npy                                       #
-├── GPV_smooth_sigma2_bond2_refD5/                          #
+├── GPV_smooth_sigma2_bond2_refD5/                      #
 	├── 3d_beam_sigma2.npy                              #
 	├── 4d_beam_sigma2.npy                              #
 	├── 5d_beam_sigma2.npy                              #
 	├── 6d_beam_sigma2.npy                              #
 	└── ND_Beam_sigma2_refD5/                           #
     		└── Beam_in_diff_dim.png                    #
-├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/          #
+├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/      #
 	├── After_012345/                                   #
 	├── After_Smooth_012345/                            #
 	├── after_smooth_lack_0_012345_all_cas_num.npy      #
 	├── after_smooth_lack_0_012345_all_cas_pos.npy      #
-	└── ...... (Different band combinations)
-├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/          #
+	└── ...... (Different band combinations)            #
+├── GPV_after_smooth_6D_bin0.2_sigma2_bond1_refD5/      #
 	├── pca_cut/                                        #
-		├── L0_012345_PCA_E0.png                    #
-		├── L0_012345_WPCA_E0.png                   #
-	     	├── ...... (Different principle components)
-		├── PCA_components_012345.npy               #
+		├── L0_012345_PCA_E0.png                        #
+		├── L0_012345_WPCA_E0.png                       #
+	     	├── ...... (Different principle components) #
+		├── PCA_components_012345.npy                   #
 	     	├── PCA_premean_012345.npy                  #
 	     	├── PCA_variances_012345.npy                #
 	     	├── PCA_var_ratios_012345.npy               #
