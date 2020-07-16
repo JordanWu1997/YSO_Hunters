@@ -45,8 +45,10 @@ set ukidss_obs=(0 0 0 0 1 1 1 )
 
 # Main Program
 # ======================================================
+set par_dir=Cloud_Classification_GPM_${method}
+if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir=${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}
-if (! -d ${out_dir}) mkdir ${out_dir} && cd ${out_dir}
+if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}
 foreach i (${indice})
     # Initialization
     # --------------------------------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ foreach i (${indice})
     echo "\nInitializing ${cloud} ..."
     # Add artificial quality label and Start Preset Procedure
     # --------------------------------------------------------------------------------------------------------
-    if (! -d ${cloud} ) mkdir ${cloud} && cd ${cloud}
+    if ( ! -d ${cloud} ) mkdir ${cloud} && cd ${cloud}
     if ( -f ${logfile} ) rm ${logfile}
     /usr/bin/cp -f ${YSO_table}/All_Converted_Catalog/SPITZER/catalog-${cloud}-HREL.tbl catalog-${cloud}-HREL.tbl | tee -a ${logfile}
     # WO/WI UKIDSS observation
