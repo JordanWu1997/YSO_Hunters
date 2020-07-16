@@ -3,18 +3,17 @@
 Distinguishing Galaxies and Young Stellar Objects (YSOs) from a database solely containing magnitudes has been proved to be a difficult task, since the physical composition of both types of objects are similar but with different amount (Harvey et al. 2006). Hsieh & Lai (2013) found that YSOs can stand out from Galaxies in Multi-dimensional Magnitude Space, and thus can be separated straightforwardly. Unfortunately, the computer memory required by the Multi-dimensional Magnitude Space method is too much for a database with 8 photometric bands, so Hsieh & Lai (2013) used two 5-dimensional arrays instead. Here we attempt to reduce the memory requirement by choosing the proper magnitude range (mag1, mag2),so that mag\<mag1 are (almost) certainly to be YSOs and mag\>mag2 are all Galaxies. Thus, the grid point required by the Multi-dimensional Magnitude Space will be greatly reduced. Our results will test whether the two 5-dimensional arrays chosen in Hsieh & Lai (2013) are adequate.
 
 ## **II.Goal**
-- Repeat the procession of Hsieh & Lai (2013) and get the same result
-- Use marginal plane on multi-dimensional space to save RAM
-- Make the program construct more dimension space at same time
+- [x] Repeat the procession of Hsieh & Lai (2013) and get the same result
+- [ ] Use marginal plane on multi-dimensional space to save RAM
+- [ ] Make the program construct more dimension space at same time
 
 ## **III.Improvement**
-- ~~Reduce the errors about extinction correction~~
-- ~~Use marginal curved surface instead of the marginal plane (position support vector)~~
-- Make all processions be automatic (SOP Program)
-- Add 1 more band to multi-D galaxy probability
-- Add new extinction test (application for selecting reliable YSO candidates)
-- **TODO**
-	- Try to make all programs more flexiable (catalog column indice independence)
+- [ ] ~~Reduce the errors about extinction correction~~
+- [ ] ~~Use marginal curved surface instead of the marginal plane (position support vector)~~
+- [x] Make all processions be automatic (SOP Program)
+- [x] Add 1 more band to multi-D galaxy probability
+- [ ] Add new extinction test (application for selecting reliable YSO candidates)
+- [x] Make all programs more flexiable (catalog column indice independence)
 
 ## **IV. How To Use SOP Programs**
 #### 0. Catalog on zeus (Optional)
@@ -81,13 +80,15 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 #### 3. Revise Locations of Some Programs/Files if ```Error: No such file``` occurs.
 - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if **all paths/files** exist
 - Then , change some path or file that may be needed to revised
-	- e.g. location where multi-D galaxy probability array stored
+	- e.g. location where multi-D galaxy probability dictionary stored
+- For all __variables__, please run ```All_Variables.py``` in terminal and check 
+- For all __paths__, please run ```SOP_Program_Path.py``` in terminal and check
 
 #### 4. Standard Sequence for Execution:
 - **Note: This Command Must Execute Under Specific Binsize Directory**
 - **Note: For cross-out terms, please check specific directories README.md**
-    1. ~SOP_Execution_GPM_Construct.py~
-    2. SOP_Execution_Preset.py
-    3. SOP_Execution_5D_method.py
-    4. ~SOP_Execution_6D_method.py~
-    5. ~SOP_Execution_Extinction_check.py~
+    1. Pipeline_Galaxy_Prob.csh (SOP_00_Gal_Prob)
+    2. SOP_Execution_Preset.py (SOP_01_Preset)
+    3. SOP_Execution_5D_method.py (SOP_02_5D_method)
+    4. Pipeline_Classification.csh (bin)
+    5. ~SOP_Execution_Extinction_check.py~ (NOT COMPLETED YET ...)
