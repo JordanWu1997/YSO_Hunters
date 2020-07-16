@@ -25,7 +25,7 @@
 if ( ${#argv} != 11 ) then
     echo "\n\tError Usage"
     echo "\tExample: Pipeline_Galaxy_Prob.csh [input catalog] [datatype] [qualabel] \
-                                            [dimension] [sigma] [bond] [cube size] [refD] [slice] [one by one] [GP method]"
+                        [dimension] [sigma] [bond] [cube size] [refD] [slice] [one by one] [GP method] [Plot]"
     echo "\t[input catalog]: must include magnitudes if datatype is 'mag'"
     echo "\t[datatype]: 'mag' or 'flux' input data in magnitude or flux (mJy)"
     echo "\t[qualabel]: if flux quality is considered in calculation"
@@ -36,7 +36,8 @@ if ( ${#argv} != 11 ) then
     echo "\t[refD]: reference dimension which to modulus other dimension to"
     echo "\t[slice]: the number of slice to gaussian smooth input catalog"
     echo "\t[one by one]: load slice of smooth input one by one or not (yes/no)"
-    echo "\t[GP method]: BD/GD (Boundary method/Galaxy Dictionary method)\n"
+    echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD)"
+    echo "\t[Plot]: plot galaxy probability 2D & 3D scatter (yes/no)\n"
     exit
 endif
 
@@ -52,6 +53,7 @@ set refD=${8}
 set slice_num=${9}
 set one_by_one=${10}
 set GP_method=${11}
+set plot=${12}
 # Input Variables
 set thread=10
 set logfile='term.out'
