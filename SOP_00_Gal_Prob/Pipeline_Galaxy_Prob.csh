@@ -15,7 +15,7 @@
 #   [refD]:          reference dimension which to modulus other dimension to"
 #   [slice]:         the number of slice to gaussian smooth input catalog"
 #   [one by one]:    load slice of smooth input one by one or not (True/False)"
-#   [GP method]:     BD/GD (Boundary method/Galaxy Dictionary method)\n"
+#   [GP method]:     BD/GD (Boundary method/Galaxy Dictionary method)"
 #
 # Latest update JordanWu 2020/07/16
 # ====================================================================================================
@@ -58,8 +58,23 @@ set bin_dir=GPV_smooth_sigma${sigma}_bond${bond}_refD${refD}
 
 # Main Programs
 # ======================================================
+
+# Count Gal Position
+echo 'Counting Galaxy Position ...'
 Count_Gal_Pos_Vec_numba.py ${inp_catalog} ${cat_datatype} ${qua_label} ${dim} ${cube} | tee -a $logfile
 Sort_Source_Lack999_Execution_All.py ${dim} ${cube} | tee -a $logfile
+
+# Do Gaussian Smooth
+echo 'Gaussian Smoothing ...'
 if (! -d ${bin_dir} ) Do_Gaussian_Smooth_Construct_Bin.py ${sigma} ${bond} ${refD} | tee -a $logfile
 Do_Gaussian_Smooth_Execution_All.py ${dim} ${cube} ${sigma} ${bond} ${refD} ${slice_num} ${one_by_one} | tee -a $logfile
-if ( GP_method == GD ) Update_GP_Dict_Key_Tuple.py ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a $logfile
+
+# GP_method for calculation
+echo 'Constructing Galaxy Probability ...'
+if ( ${GP_method} == GD ) then
+    Update_GP_Dict_Key_Tuple.py ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a $logfile
+else if ( ${GP_method} == BD ) then
+    Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 default default 10 | tee -a $logfile
+else
+    echo 'Wrong GP_method ...' && exit
+endif
