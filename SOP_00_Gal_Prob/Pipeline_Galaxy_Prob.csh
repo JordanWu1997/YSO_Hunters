@@ -53,8 +53,11 @@ set slice_num=${9}
 set one_by_one=${10}
 set GP_method=${11}
 # Input Variables
+set thread=10
 set logfile='term.out'
 set bin_dir=GPV_smooth_sigma${sigma}_bond${bond}_refD${refD}
+set pos_slice_num=10
+set inc=45
 
 # Main Programs
 # ======================================================
@@ -69,12 +72,22 @@ echo 'Gaussian Smoothing ...'
 if (! -d ${bin_dir} ) Do_Gaussian_Smooth_Construct_Bin.py ${sigma} ${bond} ${refD} | tee -a $logfile
 Do_Gaussian_Smooth_Execution_All.py ${dim} ${cube} ${sigma} ${bond} ${refD} ${slice_num} ${one_by_one} | tee -a $logfile
 
-# GP_method for calculation
+# GP Method for calculation
 echo 'Constructing Galaxy Probability ...'
 if ( ${GP_method} == GD ) then
     Update_GP_Dict_Key_Tuple.py ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a $logfile
 else if ( ${GP_method} == BD ) then
-    Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 default default 10 | tee -a $logfile
+    Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 default default ${thread} | tee -a $logfile
 else
     echo 'Wrong GP_method ...' && exit
 endif
+
+# Plot for Galaxy Probability (2D tomography & 3D)
+if ( ${plot} == yes ) then
+    Make_Galaxy_Prob_Plot_Execution_All.py ${dim} ${cube} ${sigma} ${bond} ${refD} ${pos_slice_num} ${inc} | tee -a $logfile
+else
+    echo 'No Galaxy Probability Plots ...'
+endif
+
+# Save logfile
+mv $logfile GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/
