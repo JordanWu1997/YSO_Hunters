@@ -87,8 +87,8 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 #### 4. Standard Sequence for Execution:
 - **Note: This Command Must Execute Under Specific Binsize Directory**
 - **Note: For cross-out terms, please check specific directories README.md**
-    1. Pipeline_Galaxy_Prob.csh (SOP_00_Gal_Prob)
-    2. SOP_Execution_Preset.py (SOP_01_Preset)
-    3. SOP_Execution_5D_method.py (SOP_02_5D_method)
-    4. Pipeline_Classification.csh (bin)
-    5. ~SOP_Execution_Extinction_check.py~ (NOT COMPLETED YET ...)
+    -  Pipeline_Galaxy_Prob.csh (SOP_00_Gal_Prob)
+    -  SOP_Execution_Preset.py (SOP_01_Preset)
+    -  SOP_Execution_5D_method.py (SOP_02_5D_method)
+    -  Pipeline_Classification.csh (bin)
+    -  ~SOP_Execution_Extinction_check.py~ (NOT COMPLETED YET ...)
