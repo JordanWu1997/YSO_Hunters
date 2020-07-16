@@ -86,7 +86,7 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 
 #### 4. Standard Sequence for Execution:
 - **Note: This Command Must Execute Under Specific Binsize Directory**
-- **Note: For cross-out terms, please check specific directories README.md**
+- **Note: If you have any problem please check README.md in specific directories**
     -  Pipeline_Galaxy_Prob.csh (SOP_00_Gal_Prob)
     -  SOP_Execution_Preset.py (SOP_01_Preset)
     -  SOP_Execution_5D_method.py (SOP_02_5D_method)
