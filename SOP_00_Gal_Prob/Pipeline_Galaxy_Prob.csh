@@ -22,7 +22,7 @@
 
 # Variables
 # ======================================================
-if ( ${#argv} != 11 ) then
+if ( ${#argv} != 12 ) then
     echo "\n\tError Usage"
     echo "\tExample: Pipeline_Galaxy_Prob.csh [input catalog] [datatype] [qualabel] \
                         [dimension] [sigma] [bond] [cube size] [refD] [slice] [one by one] [GP method] [Plot]"
