@@ -140,10 +140,10 @@ if __name__ == '__main__':
     else:
         path = GP_Dict_Path
     print('GP_Dict: {}'.format(path))
-    L0_Dict = np.load(path + 'all_detect_grid_Full_6d.npy').item()
-    L1_Dict = np.load(path + 'all_detect_grid_Full_5d.npy').item()
-    L2_Dict = np.load(path + 'all_detect_grid_Full_4d.npy').item()
-    L3_Dict = np.load(path + 'all_detect_grid_Full_3d.npy').item()
+    L0_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-0)).item()
+    L1_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-1)).item()
+    L2_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-2)).item()
+    L3_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-3)).item()
 
     # Load Cloud Catalog
     print('Loading input catalog ...')
