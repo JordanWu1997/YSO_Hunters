@@ -3,22 +3,24 @@
 # This program is a pipeline for cloud catalog
 # MCCloud: CHA_II, LUP_I, LUP_III, LUP_IV, OPH, SER, PER
 #
-# Pipeline.csh [dim] [cube size] [sigma] [bond] [refD] [GP method]
+# Pipeline.csh [GP_dir] [dim] [cube size] [sigma] [bond] [refD] [GP method]
 #
-# [dim]: dim of magnitude space (for now only '6')
+# [GP_dir]:    directory that stores galaxy probability (path_to_dir or 'default')"
+# [dim]:       dim of magnitude space (for now only '6')
 # [cube size]: length of multi-d cube in magnitude unit
-# [sigma]: standard deviation for gaussian dist. in magnitude
-# [refD]: reference dimension which to modulus other dimension to
+# [sigma]:     standard deviation for gaussian dist. in magnitude
+# [refD]:      reference dimension which to modulus other dimension to
 # [GP method]: BD/GD (Boundary method / Galaxy Dictionary method)
 #
-# Latest update JordanWu 2020/07/15
+# Latest update JordanWu 2020/07/27
 # ======================================================
 
 # Variables
 # ======================================================
 # Help for input arguments
-if ( ${#argv} != 6 ) then
-    echo "\n\tExample: Pipeline.csh [dimension] [cube size] [sigma] [bond] [refD] [GP method]"
+if ( ${#argv} != 7) then
+    echo "\n\tExample: Pipeline.csh [GP_dir] [dimension] [cube size] [sigma] [bond] [refD] [GP method]"
+    echo "\t[GP_dir]: directory that stores galaxy probability (path_to_dir or 'default')"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
     echo "\t[cube size]: length of multi-d cube in magnitude unit"
     echo "\t[sigma]: standard deviation for gaussian dist. in magnitude"
@@ -29,15 +31,21 @@ endif
 
 # table, directory, and logfile
 set YSO_table='/mazu/users/jordan/YSO_Project/YSO_Hunters_Table'
-set SEIP_dir='/mazu/users/jordan/YSO_Project/SEIP_GP_Bound'
 set logfile='term.out'
+
 # command line argument
-set dim=${1}
-set cube=${2}
-set sigma=${3}
-set bond=${4}
-set refD=${5}
-set method=${6}
+set dim=${2}
+set cube=${3}
+set sigma=${4}
+set bond=${5}
+set refD=${6}
+set method=${7}
+if ( ${1} == default) then
+    set GP_dir='/mazu/users/jordan/YSO_Project/SEIP_GP_Bound'
+else
+    set GP_dir=${1}
+endif
+echo "GP_dir: ${GP_dir}"
 # cloud indice and ukidss observation indicator
 set indice=(1 2 3 4 5 6 7)
 set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
@@ -98,13 +106,13 @@ foreach i (${indice})
     echo "Calculating GP by ${method} method ..."
     if ( ${method} == BD ) then
         Calculate_GP_WI_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
-        ${SEIP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_${dim}D_lower_bounds_AlB0.npy \
-        ${SEIP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_${dim}D_upper_bounds_AlB0.npy \
+        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_${dim}D_lower_bounds_AlB0.npy \
+        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_${dim}D_upper_bounds_AlB0.npy \
         012345 ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
         set GP_out=${cloud}_${dim}D_BD_GP_out_catalog.tbl
     else if ( ${method} == GD ) then
         Calculate_GP_WI_6D_Dict_Key_Tuple.py ${dim} ${cube} \
-        ${SEIP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/ \
+        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/ \
         ${cloud}_saturate_correct_file.tbl ${cloud} mag True | tee -a ${logfile}
         set GP_out=${cloud}_${dim}D_GP_all_out_catalog.tbl
     else
