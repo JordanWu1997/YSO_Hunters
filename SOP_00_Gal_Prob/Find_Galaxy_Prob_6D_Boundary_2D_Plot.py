@@ -91,8 +91,6 @@ def update_num_from_bounds(cube_array, lower_bound, upper_bound, ctick_params=ct
     ubd1_pos, ubd2_pos, ubd3_pos = upper_bound[:, 0], upper_bound[:, 1], upper_bound[:, 2]
     val_list  = [params[0] for params in ctick_params]
     tick_list = [params[1] for params in ctick_params]
-    E0_val    = val_list[tick_list.index('=0')]
-    E1_val    = val_list[tick_list.index('=1')]
     LB_val    = val_list[tick_list.index('LB')]
     UB_val    = val_list[tick_list.index('UB')]
     LBUB_val  = val_list[tick_list.index('LB=UB')]
@@ -210,22 +208,28 @@ if __name__ == '__main__':
 
         # Load galaxy pos/num
         if ddim == dim:
-            gal_pos = np.load('{}after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(smooth_dir, 0, ''.join([str(i) for i in range(ddim)])))
-            gal_num = np.load('{}after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(smooth_dir, 0, ''.join([str(i) for i in range(ddim)])))
-            gal_pos = gal_pos[:, [bd_ind[0], bd_ind[1], bd_ind[2]]]
+            gal_pos = np.load('{}after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(\
+                                smooth_dir, 0, ''.join([str(i) for i in range(ddim)])))\
+                                [:, [bd_ind[0], bd_ind[1], bd_ind[2]]]
+            gal_num = np.load('{}after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(\
+                                smooth_dir, 0, ''.join([str(i) for i in range(ddim)])))
         else:
-            gal_pos = np.load('{}after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(smooth_dir, dim-len(band_ind), band_ind))
-            gal_num = np.load('{}after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(smooth_dir, dim-len(band_ind), band_ind))
+            gal_pos = np.load('{}after_smooth_lack_{:d}_{}_all_cas_pos.npy'.format(\
+                                smooth_dir, dim-len(band_ind), band_ind))
+            gal_num = np.load('{}after_smooth_lack_{:d}_{}_all_cas_num.npy'.format(\
+                                smooth_dir, dim-len(band_ind), band_ind))
 
-        lower_bound = np.load('{}after_smooth_6D_lower_bounds_{}.npy'.format(smooth_dir, suffix))
-        upper_bound = np.load('{}after_smooth_6D_upper_bounds_{}.npy'.format(smooth_dir, suffix))
+        # 6D galaxy bound
+        lower_bound = np.load('{}after_smooth_lack_0_{}_{}D_lower_bounds_{}.npy'.format(\
+                                smooth_dir, ''.join([str(i) for i in range(dim)]), dim, suffix))
+        upper_bound = np.load('{}after_smooth_lack_0_{}_{}D_upper_bounds_{}.npy'.format(\
+                                smooth_dir, ''.join([str(i) for i in range(dim)]), dim, suffix))
 
         # Merge repeated position in bound array
         _, sort_lower_bound = sort_up_array_element(lower_bound[:, [bd_ind[0], bd_ind[1], bd_ind[2]]])
         _, sort_upper_bound = sort_up_array_element(upper_bound[:, [bd_ind[0], bd_ind[1], bd_ind[2]]])
         lower_bound = np.array(cascade_array_same_pos(sort_lower_bound))
         upper_bound = np.array(cascade_array_same_pos(sort_upper_bound))
-
         num_array   = update_num(gal_pos, gal_num, shape)
         cube_array  = update_num_from_bounds(num_array, lower_bound, upper_bound)
 
