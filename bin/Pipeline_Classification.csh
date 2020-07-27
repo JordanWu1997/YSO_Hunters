@@ -106,8 +106,8 @@ foreach i (${indice})
     echo "Calculating GP by ${method} method ..."
     if ( ${method} == BD ) then
         Calculate_GP_WI_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
-        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_${dim}D_lower_bounds_AlB0.npy \
-        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_${dim}D_upper_bounds_AlB0.npy \
+        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_012345_6D_lower_bounds_AlB0.npy \
+        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_012345_6D_upper_bounds_AlB0.npy \
         012345 ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
         set GP_out=${cloud}_${dim}D_BD_GP_out_catalog.tbl
     else if ( ${method} == GD ) then
