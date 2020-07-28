@@ -73,10 +73,8 @@ if __name__ == '__main__':
     with open(output_name, 'w') as out_cat:
         for out in output:
             out_cat.write('{}\n'.format(out))
-
     # Print output info
-    print()
-    os.system('wc -l {}'.format(output_name))
+    os.system('echo "\n" && wc -l {}'.format(output_name))
     t_end   = time.time()
     print('# on input catalog:  {:d}'.format(len(input_cat)))
     print('# on output catalog: {:d}'.format(len(output)))

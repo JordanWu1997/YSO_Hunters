@@ -20,6 +20,7 @@ Latest update 2020/05/28 Jordan Wu'''
 from __future__ import print_function
 from sys import argv, exit
 from os import system
+import time
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
@@ -64,5 +65,5 @@ if __name__ == '__main__':
     with open(output_name, 'w') as out:
         for row in out_catalog:
             out.write('{}\n'.format(row))
-    system('wc -l {}'.format(output_name))
-    print()
+    system('echo "\n" && wc -l {}'.format(output_name))
+    print(' ')
