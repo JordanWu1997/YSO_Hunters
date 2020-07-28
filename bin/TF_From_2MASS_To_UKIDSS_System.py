@@ -17,6 +17,7 @@ from __future__ import print_function
 from sys import argv, exit
 from os import system
 import numpy as np
+import time
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
@@ -36,7 +37,7 @@ if __name__ == '__main__':
               \n\tExample: [program] [input table] [output file name]\
               \n\t[output file name]: filename or "default"\n')
     else:
-        print('\nStart Transform from 2MASS to UKIDSS ...')
+        print('\nStart transforming system from 2MASS to UKIDSS ...')
 
     two_mass_cat_name = str(argv[1])
     output_cat_name   = str(argv[2])
@@ -62,5 +63,5 @@ if __name__ == '__main__':
     with open(output_cat_name, 'w') as output:
         for line in ukidss_cat:
             output.write('{}\n'.format(line))
-        system('wc -l {}'.format(output_cat_name))
-    print()
+    system('echo "\n" && wc -l {}'.format(output_cat_name))
+    print(' ' )

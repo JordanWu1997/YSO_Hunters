@@ -113,16 +113,11 @@ if __name__ == '__main__':
             out_cat.write('{}'.format(line))
 
     # Print out catalog line numbers
-    print('\n\nThe Saturate Candiates in YSO candidates: ')
-    os.system("awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl".format(\
-                                        MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
-    print('\nThe confident YSO candidates: ')
-    os.system('wc -l {}_6D_YSO.tbl'.format(cloud_name))
-    print('\nThe confident Galaxy candidates: ')
-    os.system('wc -l {}_6D_Galaxy.tbl'.format(cloud_name))
-    print('\nThe candidate to image check: ')
-    os.system('wc -l {}_6D_GP_to_image_check.tbl'.format(cloud_name))
-    print('\nOthers: ')
-    os.system('wc -l {}_6D_GP_others.tbl'.format(cloud_name))
+    os.system('echo "\nThe Saturate Candiates in YSO candidates:" && awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl'.format(\
+                                                    MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
+    os.system('echo "The YSO Candiates:" && wc -l {}_6D_YSO.tbl'.format(cloud_name))
+    os.system('echo "The Galaxy Candidates:" && wc -l {}_6D_Galaxy.tbl'.format(cloud_name))
+    os.system('echo "The Image Check Candidates:" && wc -l {}_6D_GP_to_image_check.tbl'.format(cloud_name))
+    os.system('echo "The Others:" && wc -l {}_6D_GP_others.tbl'.format(cloud_name))
     s_end   = time.time()
-    print('\nWhole {} process took {:.3f} secs\n'.format(argv[0], s_end - s_start))
+    print('Whole {} process took {:.3f} secs'.format(argv[0], s_end - s_start))
