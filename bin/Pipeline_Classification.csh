@@ -45,7 +45,7 @@ if ( ${1} == default) then
 else
     set GP_dir=${1}
 endif
-echo "GP_dir: ${GP_dir}"
+echo "\nGP_dir: ${GP_dir}"
 # cloud indice and ukidss observation indicator
 set indice=(1 2 3 4 5 6 7)
 set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
@@ -126,6 +126,7 @@ foreach i (${indice})
     Check_Coord.py ${cloud}_6D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_6D_GP_to_image_check.tbl default ${cloud}_6D_GP_IC default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_6D_GP_others.tbl default ${cloud}_6D_OTHERS default 7 False | tee -a ${logfile}
+    Print_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
     # Single cloud ends and change directory to next one
     # --------------------------------------------------------------------------------------------------------
     echo "${cloud} completes ...\n"
