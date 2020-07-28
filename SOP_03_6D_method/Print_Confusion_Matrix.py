@@ -1,4 +1,12 @@
 #!/usr/bin/python
+'''
+----------------------------------------------------------
+Example: [program] [cloud\'s name]
+
+Input Variables:
+    [cloud\'s name]: name of molecular cloud e.g. CHA_II
+----------------------------------------------------------
+latest update: 2019/07/28 Jordan Wu'''
 
 from __future__ import print_function
 from glob import glob
@@ -7,10 +15,19 @@ import numpy as np
 import warnings
 
 def get_list_number(list_name):
+    '''
+    This is to get total number of line in input list
+    '''
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         inplist = np.loadtxt(list_name, dtype=str)
-    number = len(inplist)
+    if len(inplist.shape) == 1:
+        if inplist.shape[0] == 0:
+            number = 0
+        else:
+            number = 1
+    else:
+        number = len(inplist)
     return number
 
 if __name__ == '__main__':
