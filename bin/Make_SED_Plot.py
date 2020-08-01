@@ -23,7 +23,7 @@ import time
 import random
 import numpy as np
 from os import system, path, chdir
-from sys import argv, exit
+from argparse import ArgumentParser
 from All_Variables import *
 from Useful_Functions import drawProgressBar
 # For non-interactive backend (No request for showing pictures)
@@ -83,7 +83,7 @@ def plot_individual_SED(flux_list, qua_list, Norm, index, color='r'):
         if flux_list[i] != 0.0:
             x.append(wavelength[i])
             y.append(wavelength[i] * flux_list[i])
-    if Norm == 'True':
+    if Norm:
         yN = [ys / max(y) for ys in y]
         plt.loglog(x, yN, '{}o-'.format(color), label=str(index))
         plt.ylabel('Normalized flux * wavelength')
@@ -100,16 +100,24 @@ def plot_individual_SED(flux_list, qua_list, Norm, index, color='r'):
 if __name__ == '__main__':
     t_start = time.time()
 
-    # Check inputs
-    if len(argv) != 4:
-        exit('\n\tExample: python [program] [input catalog] [piece-size] [normalize]\
-              \n\t[piece-size]: # of SED in ALL_SED_PLOT plot\
-              \n\t[normalize]: True/False (default: False)\n')
+    # # Check inputs
+    # if len(argv) != 4:
+        # exit('\n\tExample: python [program] [input catalog] [piece-size] [normalize]\
+              # \n\t[piece-size]: # of SED in ALL_SED_PLOT plot\
+              # \n\t[normalize]: True/False (default: False)\n')
+
+   # Parser arguments
+    parser = ArgumentParser(description="Plot SED (Spectral Energy Distribution)",\
+                            epilog=" ")
+    parser.add_argument("inp_cat", type=str, help="Input catalog to plot SED")
+    parser.add_argument("-p", "--piece_num", dest="piece", default=10, type=int, help="Number of SED on a plot")
+    parser.add_argument("-n", "--normalize",  dest="norm", action='store_true', help="Normalize to max flux",)
+    args = parser.parse_args()
+    inp_cat = args.inp_cat
+    piece   = args.piece
+    Norm    = args.norm
 
     # Input variables
-    inp_catalog = str(argv[1])
-    piece       = int(argv[2])
-    Norm        = str(argv[3])
     print('\nStart plotting SEDs ...\
            \nCatalog: {}\
            \nNorm   : {}\
@@ -119,7 +127,7 @@ if __name__ == '__main__':
            \nWavelength (um) : {}\
            \nQua_ID          : {}'
            .format(\
-           inp_catalog, Norm, str(band), str(wavelength), str(JHK_f0), str(col_index), str(flux_qua)))
+           inp_cat, Norm, str(band), str(wavelength), str(JHK_f0), str(col_index), str(flux_qua)))
 
     # Check output directories
     if path.isdir('SED_PLOT'):
@@ -132,7 +140,7 @@ if __name__ == '__main__':
         system('mkdir ALL_SED_PLOT')
 
     # Load catalog
-    with open(inp_catalog, 'r') as cat:
+    with open(inp_cat, 'r') as cat:
         data = cat.readlines()
 
     # Plot individual SED plot
@@ -178,4 +186,4 @@ if __name__ == '__main__':
         drawProgressBar(float(h+1)/((len(data)//piece)+1))
     chdir('../')
     t_end  = time.time()
-    print('\n\nWhole {} took {:.3f} secs\n'.format(str(argv[0]), t_end-t_start))
+    print('\n\nWhole {} took {:.3f} secs\n'.format(parser.prog, t_end-t_start))

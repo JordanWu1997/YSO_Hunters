@@ -1,118 +1,148 @@
 #!/usr/bin/python
-
-'''-------------------------------------------------------------------
-This program is for getting fits from catalog with ra, dec in deg
-
-Input : catalog with ra, dec in deg
-
-Output : Fits_and_shape directory with mosaics of different bands
-
-*minor change: (1)name option is added
-               (2)save option is added
+'''
 ----------------------------------------------------------------------
-latest update: 2019/03/04 by Jordan Wu'''
+Abstract:
+    This program is for cutting diff bands of SPITZER Mosiac WI WCS
 
-from sys import argv, exit
-from os import system
+Input  : catalog with WCS (RA, DEC) in deg
+Output : Fits_and_shape directory with mosaics of different bands
+Example: [program] [catalog] [cloud's name]
+                   [horizontal_pix_num] [vertical_pix_num] [option]
+Input Variables:
+    [catalog]            : input catalog
+    [cloud's name]       : Name of cloud region of input catalog
+    [horizontal_pix_num] : pixel number to cut (must be integer)
+    [vertical_pix_num]   : pixel number to cut (must be integer)
+    [option]             : Saturate / Image_Check / IR1_Check/ NAN
+----------------------------------------------------------------------
+latest update: 2020/08/01 Jordan Wu'''
 
-if len(argv) != 8:
-    exit('\n\tExample: python [program] [catalog] [cloud\'s name] [Output Name]\
-                                        [horizontal_pix_num] [vertical_pix_num] [option] [save table]\
-          \n\tRequire: [horizontal_pix_num] [vertical_pix_num] must both be integers\
-          \n\t[option]: Saturate / Image_Check / IR1_Check/ NAN\
-          \n\t[save table]: save transformed RA DEC table [yes/no]')
+# Load Modules
+#======================================================
+from __future__ import print_function, division
+from astropy import units as u
+from astropy.coordinates import SkyCoord
+from argparse import ArgumentParser
+from os import system, path
+from All_Variables import *
+from Hsieh_Functions import *
+from Useful_Functions import *
+import SOP_Program_Path as spp
+import time
 
-cloud   = str(argv[2])
-name    = str(argv[3])
-option  = str(argv[6])
-save    = str(argv[7])
-catalog = open(argv[1],'r')
-catalog = catalog.readlines()
+# Global Variables
+#======================================================
+# IR1, IR2, IR3, IR4, MP1 (Spitzer Bands)
+coor_ID           = coor_ID
+qua_ID_Spitzer    = qua_ID_Spitzer
+psf_ID_Spitzer    = psf_ID_Spitzer
+Spitzer_band_name = Spitzer_band_name
 
-print('Convert deg to hh:mm:ss ...\n')
+# Functions
+#======================================================
+def deg_to_hms(Ra_deg, Dec_deg):
+    '''
+    This is to transform RA/DEC from deg to hhmmss
+    '''
+    Coord = SkyCoord(ra=Ra_deg*u.degree, dec=Dec_deg*u.degree)
+    Ra_hms, Dec_hms = Coord.to_string('hmsdms', sep=(':')).split()
+    return Ra_hms, Dec_hms
 
-new=[]
-for line in catalog:
-    line = line.split()
-    ra_degree = float(line[0])
-    dec_degree = float(line[2])
-    Qua = [line[100], line[121], line[142], line[163], line[184]]
-    imtype = [line[102], line[123], line[144], line[165], line[186]]
-    ra = str("%02d" % int(ra_degree/360*24)) + ":" + str("%02d" % int(ra_degree/360*24%1*60)) + ":" + str("%05.2f" % (ra_degree/360*24*60%1*60))
-    dec = str("%02d" % int(dec_degree)) + ":" + str("%02d" % int(abs(dec_degree)%1*60)) + ":" + str("%05.2f" % (abs(dec_degree)*60%1*60))
+def generate_MOSAIC_path(cloud):
+    '''
+    This is to generate Mosiaic path
+    '''
+    if 'LUP' in cloud:
+        path = '{}LUP/MOSAICS/'.format(spp.Mosaic_path)
+    else:
+        path = '{}{}/MOSAICS/'.format(spp.Mosaic_path, cloud)
+    return path
 
-    new_line = str(ra_degree) + " " + str(dec_degree) + "\t" + ra + " " + dec + "\t" + "".join(Qua) + "".join(imtype) + "\n"
-    new.append(new_line)
-    print(new_line.strip('\n'))
+def generate_MOSAIC_ls(cloud):
+    '''
+    This is to generate Mosaic fits list according
+    to different cloud (SPITZER Data)
+    '''
+    if cloud == 'PER':
+        MOSAIC_ls=["PER_ALL_COMB_IRAC1_mosaic.fits",\
+                   "PER_ALL_COMB_IRAC2_mosaic.fits",\
+                   "PER_ALL_COMB_IRAC3_mosaic.fits",\
+                   "PER_ALL_COMB_IRAC4_mosaic.fits",\
+                   "PER_ALL_A_MIPS1_mosaic.fits"]
+    elif cloud == 'OPH':
+        MOSAIC_ls = ["OPH_ALL_COMB_IRAC1_mosaic.fits",\
+                     "OPH_ALL_COMB_IRAC2_mosaic.fits",\
+                     "OPH_ALL_COMB_IRAC3_mosaic.fits",\
+                     "OPH_ALL_COMB_IRAC4_mosaic.fits",\
+                     "OPH_ALL_A_MIPS1_mosaic.fits"]
+    else:
+        MOSAIC = ["_COMB_IRAC1_mosaic.fits",\
+                  "_COMB_IRAC2_mosaic.fits",\
+                  "_COMB_IRAC3_mosaic.fits",\
+                  "_COMB_IRAC4_mosaic.fits",
+                  "_A_MIPS1_mosaic.fits"]
+        MOSAIC_ls = ['{}{}'.format(cloud, MOS) for MOS in MOSAIC]
+    return MOSAIC_ls
 
-out_ca = open(name + '_cans_to_wcs.tbl','w')
-for i in new:
-    out_ca.write(str(i))
-out_ca.close()
+# Main Program
+#======================================================
+if __name__ == '__main__':
+    wf_start = time.time()
 
-print('Conversion Complete ...\n')
+    # Parser arguments
+    parser = ArgumentParser(description="Print out catalog information",\
+                            epilog="Purpose: Saturate / Image_Check / IR1_Check/ NAN")
+    parser.add_argument("inp_cat", type=str, help="Input catalog")
+    parser.add_argument("cloud", type=str, help="Cloud name in SPITZER region")
+    parser.add_argument("-hp", "--hor_pix", default=100, dest="hor_pix", type=int, help="Horizontal pixel cut")
+    parser.add_argument("-vp", "--ver_pix", default=100, dest="ver_pix", type=int, help="Vertical pixel cut")
+    parser.add_argument("-opt", "--option", default="NAN", dest="option", type=str, help="Purpose for FITS image")
+    args = parser.parse_args()
+    inp_cat = args.inp_cat
+    cloud   = args.cloud
+    hor_pix = args.hor_pix
+    ver_pix = args.ver_pix
+    option  = args.option
 
-#--------------------------------------------------------------------------------------------------------------------------------
+    # Initialization
+    fits_dir = '{}_{}_Fits_and_shape'.format(cloud, option)
+    if path.isdir(fits_dir):
+        system('rm -r {} && mkdir {}'.format(fits_dir, fits_dir))
+    path      = generate_MOSAIC_path(cloud)
+    MOSAIC_ls = generate_MOSAIC_ls(cloud)
+    with open(inp_cat,'r') as cat:
+        catalog = cat.readlines()
 
-coor = open(name + '_cans_to_wcs.tbl', 'r')
-coor = coor.readlines()
+    # From WCS To Fits
+    new_rows = []
+    print('\nGet SPITZER image cut WI WCS (# to cut: {:d})'.format(len(catalog)))
+    for i, row in enumerate(catalog):
+        drawProgressBar(float(i+1)/len(catalog))
+        cols = row.split()
 
-print('Getfitting ...\n')
+        # Transform from deg to hhmmss
+        Qua  = [cols[ID] for ID in qua_ID_Spitzer]
+        Psf  = [cols[ID] for ID in psf_ID_Spitzer]
+        Ra_deg, Dec_deg = float(cols[coor_ID[0]]), float(cols[coor_ID[1]])
+        Ra_hms, Dec_hms = deg_to_hms(Ra_deg, Dec_deg)
+        new_row = "{}\t{}\t{}\t{}\t{}\t{}\n".format(\
+                   Ra_deg, Dec_deg, Ra_hms, Dec_hms, "".join(Qua), "".join(Psf))
+        new_rows.append(new_row)
 
-if cloud == 'PER':
-    MOSAIC_li=["PER_ALL_COMB_IRAC1_mosaic.fits","PER_ALL_COMB_IRAC2_mosaic.fits","PER_ALL_COMB_IRAC3_mosaic.fits","PER_ALL_COMB_IRAC4_mosaic.fits","PER_ALL_A_MIPS1_mosaic.fits"]
+        # Get fits according to WCS
+        qdir_name = "{:d}_{}".format(i+1, "".join(Qua))
+        system("mkdir {}".format(qdir_name))
+        for j in range(len(MOSAIC_ls)):
+            fits_name = "{}_{:d}.fits".format(Spitzer_band_name[j], i+1)
+            system("getfits -o {} {}{} {}, {} {:d} {:d} &> /dev/null".format(\
+                    fits_name, path, MOSAIC_ls[j], Ra_hms, Dec_hms, hor_pix, ver_pix))
+            system("mv {} {}".format(fits_name, qdir_name))
+        system("mv {} {}".format(qdir_name, fits_dir))
 
-elif cloud == 'OPH':
-    MOSAIC_li = ["OPH_ALL_COMB_IRAC1_mosaic.fits","OPH_ALL_COMB_IRAC2_mosaic.fits","OPH_ALL_COMB_IRAC3_mosaic.fits","OPH_ALL_COMB_IRAC4_mosaic.fits","OPH_ALL_A_MIPS1_mosaic.fits"]
-
-else:
-    MOSAIC=["_COMB_IRAC1_mosaic.fits","_COMB_IRAC2_mosaic.fits","_COMB_IRAC3_mosaic.fits","_COMB_IRAC4_mosaic.fits","_A_MIPS1_mosaic.fits"]
-    MOSAIC_li = []
-    for element in MOSAIC:
-        MOSAIC_li.append(cloud+element)
-
-#--------------------------------------------------------------------------------------------------------------------------------
-
-band=["IR1","IR2","IR3","IR4","MP1"]
-
-if 'LUP' in cloud:
-    path = '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/LUP/MOSAICS/'
-else:
-    path = '/data/public/spitzer/c2d/data.spitzer.caltech.edu/popular/c2d/20071101_enhanced_v1/'+cloud+'/MOSAICS/'
-
-if option != 'NAN':
-    system("rm -r " + name + "_" + option + "_Fits_and_shape")
-    system("mkdir " + name + "_" + option + "_Fits_and_shape")
-else:
-    option = ''
-    system("rm -r " + name + "_" + option + "_Fits_and_shape")
-    system("mkdir " + name + "_" + option + "_Fits_and_shape")
-
-#--------------------------------------------------------------------------------------------------------------------------------
-
-hor_num = str(argv[4])
-ver_num = str(argv[5])
-
-print('number of candidates: %s' % str(len(coor)))
-print('----------------------')
-for i in range(len(coor)):
-    print(str(i+1)+'/'+str(len(coor)))
-    Qua = "_"+coor[i].split()[4]
-    system("mkdir "+str(i+1)+Qua)
-
-    for j in range(len(MOSAIC_li)):
-        Ra = coor[i].split()[2]
-        Dec = coor[i].split()[3]
-        system("getfits " + path + MOSAIC_li[j] + " " + Ra + ", " + Dec + "," + " " + hor_num + " " +ver_num + " -o "+band[j] + "_" + str(i+1) + ".fits &> /dev/null")
-        system("mv " + band[j] + "_" + str(i+1) + ".fits " + str(i+1) + Qua)
-    system("mv " + str(i+1) + Qua + " " + name  + "_" +  option + "_Fits_and_shape")
-
-#--------------------------------------------------------------------------------------------------------------------------------
-
-if save == 'no':
-    system('rm '+ name + '_cans_to_wcs.tbl')
-elif save == 'yes':
-    pass
-
-print('----------------------')
-print('Procedure is complete ...')
+    # Save tables ...
+    print('\nStore WCS table ...')
+    with open('{}_cans_to_wcs.tbl'.format(cloud), 'w') as out_cat:
+        for row in new_rows:
+            out_cat.write(row)
+    wf_end   = time.time()
+    print('{} took {:.3f} secs\n'.format(parser.prog, wf_end-wf_start))
