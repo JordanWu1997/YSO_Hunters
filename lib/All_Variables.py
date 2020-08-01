@@ -70,8 +70,9 @@ full_flux_err_ID = [34, 55, 76, 97, 118, 139, 160, 181, 202]
 full_mag_err_ID  = [36, 57, 78, 99, 120, 141, 162, 183, 204]
 
 # Band name
-band_name      = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
-full_band_name = ['J', 'H', 'Ks', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1', 'MP2']
+band_name         = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
+Spitzer_band_name = ['IR1', 'IR2', 'IR3', 'IR4', 'MP1']
+full_band_name    = ['J', 'H', 'Ks', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1', 'MP2']
 
 # Band wavelength
 full_band_wavelength_2MASS_SPITZER  = [1.235,   1.662,  2.159, 3.6, 4.5, 5.8, 8.0, 24.0, 70.0]
