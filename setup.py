@@ -10,35 +10,37 @@ Input Variables:
     [python path]: python working path or "default"
     [default]    : /usr/bin/python
 ----------------------------------------------------------------------
-Latest updated: 2020/06/04 Jordan Wu'''
+Latest updated: 2020/08/01 Jordan Wu'''
 
+from __future__ import print_function
 from glob import glob
 from os import system
-from sys import argv, exit
+from argparse import ArgumentParser
 
 if __name__ == '__main__':
 
-    # Check inputs
-    if len(argv) != 2:
-        exit('\n\tExample: [program] [python path]\
-              \n\t[python path]: python working path or "default"\
-              \n\t[default]: /usr/bin/python\n')
+    # Default argument and parser
+    de_path = '/usr/bin/python'
+    parser = ArgumentParser(description='Setup python working paths for YSO Hunters.')
+    parser.add_argument("-p", dest="py_path", default=de_path, type=str, help="python working path to be set")
+    parser.add_argument("-v", dest="verbose", action='store_true', help="print info verbosely",)
+    args = parser.parse_args()
+    py_path = args.py_path
+    verbose = args.verbose
 
     # Get file list
-    print('\nFiles to change head line')
+    if verbose: print('\nFiles to change head line ...')
     exec_file_list = []
     for dirs in glob('./*'):
         for files in glob('{}/*'.format(dirs)):
             if '.py' in files:
                 exec_file_list.append(files)
-                print(files)
+                if verbose: print(files)
 
     # Change headline
-    headline = '#!{}'.format(str(argv[1]))
-    if headline == '#!default':
-        headline = '#!/usr/bin/python'
-    print('\nDefault HL: #!/usr/bin/python\
-           \nNew HL    : {}'.format(headline))
+    headline = '#!{}'.format(py_path)
+    if verbose: print('\n{:12}: {}'.format('Default HL', de_path))
+    if verbose: print(  '{:12}: {}'.format('New HL', py_path))
     headline = '\/'.join(headline.split('/'))
     for files in exec_file_list:
         system("sed -i \'1 s/.*/{}/\' {}".format(headline, files))

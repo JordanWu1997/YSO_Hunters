@@ -13,12 +13,12 @@ Latest update: 2020/05/27 Jordan Wu'''
 # Load Modules
 #======================================================
 from __future__ import print_function
-from sys import argv, exit
+from argparse import ArgumentParser
+import inspect
+import time
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
-import inspect
-import time
 
 # Global Variables
 #======================================================
@@ -77,52 +77,41 @@ def print_out_one_line_content(line, content, index=0, coor_ID=coor_ID):
 if __name__ == '__main__':
     t_start = time.time()
 
-    # Check inputs
-    if len(argv) != 4:
-        exit('\n\tWrong Usage\
-              \n\tExample [program] [catalog] [content] [index]\
-              \n\t[catalog]: input catalog\
-              \n\t[content]: "default" or specific content name\
-              \n\t[Index]  : "all" or a specific range e.g "1~10"\
-              \n\n\t***available content***\
-              \n\t\t{}\
-              \n\t***********************\n'.format(
-              '\n\t\t'.join([name for name in dir()\
-              if ('ID' in name) and ('f0' not in name) and ('UKIDSS' not in name) and (name != 'ID_list')])))
-
-    # Input variables
-    catalogs = str(argv[1])
-    content  = str(argv[2])
-    index_op = str(argv[3])
+    # Parser arguments
+    parser = ArgumentParser(description="Print out catalog information",\
+                            epilog="Available content:{}".format('\t'.join([name for name in dir()\
+                            if ('ID' in name) and ('f0' not in name) and ('UKIDSS' not in name) and (name != 'ID_list')])))
+    parser.add_argument("inp_cat", type=str, help="Input catalog to print")
+    parser.add_argument("content", default="default", type=str, help="Content to print or 'default'")
+    parser.add_argument("-is", "--index_start", default=0, dest="index_s", type=int, help="Assign content start index")
+    parser.add_argument("-ie", "--index_end", default=-1, dest="index_e", type=int, help="Assign content end index")
+    args = parser.parse_args()
+    inp_cat = args.inp_cat
+    content = args.content
+    index_s = args.index_s
+    index_e = args.index_e
 
     # Set up printing regions
-    with open(catalogs, 'r') as inp:
+    with open(inp_cat, 'r') as inp:
         catalog = inp.readlines()
-    if index_op != 'all':
-        line_index = index_op.split('~')
-        if len(line_index) != 1:
-            indice = range(int(line_index[0]), int(line_index[1])+1)
-        else:
-            indice = range(int(line_index[0]), int(line_index[0])+1)
-    else:
-        indice = range(len(catalog))
+    catalog = catalog[index_s:index_e]
 
     # Start printing
     if content == 'default':
         print(' ')
-        for i in indice:
+        for i in range(len(catalog)):
             line = catalog[i].split()
             print_out_one_line_default(line, index=i)
     else:
         if content in dir():
             print('\n{:10}\n'.format(content))
-            for i in indice:
+            for i in range(len(catalog)):
                 line = catalog[i].split()
                 print_out_one_line_content(line, content, index=i)
         else:
             print('\nContent not found ...')
-    print('\n{}'.format(catalogs))
+    print('\n{}'.format(inp_cat))
 
     # Print out input information
     t_end   = time.time()
-    print("\n{} took {:.3f} secs\n".format(str(argv[0]), t_end-t_start))
+    print("\n{} took {:.3f} secs\n".format(parser.prog, t_end-t_start))
