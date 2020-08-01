@@ -81,8 +81,8 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
     '''
     This is to calculate position vector and object types
     Count:
-        "not_count" : LESS3BD
-        "not_count" : AGB
+        "no_count"  : LESS3BD
+        "no_count"  : AGB
         1e-5        : MP1_Sat
         1e-4        : Bright
         1e-3        : YSO
@@ -106,15 +106,16 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
 
     if OBS_num < 3:
         Count = 'no_count'; OBJ_type += 'LESS3BD'
-    if (MP1_Sat_flag == 'MP1_Sat'):
-        Count = 1e-5; OBJ_type += 'MP1_Sat'
-    elif (AGB_flag == 'AGB'):
-        Count = 'no_count'; OBJ_type += 'AGB'
-    elif (AGB_flag == 'Not_AGB'):
-        if (SEQ_vec.count(9999) > 0):
-            Count = 1e4; OBJ_type += 'Faint'
-        elif (SEQ_vec.count(-9999) > 0):
-            Count = 1e-4; OBJ_type += 'Bright'
+    else:
+        if (AGB_flag == 'AGB'):
+            Count = 'no_count'; OBJ_type += 'AGB'
+        elif (AGB_flag == 'Not_AGB'):
+            if (MP1_Sat_flag == 'MP1_Sat'):
+                Count = 1e-5; OBJ_type += 'MP1_Sat'
+            elif (SEQ_vec.count(-9999) > 0):
+                Count = 1e-4; OBJ_type += 'Bright'
+            elif (SEQ_vec.count(9999) > 0):
+                Count = 1e4;  OBJ_type += 'Faint'
     return POS_vector, OBJ_type, Count
 
 def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
@@ -167,17 +168,13 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
         GP_Lower_Bound_flag = Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound)
         GP_Upper_Bound_flag = Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound)
         if (GP_Lower_Bound_flag) and (GP_Upper_Bound_flag):
-            Count = 1e3
-            OBJ_type += 'Galaxyc'
+            Count = 1e3;  OBJ_type += 'Galaxyc'
         elif (not GP_Lower_Bound_flag) and (GP_Upper_Bound_flag):
-            Count = 1e-3
-            OBJ_type += 'LYSOc'
+            Count = 1e-3; OBJ_type += 'LYSOc'
         elif (GP_Lower_Bound_flag) and (not GP_Upper_Bound_flag):
-            Count = 1e-3
-            OBJ_type += 'UYSOc'
+            Count = 1e-3; OBJ_type += 'UYSOc'
         else:
-            Count = 1e-3
-            OBJ_type += 'IYSO'
+            Count = 1e-3; OBJ_type += 'IYSO'
     return OBJ_type, Count, POS_vector
 
 def fill_up_list_WI_z(input_list, max_column_num=max_column_num):
@@ -220,6 +217,7 @@ if __name__ == '__main__':
     galaxy_upper = str(argv[5])
     # Galaxy Bound Quantity
     dim          = 6
+    bd_band_axis = 0
     band_inp     = str(argv[6])
     cube         = float(argv[7])
     sigma        = int(argv[8])
@@ -228,7 +226,7 @@ if __name__ == '__main__':
 
     # Lower bound array
     if galaxy_lower == 'default':
-        suffix = 'AlB{:d}'.format(0) # suffix = 'PCA0'
+        suffix = 'AlB{:d}'.format(bd_band_axis) # suffix = 'PCA0'
         lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
                             after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_{}'.format(\
                             bound_path, dim, cube, sigma, bond, refD, dim-len(band_inp), band_inp, dim, suffix)
@@ -237,7 +235,7 @@ if __name__ == '__main__':
 
     # Upper bound array
     if galaxy_upper == 'default':
-        suffix = 'AlB{:d}'.format(0) # suffix = 'PCA0'
+        suffix = 'AlB{:d}'.format(bd_band_axis) # suffix = 'PCA0'
         upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
                             after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_{}'.format(\
                             bound_path, dim, cube, sigma, bond, refD, dim-len(band_inp), band_inp, dim, suffix)
@@ -265,7 +263,7 @@ if __name__ == '__main__':
         GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
                                 GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=True, system='ukidss')
         row_list = fill_up_list_WI_z(row_list)
-        row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GPP_Count)
+        row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
         row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)
         row_list[POS_VEC_ID] = (','.join([str(PV) for PV in Pos_vector]))
         GP_tot_out.append('\t'.join(row_list))
