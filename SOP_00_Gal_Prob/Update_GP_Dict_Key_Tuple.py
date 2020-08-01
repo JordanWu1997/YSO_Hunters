@@ -57,8 +57,8 @@ if __name__ == '__main__':
         print('\nCombining Lack {:d} sources pos/num...'.format(lack))
 
         # Generate different lack list
-        lack_pos_ls = glob.glob('{}/after_smooth_lack_{:d}_*_all_cas_pos.npy'.format(out_prefix, lack))
-        lack_num_ls = glob.glob('{}/after_smooth_lack_{:d}_*_all_cas_num.npy'.format(out_prefix, lack))
+        lack_pos_ls = sorted(glob.glob('{}/after_smooth_lack_{:d}_*_all_cas_pos.npy'.format(out_prefix, lack)))
+        lack_num_ls = sorted(glob.glob('{}/after_smooth_lack_{:d}_*_all_cas_num.npy'.format(out_prefix, lack)))
         lack_pos_arr_ls = [np.load(lack_pos) for lack_pos in lack_pos_ls]
         lack_num_arr_ls = [np.load(lack_num) for lack_num in lack_num_ls]
         print('\n'.join(lack_pos_ls))
