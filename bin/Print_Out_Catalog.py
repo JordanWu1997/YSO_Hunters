@@ -94,14 +94,17 @@ if __name__ == '__main__':
     # Set up printing regions
     with open(inp_cat, 'r') as inp:
         catalog = inp.readlines()
-    catalog = catalog[index_s:index_e]
+    if index_e == -1:
+        catalog = catalog[index_s:]
+    else:
+        catalog = catalog[index_s:index_e]
 
     # Start printing
     if content == 'default':
         print(' ')
         for i in range(len(catalog)):
             line = catalog[i].split()
-            print_out_one_line_default(line, index=i)
+            print_out_one_line_default(line, index=i+1)
     else:
         if content in dir():
             print('\n{:10}\n'.format(content))
