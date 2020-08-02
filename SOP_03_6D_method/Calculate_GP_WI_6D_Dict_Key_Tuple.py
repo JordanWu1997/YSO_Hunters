@@ -103,7 +103,7 @@ def GP_Dict_Pipeline(line, mag_list, PSF_list, cube, axlim_list=axlim_list):
     if lines[MP1_ID] == "S":
         Count = 1e-4
     # Record bandfill band number
-    Ob_type += "bandfill=" + str(PSF_list.count("-2"))
+    Ob_type += "bandfill=" + str(PSF_list.count(-2))
     return Ob_type, Count, KEY
 
 # Main Program
