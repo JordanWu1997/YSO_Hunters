@@ -140,10 +140,12 @@ if __name__ == '__main__':
     else:
         path = GP_Dict_Path
     print('GP_Dict: {}'.format(path))
-    L0_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-0)).item()
-    L1_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-1)).item()
-    L2_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-2)).item()
-    L3_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-3)).item()
+
+    # Note for allow_pickle, encoding option is for python3 and numpy version higher than 1.16
+    L0_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-0), allow_pickle=True, encoding='bytes').item()
+    L1_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-1), allow_pickle=True, encoding='bytes').item()
+    L2_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-2), allow_pickle=True, encoding='bytes').item()
+    L3_Dict = np.load(path + 'all_detect_grid_Full_{:d}d.npy'.format(dim-3), allow_pickle=True, encoding='bytes').item()
 
     # Load Cloud Catalog
     print('Loading input catalog ...')
