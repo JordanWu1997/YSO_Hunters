@@ -15,9 +15,10 @@ Latest update: 2019/05/26 Jordan Wu'''
 
 # Import Modules
 #======================================================
+from __future__ import print_function
 from os import system
 from sys import argv, exit
-import pyfits
+from astropy.io import fits as pyfits
 import SOP_Program_Path as spp
 from All_Variables import *
 from Hsieh_Functions import *
