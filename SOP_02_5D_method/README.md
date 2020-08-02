@@ -11,3 +11,5 @@
 
 ### Part 2 - Check GP and GPP and Sort to YSO, Galaxy and Image_Check Groups
 - Check_Prob.py
+- Deg_To_WCS.py
+- Get_Fits.py
