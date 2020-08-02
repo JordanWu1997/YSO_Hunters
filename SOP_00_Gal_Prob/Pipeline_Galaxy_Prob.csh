@@ -9,9 +9,9 @@
 #   [datatype]:      'mag' or 'flux' input data in magnitude or flux (mJy)"
 #   [qualabel]:      if flux quality is considered in calculation"
 #   [dimension]:     dimension of magnitude space (for now only '6')"
+#   [cube size]:     length of multi-d cube in magnitude unit"
 #   [sigma]:         standard deviation for gaussian dist. in magnitude"
 #   [bond]:          bondary of gaussian smooth"
-#   [cube size]:     length of multi-d cube in magnitude unit"
 #   [refD]:          reference dimension which to modulus other dimension to"
 #   [slice]:         the number of slice to gaussian smooth input catalog"
 #   [one by one]:    load slice of smooth input one by one or not (True/False)"
@@ -27,14 +27,14 @@ if ( ${#argv} != 12 ) then
     echo "\tExample: Pipeline_Galaxy_Prob.csh [input catalog] [datatype] [qualabel] \
                         [dimension] [sigma] [bond] [cube size] [refD] [slice] [one by one] [GP method] [Plot]"
     echo "\t[input catalog]: must include magnitudes if datatype is 'mag'"
-    echo "\t[datatype]: 'mag' or 'flux' input data in magnitude or flux (mJy)"
-    echo "\t[qualabel]: if flux quality is considered in calculation"
+    echo "\t[datatype]: input data in type of magnitude or flux (in mJy) ('mag' or 'flux')"
+    echo "\t[qualabel]: if flux quality is considered in calculation (True/False)"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
-    echo "\t[sigma]: standard deviation for gaussian dist. in magnitude"
-    echo "\t[bond]: bondary of gaussian smooth"
-    echo "\t[cube size]: length of multi-d cube in magnitude unit"
-    echo "\t[refD]: reference dimension which to modulus other dimension to"
-    echo "\t[slice]: the number of slice to gaussian smooth input catalog"
+    echo "\t[cube size]: length of multi-d cube in magnitude unit (must in float)"
+    echo "\t[sigma]: standard deviation for gaussian dist. in magnitude (must in integer)"
+    echo "\t[bond]: bondary of gaussian smooth (must in integer)"
+    echo "\t[refD]: reference dimension which to modulus other dimension to (must in integer)"
+    echo "\t[slice]: the number of slice to gaussian smooth input catalog (must in integer)"
     echo "\t[one by one]: load slice of smooth input one by one or not (yes/no)"
     echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD)"
     echo "\t[Plot]: plot galaxy probability 2D & 3D scatter (yes/no)\n"
@@ -46,9 +46,9 @@ set inp_catalog=${1}
 set cat_datatype=${2}
 set qua_label=${3}
 set dim=${4}
-set sigma=${5}
-set bond=${6}
-set cube=${7}
+set cube=${5}
+set sigma=${6}
+set bond=${7}
 set refD=${8}
 set slice_num=${9}
 set one_by_one=${10}
