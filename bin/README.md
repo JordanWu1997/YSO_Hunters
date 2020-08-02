@@ -21,10 +21,6 @@
   - Add magnitudes from J to MP1 (8 bands) to input catalog (which should already have flux data)
 
 ### Part 2 - About Images
-- #### Deg_To_WCS.py
-  - Transform input RA, DEC from deg to HH:MM:SS format 
-- #### Get_Fits.py
-  - Use HH:MM:SS format catalog to get fits image of that region
 - #### WCS_To_Fits.py
   - Directly get fits image with input RA DEC (in deg)
 
