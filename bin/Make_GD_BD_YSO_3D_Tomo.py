@@ -2,17 +2,32 @@
 '''
 ----------------------------------------------------------------
 
+Example: program [Shape array] [GD dict]
+                 [BD lower array] [BD upper array]
+                 [YSO catalog] [YSO method] [Output directory]
+
+Input Variables:
+    [Shape_name]      : Shape that stores multi-D space size
+    [GD_dict_name]    : Dictionary from GD method
+    [BD_l_array_name] : Lower bound array from BD method
+    [BD_u_array_name] : Upper bound array from BD method
+    [YSO_catalog_name]: YSO catalog containing position vector
+    [YSO_method]      : Method to get YSO catalog (GD/BD)
+    [out_dir]         : Out directory to store tomographys
+
 ----------------------------------------------------------------
-Latest update 2020/08/04 Jordan Wu
+Latest update 2020/08/05 Jordan Wu
 '''
 
 # Import Modules
 #=======================================================
 from __future__ import print_function
+import time
 import numpy as np
 from sys import argv, exit
 from os import system, chdir, path
 from itertools import combinations
+from argparse import ArgumentParser
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
@@ -37,7 +52,7 @@ def load_YSO_catalog(YSO_catalog_name, KEY_ID=245):
     with open(YSO_catalog_name, 'r') as YSO_cat:
         YSO_catalog = YSO_cat.readlines()
     YSO_pos_list  = [YSO.split()[KEY_ID].split(',') for YSO in YSO_catalog]
-    YSO_pos_array = np.array(YSO_list)
+    YSO_pos_array = np.array(YSO_pos_list)
     YSO_num_array = np.ones(len(YSO_pos_array))
     return YSO_pos_array, YSO_num_array
 
@@ -46,7 +61,7 @@ def load_GD_dict(GD_dict_name):
     This is to load pos/num on GD dictionary
     '''
     GD_dict = np.load(GD_dict_name, allow_pickle=True, encoding='bytes').item()
-    GD_keys, GD_values = GD_dict.keys(), GD_dict_values()
+    GD_keys, GD_values = GD_dict.keys(), GD_dict.values()
     GD_pos_list = [np.array(key) for key in GD_keys]
     GD_num_list = GD_values
     GD_pos_array = np.array(GD_pos_list)
@@ -61,7 +76,7 @@ def load_BD_bounds(BD_l_array_name, BD_u_array_name):
     BD_l_array = np.load(BD_l_array_name)
     BD_u_array = np.load(BD_u_array_name)
     BD_tot_pos_array = np.append(BD_l_array, BD_u_array, axis=0)
-    BD_tot_num_array np.ones(len(BD_tot_pos_array))
+    BD_tot_num_array = np.ones(len(BD_tot_pos_array))
     return BD_tot_pos_array, BD_tot_num_array
 
 ##TODO
@@ -75,7 +90,7 @@ def sort_up_and_assign_num(pos_array, num_array, bd_ind, option):
     '''
     This is to sort up pos array and assign num array according to option
     '''
-    sort_id, sort_pos = sort_up_array_element(pos_array[:, [bd_ind[0], bd_ind[1], [bd_ind[2]]])
+    sort_id, sort_pos = sort_up_array_element(pos_array[:, [bd_ind[0], bd_ind[1], [bd_ind[2]]]])
     if option == 'GD' or option == 'YSO':
         # Repeat ones should be cascades
         sort_num = num_array[sort_id]
@@ -112,15 +127,14 @@ def get_cbar_label(inp_desc):
         cbar_label = 'YSO #'
     return cbar_label
 
-
 def plot_along_band(shape, inp_title_list, inp_cube_list, inp_desc_list, bd_name, aband_axis):
     '''
     This is to plot 2D plot along specific band
     '''
     # Set up band id
-    t_bd_id     = aband_axis
-    x_bd_id     = aband_axis - 1
-    y_bd_id     = aband_axis - 2
+    t_bd_id = aband_axis
+    x_bd_id = aband_axis - 1
+    y_bd_id = aband_axis - 2
 
     # Along band axis
     for i in range(inp_cube_list[0].shape[aband_axis]):
@@ -141,7 +155,7 @@ def plot_along_band(shape, inp_title_list, inp_cube_list, inp_desc_list, bd_name
         fig  = plt.figure()
         axe1 = plt.add_subplot(131)
         cax1 = axe1.imshow(plot_slice_list[0], origin='lower')
-        cbar = fig.colorbar(cax, label=get_cmap(inp_desc_list[0])
+        cbar = fig.colorbar(cax, label=get_cmap(inp_desc_list[0]))
         axe1.set_title('{}: {} = {:d}'.format(inp_title_list[0], bd_name[t_bd_id], i))
         axe1.set_xlabel('{} ({:d})'.format(bd_name[x_bd_id], shape[x_bd_id]))
         axe1.set_ylabel('{} ({:d})'.format(bd_name[y_bd_id], shape[y_bd_id]))
@@ -187,23 +201,31 @@ def plot_along_band(shape, inp_title_list, inp_cube_list, inp_desc_list, bd_name
 if __name__ == '__main__':
     m_start = time.time()
 
-    # Check input variables
-    if len(argv) != 8:
-        exit('\n\tExample: program [Shape array] [GD dict] [BD lower array] [BD upper array] \
-                                   [YSO catalog] [YSO method] [Output directory]\n')
-    Shape_name       = str(argv[1])
-    GD_dict_name     = str(argv[2])
-    BD_l_array_name  = str(argv[3])
-    BD_u_array_name  = str(argv[4])
-    YSO_catalog_name = str(argv[5])
-    YSO_method       = str(argv[6])
-    out_dir          = str(argv[7])
+    # Check inputs
+    parser = ArgumentParser(description='Make tomography that contains GD, BD, YSO respectively')
+    parser.add_argument("Shape_array", type=str, help="Shape that stores multi-D space size")
+    parser.add_argument("GD_dictionary", type=str, help="Dictionary from GD method")
+    parser.add_argument("BD_lower_array", type=str, help="Lower bound array from BD method")
+    parser.add_argument("BD_upper_array", type=str, help="Upper bound array from BD method")
+    parser.add_argument("YSO_catalog", type=str, help="YSO catalog containing position vector")
+    parser.add_argument("YSO_method", type=str, help="Method to get YSO catalog (GD/BD)")
+    parser.add_argument("Out_directory", type=str, help="Out directory to store tomographys")
+
+    # Load input from parser
+    args             = parser.parse_args()
+    Shape_name       = args.Shape_array
+    GD_dict_name     = args.GD_dictionary
+    BD_l_array_name  = args.BD_lower_array
+    BD_u_array_name  = args.BD_upper_array
+    YSO_catalog_name = args.YSO_catalog
+    YSO_method       = args.YSO_method
+    out_directory    = args.Out_dir
 
     # Load pos/num array from inputs
     Shape            = np.load(Shape_name)
     GD_pos, GD_num   = load_GD_dict(GD_dict_name)
     BD_pos, BD_num   = load_BD_bounds(BD_l_array_name, BD_u_array_name)
-    YSO_pos, YSO_num = load_YSO_catalog()
+    YSO_pos, YSO_num = load_YSO_catalog(YSO_catalog_name)
 
     # Try different bands combination
     band_ind_list = np.arange(0, len(band_name), 1)
@@ -219,9 +241,9 @@ if __name__ == '__main__':
         Proj_shape = Shape[bd_ind]
 
         # Generate 3D cube with value (num)
-        GD_cube  = update_num_to_cube_array(Proj_Shape, GD_sort_pos, GD_sort_num)
-        BD_cube  = update_num_to_cube_array(Proj_Shape, BD_sort_pos, BD_sort_num)
-        YSO_cube = update_num_to_cube_array(Proj_Shape, YSO_sort_pos, YSO_sort_num)
+        GD_cube  = update_num_to_cube_array(Proj_shape, GD_sort_pos, GD_sort_num)
+        BD_cube  = update_num_to_cube_array(Proj_shape, BD_sort_pos, BD_sort_num)
+        YSO_cube = update_num_to_cube_array(Proj_shape, YSO_sort_pos, YSO_sort_num)
 
         # Generate list of objects prepared to be plotted
         inp_title_list = ['GD', 'BD', '{}_YSO'.format(YSO_method)]
@@ -230,7 +252,7 @@ if __name__ == '__main__':
 
         # Generate output directory
         if not path.isdir(out_dir):
-            system('mkdir {}'.format(out_dir)
+            system('mkdir {}'.format(out_dir))
         chdir(out_dir)
 
         # Generate tomo dir for all combinations
@@ -245,7 +267,7 @@ if __name__ == '__main__':
         if not path.isdir(axis_dir):
             system('mkdir {}'.format(axis_dir))
         chdir(axis_dir)
-        plot_along_band(shape, inp_title_list, inp_cube_list, inp_desc_list, bd_name, 0)
+        plot_along_band(Shape, inp_title_list, inp_cube_list, inp_desc_list, band_name, 0)
         chdir('../')
         system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[0]))
 
@@ -255,7 +277,7 @@ if __name__ == '__main__':
         if not path.isdir(axis_dir):
             system('mkdir {}'.format(axis_dir))
         chdir(axis_dir)
-        plot_along_band(shape, inp_title_list, inp_cube_list, inp_desc_list, bd_name, 1)
+        plot_along_band(Shape, inp_title_list, inp_cube_list, inp_desc_list, band_name, 1)
         chdir('../')
         system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[1]))
 
@@ -265,10 +287,10 @@ if __name__ == '__main__':
         if not path.isdir(axis_dir):
             system('mkdir {}'.format(axis_dir))
         chdir(axis_dir)
-        plot_along_band(shape, inp_title_list, inp_cube_list, inp_desc_list, bd_name, 2)
+        plot_along_band(Shape, inp_title_list, inp_cube_list, inp_desc_list, band_name, 2)
         chdir('../')
         system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[2]))
         chdir('../../')
 
     m_end   = time.time()
-    print('\nWhole {} process took {:.3f} secs\n'.format(str(argv[0]), m_end-m_start))
+    print('\nWhole {} process took {:.3f} secs\n'.format(parser.prog, m_end-m_start))
