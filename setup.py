@@ -21,8 +21,9 @@ if __name__ == '__main__':
 
     # Default argument and parser
     de_path = '/usr/bin/python'
-    parser = ArgumentParser(description='Setup python working paths for YSO Hunters.')
-    parser.add_argument("-p", dest="py_path", default=de_path, type=str, help="python working path to be set")
+    parser = ArgumentParser(description='Setup python working paths for YSO Hunters.',
+                            epilog='Default working path: /usr/bin/python')
+    parser.add_argument("-p", dest="py_path", default=de_path, type=str, help="python working path to be set", required=True)
     parser.add_argument("-v", dest="verbose", action='store_true', help="print info verbosely",)
     args = parser.parse_args()
     py_path = args.py_path
