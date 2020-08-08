@@ -21,7 +21,7 @@ Latest update 2020/08/05 Jordan Wu
 
 # Import Modules
 #=======================================================
-from __future__ import print_function
+from __future__ import print_function, division
 import time
 import warnings
 import numpy as np
@@ -40,7 +40,7 @@ import matplotlib.pyplot as plt
 
 # Global Variables
 #=======================================================i
-warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=(FutureWarning, UserWarning))
 band_name = band_name
 KEY_ID    = 245
 
@@ -130,12 +130,11 @@ def sort_up_and_assign_num(pos_array, num_array, bd_ind, option):
     # Remove lack, bright, faint
     no_lack_pos_list = []
     for pos in pos_array[:, [bd_ind[0], bd_ind[1], bd_ind[2]]]:
-        if (-999 in pos ) or (-9999 in pos) or (9999 in pos):
-            break
+        if (-999 in pos) or (-9999 in pos) or (9999 in pos):
+            continue
         else:
             no_lack_pos_list.append(pos)
     no_lack_pos_array = np.array(no_lack_pos_list)
-
     # Check length of pos_array
     out_pos, out_num = [], []
     if len(no_lack_pos_array) != 0:
@@ -157,11 +156,13 @@ def update_num_to_cube_array(inp_shape, inp_pos, inp_num):
     Update inp_num according to inp_pos to a cube array in inp_shape
     '''
     # Assign num for diff conditions
-    bd1_pos, bd2_pos, bd3_pos = inp_pos[:, 0], inp_pos[:, 1], inp_pos[:, 2]
     bd1_len, bd2_len, bd3_len = inp_shape[0], inp_shape[1], inp_shape[2]
     cube_array = 0.0 * np.ones((bd1_len, bd2_len, bd3_len))
-    for i in range(len(inp_pos)):
-        cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = inp_num[i]
+    if inp_shape != []:
+        bd1_pos, bd2_pos, bd3_pos = inp_pos[:, 0], inp_pos[:, 1], inp_pos[:, 2]
+        cube_array = 0.0 * np.ones((bd1_len, bd2_len, bd3_len))
+        for i in range(len(inp_pos)):
+            cube_array[bd1_pos[i], bd2_pos[i], bd3_pos[i]] = inp_num[i]
     return cube_array
 
 def generate_cube_and_desc(proj_shape, inp_pos_list, inp_num_list, inp_desc_list, bd_ind):
@@ -198,12 +199,26 @@ def get_imshow_max(inp_desc):
     '''
     imshow_max = None
     if 'GD' in inp_desc:
-        imshow_max = 100
+        imshow_max = 5
     elif 'BD'in inp_desc:
         imshow_max = 1
     elif 'YSO' in inp_desc:
         imshow_max = 1
     return imshow_max
+
+def discrete_cmap(N, base_cmap=None):
+    '''
+    Create an N-bin discrete colormap from the specified input map
+    Author: jakevdp/discrete_cmap.py
+    Link: https://gist.github.com/jakevdp/91077b0cae40f8f8244a
+    '''
+    # Note that if base_cmap is a string or None, you can simply do
+    #    return plt.cm.get_cmap(base_cmap, N)
+    # The following works for string, None, or a colormap instance:
+    base = plt.cm.get_cmap(base_cmap)
+    color_list = base(np.linspace(0, 1, N))
+    cmap_name = base.name + str(N)
+    return base.from_list(cmap_name, color_list, N)
 
 def plot_along_band(shape, inp_cube_list, inp_desc_list, bd_name, aband_axis):
     '''
@@ -234,15 +249,32 @@ def plot_along_band(shape, inp_cube_list, inp_desc_list, bd_name, aband_axis):
         fig  = plt.figure(figsize=(6*len(axe_list), 6))
         for j in range(len(axe_list)):
             axe  = fig.add_subplot(axe_list[j])
-            cax  = axe.imshow(plot_slice_list[j], origin='lower', vmax=get_imshow_max(inp_desc_list[j]))
-            cbar = fig.colorbar(cax, label=get_cbar_label(inp_desc_list[j]))
+            cax  = axe.imshow(plot_slice_list[j], origin='lower',\
+                              vmin=-0.5, vmax=get_imshow_max(inp_desc_list[j])+0.5, \
+                              cmap=discrete_cmap(get_imshow_max(inp_desc_list[j])+1, base_cmap='hot'))
+            cbar = fig.colorbar(cax, ticks=np.arange(0, get_imshow_max(inp_desc_list[j])+1, 1),\
+                                label=get_cbar_label(inp_desc_list[j]))
+            cbar.ax.set_yticklabels(list(np.arange(0, get_imshow_max(inp_desc_list[j])+1)))
             axe.set_title('{}\n{} = {:d}'.format(inp_desc_list[j], bd_name[t_bd_id], i))
             axe.set_xlabel('{} ({:d})'.format(bd_name[x_bd_id], shape[x_bd_id]))
             axe.set_ylabel('{} ({:d})'.format(bd_name[y_bd_id], shape[y_bd_id]))
             axe.set_xticks(np.arange(0-0.5, shape[x_bd_id]+0.5, 1))
             axe.set_yticks(np.arange(0-0.5, shape[y_bd_id]+0.5, 1))
-            axe.xaxis.set_ticklabels([0])
-            axe.yaxis.set_ticklabels([0])
+            tick_res = 5
+            x_tick_list = []
+            for tick in range(shape[x_bd_id]):
+                if tick % tick_res == 0 and tick >= tick_res:
+                    x_tick_list.append(tick)
+                else:
+                    x_tick_list.append(' ')
+            y_tick_list = []
+            for tick in range(shape[y_bd_id]):
+                if tick % tick_res == 0 and tick >= tick_res:
+                    y_tick_list.append(tick)
+                else:
+                    y_tick_list.append(' ')
+            axe.xaxis.set_ticklabels(x_tick_list)
+            axe.yaxis.set_ticklabels(y_tick_list)
             axe.grid()
         plt.tight_layout()
         plt.savefig('{}_{:0>3d}'.format(bd_name[t_bd_id], i))
@@ -294,7 +326,7 @@ if __name__ == '__main__':
     # Load shape/pos/num/decs list
     Shape =  np.load(Shape_name)
     GD_pos_list, GD_num_list, GD_Desc_list = [], [], []
-    if GD_dict_name_list != None:
+    if GD_dict_name_list is not None:
         for i in range(len(GD_dict_name_list)):
             GD_dict_name = GD_dict_name_list[i]
             GD_pos, GD_num = load_GD_dict(GD_dict_name)
@@ -304,7 +336,7 @@ if __name__ == '__main__':
     BD_Desc_list = []
     BD_l_pos_list, BD_u_pos_list = [], []
     BD_tot_pos_list, BD_tot_num_list = [], []
-    if BD_l_name_list != None:
+    if BD_l_name_list is not None:
         for i in range(len(BD_l_name_list)):
             BD_l_name = BD_l_name_list[i]
             BD_u_name = BD_u_name_list[i]
@@ -318,14 +350,13 @@ if __name__ == '__main__':
             BD_Desc_list.append(BDDesc_list[i])
 
     YSO_pos_list, YSO_num_list, YSO_Desc_list = [], [], []
-    if YSO_name_list != None:
+    if YSO_name_list is not None:
         for i in range(len(YSO_name_list)):
             YSO_catalog_name = YSO_name_list[i]
             YSO_pos, YSO_num = load_YSO_catalog(YSO_catalog_name)
             YSO_pos_list.append(YSO_pos)
             YSO_num_list.append(YSO_num)
             YSO_Desc_list.append(YSODesc_list[i])
-
     # Try different bands combination
     band_ind_list = np.arange(0, len(band_name), 1)
     # band_ind_list = [0, 1, 3]
@@ -340,9 +371,9 @@ if __name__ == '__main__':
         GD_cube_list, GD_desc_list = generate_cube_and_desc(Proj_shape, GD_pos_list, GD_num_list, GD_Desc_list, bd_ind)
         BD_cube_list, BD_desc_list = generate_cube_and_desc(Proj_shape, BD_tot_pos_list, BD_tot_num_list, BD_Desc_list, bd_ind)
         YSO_cube_list, YSO_desc_list = generate_cube_and_desc(Proj_shape, YSO_pos_list, YSO_num_list, YSO_Desc_list, bd_ind)
+
         inp_cube_list = GD_cube_list + BD_cube_list + YSO_cube_list
         inp_desc_list = GD_desc_list + BD_desc_list + YSO_desc_list
-
         # Generate output directory
         if not path.isdir(out_dir):
             system('mkdir {}'.format(out_dir))
@@ -354,7 +385,7 @@ if __name__ == '__main__':
 
         # Plot along axis
         for ax in range(3):
-            axis_dir = 'axis_{}/'.format(bd_ind[ax])
+            axis_dir = 'axis_{}'.format(bd_ind[ax])
             if not path.isdir(axis_dir):
                 system('mkdir {}'.format(axis_dir))
             chdir(axis_dir)
@@ -362,7 +393,7 @@ if __name__ == '__main__':
                 plot_along_band(Proj_shape, inp_cube_list, inp_desc_list, band_name, ax)
                 chdir('../')
                 print('\nGenerate .gif file ...')
-                system('convert -delay 20 -loop 0 {}*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[ax]))
+                system('convert -delay 50 -loop 0 {}/*.png {}_axis_{}.gif'.format(axis_dir, band_ind, bd_ind[ax]))
             else:
                 print('\nNo Plottable Pos ...\n')
                 break
