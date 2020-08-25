@@ -98,8 +98,8 @@ for i in range(lack_lim):
     #================================================
     # Save results
     chdir(lack_dir)
-    np.save('Lack_{:d}{:d}{:d}_pos'.format(i, i, i), np.array(sort_pos))
-    np.save('Lack_{:d}{:d}{:d}_num'.format(i, i, i), np.array(sort_num))
+    np.save('Lack_{:d}{:d}{:d}_pos'.format(i, i, i), np.array(after_cascade_pos))
+    np.save('Lack_{:d}{:d}{:d}_num'.format(i, i, i), np.array(after_cascade_num))
     chdir('../../')
     s_end   = time.time()
     print('Cascade lack {:d} took {:.3f} sec\n'.format(i, s_end-s_start))
