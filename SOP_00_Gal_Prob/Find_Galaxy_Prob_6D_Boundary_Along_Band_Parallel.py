@@ -158,13 +158,17 @@ if __name__ == '__main__':
 
     # Load arrays for calculations
     probe_vec0    = [0] * (len(band_inp)-1); probe_vec0.insert(sc_fixed_bd, 1)
-    gal_pos       = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
-    gal_num       = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
     shape         = np.load(posv_dir + 'Shape.npy')
     band_upper_bd = np.array([int(shape[int(ind)]) for ind in band_inp])
     band_lower_bd = np.array([0 for ind in band_inp])
     sc_lower_bd   = [0 for i in range(len(band_inp)-1)]
     sc_upper_bd   = [shape[int(i)] for i in band_inp if int(i) != sc_fixed_bd]
+
+    # Galaxy position vector and number (Remove pos with num < 1.0 to increase efficiency)
+    gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
+    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
+    gal_pos = gal_pos[gal_num >= 1.0]
+    gal_num = gal_num[gal_num >= 1.0]
 
     # Use different origins to find boundaries
     origin_list = generate_6D_origins_on_plane(band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
