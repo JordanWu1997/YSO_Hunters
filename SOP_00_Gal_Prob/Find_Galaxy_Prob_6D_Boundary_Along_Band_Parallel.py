@@ -14,7 +14,7 @@ Example: [program] [dim] [cube size] [sigma] [bond] [ref-D] [band_inp] [fixed_ba
     [upper_bd]:      bound of input bands except fixed one (unit:cell) e.g. "9,9,9,9,9" or "default"
     [n_thread]:      number of thread for parallel computation
 ------------------------------------------------------------------------------------------------------------
-Latest Updated: 2020.05.26 Jordan Wu'''
+Latest Updated: 2020.08.26 Jordan Wu'''
 
 # Import Modules
 #==========================================================
@@ -91,6 +91,28 @@ def get_gp_along_line(probe_line, gal_pos, gal_num):
     gp_along_line = np.array(gp_along_line)
     return gp_along_line
 
+# def get_gp_along_line_and_delete_pos(probe_line, gal_pos, gal_num):
+    # '''
+    # This is used to get galaxy probability along probe line
+    # But this took forever to replace gal_pos, gal_num
+    # '''
+    # gp_along_line = []
+    # for i in range(len(probe_line)):
+        # probe_pos = probe_line[i].reshape(1, len(probe_line[i]))
+        # loc_id = find_pos_id_in_gal_pos(gal_pos, probe_pos)
+        # loc_id = find_pos_id_in_gal_pos_KD_Tree(gal_pos, probe_pos)
+        # if (len(loc_id) == 1):
+            # num = float(gal_num[loc_id])
+            # gal_pos = np.delete(gal_pos, loc_id[0])
+            # gal_num = np.delete(gal_num, loc_id[0])
+        # elif (len(loc_id) == 0):
+            # num = 0.
+        # else:
+            # exit('Wrong loc_id ...')
+        # gp_along_line.append(num)
+    # gp_along_line = np.array(gp_along_line)
+    # return gp_along_line
+
 def find_gp_boundary(probe_line, gp_along_line):
     '''
     This is used to find two boundary end in one probe cut set
@@ -165,6 +187,7 @@ if __name__ == '__main__':
     sc_upper_bd   = [shape[int(i)] for i in band_inp if int(i) != sc_fixed_bd]
 
     # Galaxy position vector and number (Remove pos with num < 1.0 to increase efficiency)
+    load_time = time.time()
     gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
     gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
     gal_pos = gal_pos[gal_num >= 1.0]
