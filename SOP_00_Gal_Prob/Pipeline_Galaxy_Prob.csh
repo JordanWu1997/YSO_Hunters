@@ -25,7 +25,7 @@
 if ( ${#argv} != 12 ) then
     echo "\n\tError Usage"
     echo "\tExample: Pipeline_Galaxy_Prob.csh [input catalog] [datatype] [qualabel] \
-                        [dimension] [sigma] [bond] [cube size] [refD] [slice] [one by one] [GP method] [Plot]"
+                        [dimension] [cube size] [sigma] [bond] [refD] [slice] [one by one] [GP method] [Plot]"
     echo "\t[input catalog]: must include magnitudes if datatype is 'mag'"
     echo "\t[datatype]: input data in type of magnitude or flux (in mJy) ('mag' or 'flux')"
     echo "\t[qualabel]: if flux quality is considered in calculation (True/False)"
@@ -38,6 +38,7 @@ if ( ${#argv} != 12 ) then
     echo "\t[one by one]: load slice of smooth input one by one or not (yes/no)"
     echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD)"
     echo "\t[Plot]: plot galaxy probability 2D & 3D scatter (yes/no)\n"
+    echo "\tIf gal_pos has already been calculated, just use 'SKIP' as input to 'input catalog', 'datatype', 'qualabel'\n"
     exit
 endif
 
@@ -65,9 +66,13 @@ set inc=45
 # ======================================================
 
 # Count Gal Position
-echo 'Counting Galaxy Position ...'
-Count_Gal_Pos_Vec_numba.py ${inp_catalog} ${cat_datatype} ${qua_label} ${dim} ${cube} | tee -a $logfile
-Sort_Source_Lack999_Execution_All.py ${dim} ${cube} | tee -a $logfile
+if ( ${inp_catalog} != SKIP) then
+    echo 'Counting Galaxy Position ...'
+    Count_Gal_Pos_Vec_numba.py ${inp_catalog} ${cat_datatype} ${qua_label} ${dim} ${cube} | tee -a $logfile
+    Sort_Source_Lack999_Execution_All.py ${dim} ${cube} | tee -a $logfile
+else
+    echo 'Galaxy Position has been counted ...'
+endif
 
 # Do Gaussian Smooth
 echo 'Gaussian Smoothing ...'
