@@ -28,25 +28,8 @@ from Useful_Functions import *
 
 # Global Variables
 #======================================================
-# J, IR1, IR2, IR3, IR4, MP1
-# If input spizer catalog, just comment below 2 lines
-flux_ID = [0, 3, 4, 5, 6, 7]
-mag_ID  = [0, 3, 4, 5, 6, 7]
-band_ID = [0, 3, 4, 5, 6, 7]
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
-# Use Limit Stored in Hsieh_Functions
-Jaxlim   = Hsieh_Jaxlim
-Ksaxlim  = Hsieh_Ksaxlim
-Haxlim   = [0, 0]         # Not Mentioned in Hsieh
-IR1axlim = Hsieh_IR1axlim
-IR2axlim = Hsieh_IR2axlim
-IR3axlim = Hsieh_IR3axlim
-IR4axlim = Hsieh_IR4axlim
-MP1axlim = Hsieh_MP1axlim
-# For now, only 6 out of 8 bands used
-all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-axlim_list = [all_axlim[i] for i in band_ID]
 
 # Functions
 #======================================================
@@ -114,21 +97,43 @@ def cascade_array_pos(sort_position):
 if __name__ == '__main__':
 
     # Check inputs
-    if len(argv) != 6:
+    if len(argv) != 7:
         exit('\n\tError: Wrong Arguments\
-        \n\tExample: [program] [input catalog] [datatype] [qua] [dimension] [cube size]\
+        \n\tExample: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size]\
         \n\t[input catalog]: must include magnitudes\
+        \n\t[catalog format]: format of catalog (SEIP/C2D)\
         \n\t[datatype]: "mag" or "flux" input data in magnitude or flux (mJy)\
         \n\t[qua]: if qua label is taken into calculation (True/False)\
         \n\t[dimension]: dim of magnitude space (for now only "6")\
         \n\t[cube size]: length of multi-d cube in magnitude unit\n')
 
     # Input variables
-    inpcat   = str(argv[1])
-    datatype = str(argv[2])
-    qualabel = bool(argv[3] == 'True')
-    dim      = int(argv[4])
-    cube     = float(argv[5])
+    inpcat    = str(argv[1])
+    catformat = str(argv[2])
+    datatype  = str(argv[3])
+    qualabel  = bool(argv[4] == 'True')
+    dim       = int(argv[5])
+    cube      = float(argv[6])
+
+    # J, IR1, IR2, IR3, IR4, MP1
+    # If input spizer catalog, just comment below 2 lines
+    if catformat == 'SEIP':
+        flux_ID = [0, 3, 4, 5, 6, 7]
+        mag_ID  = [0, 3, 4, 5, 6, 7]
+
+    # Use Limit Stored in Hsieh_Functions
+    Jaxlim   = Hsieh_Jaxlim
+    Ksaxlim  = Hsieh_Ksaxlim
+    Haxlim   = [0, 0]         # Not Mentioned in Hsieh
+    IR1axlim = Hsieh_IR1axlim
+    IR2axlim = Hsieh_IR2axlim
+    IR3axlim = Hsieh_IR3axlim
+    IR4axlim = Hsieh_IR4axlim
+    MP1axlim = Hsieh_MP1axlim
+    # For now, only 6 out of 8 bands used
+    band_ID    = [0, 3, 4, 5, 6, 7]
+    all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+    axlim_list = [all_axlim[i] for i in band_ID]
 
     # Check Directory
     if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
@@ -139,8 +144,8 @@ if __name__ == '__main__':
 
     bins_list = [int(round((all_axlim[i][1] - all_axlim[i][0]) / cube)) + 1 for i in band_ID]
     # Print out input information
-    print('\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua_ID: {}, {}\nShape: {}'.format(\
-            cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))
+    print('\nJHK system: {}\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua_ID: {}, {}\nShape: {}'.format(\
+           JHK_system, cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))
 
     # Load Galaxy Catalog
     l_start = time.time()
