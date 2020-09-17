@@ -6,8 +6,11 @@ This stores useful functions in YSO Hunter project
 Latest update : Jordan Wu'''
 
 from __future__ import print_function
-import numpy as np
+from __future__ import division
 from numba import jit
+from sklearn.neighbors import KDTree
+import numpy as np
+import pickle
 import sys
 
 def drawProgressBar(percent, barLen = 50):
@@ -114,7 +117,23 @@ def find_pos_id_in_gal_pos(gal_pos, target):
     for i in range(len(gal_pos)):
         if np.all(np.equal(gal_pos[i], target)):
             id_list.append(i)
+            break
     id_array = np.array(id_list)
+    return id_array
+
+def find_pos_id_in_gal_pos_KD_Tree(gal_pos, target):
+    '''
+    This is to find if target in galaxy position array by KD tree
+    '''
+    pos_tree       = KDTree(gal_pos, leaf_size=40)
+    sort_pos_tree  = pickle.dumps(pos_tree)
+    sort_tree_copy = pickle.loads(sort_pos_tree)
+    dist, ind      = sort_tree_copy.query(target, k=1)
+    if float(dist) == 0.0:
+        pos_ind = [int(ind)]
+    else:
+        pos_ind = []
+    id_array = np.array(pos_ind)
     return id_array
 
 def fill_up_list_WI_z(input_list, max_column_num=246):
