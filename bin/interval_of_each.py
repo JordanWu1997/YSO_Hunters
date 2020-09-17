@@ -11,14 +11,13 @@ import time
 
 #path = '/mazu/users/jordan/YSO_Project/SEIP_GP_Bound/GPV_6Dposvec_bin1.0/Lack_pos_num/Lack_000_pos.npy'
 
-'''
-if len(argv) != 4:
+
+if len(argv) != 3:
     exit('\n\t Error Argument : \
-            \n\t Example : [program] [catalog] [bin_size] [name]\
+            \n\t Example : [program] [catalog] [output name]\
             \n ')
-'''
-def interval(path, name) :
-    cat_arr = np.load(path)
+
+def interval(cat_arr, name) :
     print('\nStart finding intervals for '+name+' \n')
     tStart = time.time()
     time.sleep(2)
@@ -31,11 +30,12 @@ def interval(path, name) :
     print('Load distance and index\n')
     tStart = time.time()
     time.sleep(2)
-    dist, ind = tree_copy.query(cat_arr, k=len(cat_arr))
+    ind, dist = tree_copy.query_radius(cat_arr, r = 1.5, return_distance=True)
     print('Finish to load the data\n')
     tEnd = time.time()
     print("It cost %f sec\n" % (tEnd - tStart))
-
+    print(dist)
+    print(ind)
     print("Start to re-arrange the array\n")
     fin = []
     for i in tqdm(range(len(cat_arr))) :
@@ -47,14 +47,6 @@ def interval(path, name) :
     #print(fin)
     np.save(name, fin)
     #np.save('catalog_of_interval_bin{}'.format(argv[2]), fin)
-l = []
-n = 3
-for i in range(6) :
-    for j in range(6) :
-        for k in range(6) :
-            if i < j and j < k :
-                l.append(str(i) + str(j) + str(k))
-interval('/mazu/users/jordan/YSO_Project/SEIP_GP_Bound/GPV_6Dposvec_bin0.2/Lack_pos_num/Lack_000_pos.npy', 'intervals_bin0.2_lack_0.npy') 
-#for line in l :
-#    interval('/home/jeremy/intervals_length/catalog/band_lack_3/bin0.5/band_bin0.5_'+line+'.npy', 'intervals_bin0.5_lack_3_'+ line +'.npy')
-#    interval('/mazu/users/jordan/YSO_Project/SEIP_GP_Bound/GPV_6Dposvec_bin1.0/Band_pos_num/Lack_3_'+ line +'_pos.npy','intervals_Lack_3_'+ line +'_pos.npy') 
+
+cat = np.load(argv[1])
+interval(cat, argv[2]) 
