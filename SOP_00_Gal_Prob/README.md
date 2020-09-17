@@ -19,20 +19,20 @@
 	- Sort_Source_Lack999_Cascade.py
 	- Sort_Source_Lack999_Band.py
 
-### Part2 - Do gaussian smooth
+### Part 2 - Do gaussian smooth
 - (1) Do_Gaussian_Smooth_Construct_Bin.py
 - (2) Do_Gaussian_Smooth_Execution_All.py
 	- Do_Gaussian_Smooth_Slice.py
 	- Do_Gaussian_Smooth_Slice_Index.py
 	- Do_Gaussian_Smooth_Slice_Cascade.py
 
-### Part3 - Visualize galaxy probability
+### Part 3 - Visualize galaxy probability
 - (1) Make_Galaxy_Prob_Plot_Execution_All.py
 	- Make_Galaxy_Prob_3D_Plot.py
 	- Make_Galaxy_Prob_PCA_Cut_Plot.py
 	- Make_Galaxy_Prob_3D_Plot_With_PCA.py
 
-### Part4 - Galaxy Probability
+### Part 4 - Galaxy Probability
 - Pick Method (1) or (2)
     - (1) Find GP Boundary (Along with Axis or PCA, Axis is recommended)
         - Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py
@@ -40,7 +40,7 @@
     - (2) Construct GP Dictionary
         - Update_GP_Dict_Key_Tuple.py
 
-### Part5 - Pipeline from Part1 to Part4
+### Part 5 - Pipeline from Part1 to Part4
 - Pipeline_Galaxy_Prob.csh
     - (1) Count_Gal_Pos_Vec_numba.py
     - (2) Sort_Source_Lack999_Execution_All.py
