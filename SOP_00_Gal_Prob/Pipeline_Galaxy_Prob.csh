@@ -86,7 +86,7 @@ echo 'Constructing Galaxy Probability ...'
 if ( ${GP_method} == GD ) then
     Update_GP_Dict_Key_Tuple.py ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a $logfile
 else if ( ${GP_method} == BD ) then
-    Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 ${thread} | tee -a $logfile
+    Find_Galaxy_Prob_6D_Boundary_Along_Band_Parallel.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 -n_th ${thread} | tee -a $logfile
 else
     echo 'Wrong GP_method ...' && exit
 endif
