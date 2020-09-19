@@ -35,6 +35,7 @@ if __name__ == '__main__':
         \n\t[ref-D]: reference dimension which to modulus other dimension to\
         \n\t[slice_num]: number of slices of the input catalog\
         \n\t[one_by_one]: smooth then cascade one by one or not ("yes"/"no") \n')
+
     # Input Variables
     dim         = int(argv[1])       # Dimension of position vector
     cube        = float(argv[2])     # Beamsize for each cube
@@ -45,10 +46,12 @@ if __name__ == '__main__':
     one_by_one  = str(argv[7])       # Smooth then cascade one by one or not
     lack_lim    = dim - 3 + 1
     slice_ind_list = [i for i in range(slice_num)]
+
     # Directory
     posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
     band_dir = posv_dir + 'Band_pos_num/'
     out_dir  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
+
     # Band directory list
     lack_inp_list = []
     band_inp_list = []
@@ -66,6 +69,7 @@ if __name__ == '__main__':
             band_inp_list.append(band_index)
             temp_dir_list.append(temp_dir)
             slic_dir_list.append(slic_dir)
+
     # Check storage directory
     if not path.isdir(out_dir):
         system('mkdir ' + out_dir)
@@ -109,6 +113,7 @@ if __name__ == '__main__':
                 # Start again with cascade pos/num
                 pos, num = np.array(cas_pos), np.array(cas_num)
                 drawProgressBar(float(j+1)/slice_num)
+
         # Cascade all in one time
         elif one_by_one == 'no':
             for j in range(slice_num):
@@ -127,6 +132,7 @@ if __name__ == '__main__':
                 pos      = np.concatenate((pos, new_pos), axis=0)
                 num      = np.concatenate((num, new_num), axis=0)
                 drawProgressBar(float(j+1)/slice_num)
+
             # If no slice needed
             if slice_num <= 1:
                 join_pos, join_num = pos, num
@@ -135,7 +141,7 @@ if __name__ == '__main__':
             sort_pos = np.array(join_pos[sort_ind], dtype=int)
             sort_num = np.array(join_num[sort_ind], dtype=float)
             pos, num = cascade_array(sort_pos, sort_num)
-        #================================================
+
         # Save all band result
         chdir(out_dir)
         np.save("after_smooth_lack_{:d}_{}_all_cas_pos".format(lack_inp_list[i], band_inp_list[i]), pos)

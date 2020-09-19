@@ -14,7 +14,7 @@ Example: [program] [dim] [cube size] [sigma] [bond] [ref-D] [band_inp] [fixed_ba
     [upper_bd]:      bound of input bands except fixed one (unit:cell) e.g. "9,9,9,9,9" or "default"
     [n_thread]:      number of thread for parallel computation
 ------------------------------------------------------------------------------------------------------------
-Latest Updated: 2020.08.26 Jordan Wu'''
+Latest Updated: 2020.09.19 Jordan Wu'''
 
 # Import Modules
 #==========================================================
@@ -196,6 +196,8 @@ if __name__ == '__main__':
     if out_dir is None:
         out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
         out_dir     = '{}/'.format(out_prefix)
+    print('\nGalaxy Position Vector Directory: {}\
+           \nOutput Boundary Directory:        {}'.format(posv_dir, out_dir))
 
     # Load arrays for calculations
     probe_vec0    = [0] * (len(band_inp)-1); probe_vec0.insert(sc_fixed_bd, 1)
@@ -214,20 +216,24 @@ if __name__ == '__main__':
             lack_ind_list.append(ind)
 
     # Galaxy position vector and number (Remove pos with num < 1.0 to increase efficiency)
+    print('\nLoad galaxy position vectors and correspoding values ...')
     gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
     gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
     gal_pos = gal_pos[gal_num >= 1.0]
     gal_num = gal_num[gal_num >= 1.0]
 
     # Use different origins to find boundaries
+    print('\nGenerate origins on multi-D magnitude space ...')
     origin_list = generate_origins_on_plane(shape, band_inp, sc_fixed_bd, sc_lower_bd, sc_upper_bd)
     len_origin  = len(origin_list)
-    print('\nFixed band id: {}\nOrigins lower bound: {}\nOrigins upper bound: {}\n# of origins: {:d}\n'.format(\
+    print('\nFixed band id: {}\nOrigins lower bound: {}\nOrigins upper bound: {}\n# of origins: {:d}'.format(\
             sc_fixed_bd, sc_lower_bd, sc_upper_bd, len_origin))
     p_end   = time.time()
 
+    print('\nGenerate mult-d origins took {:.3f} secs'.format(p_end-p_start))
     # Parallel Computing (Note: require='sharedmen' is essential for list parallel)
     s_start = time.time()
+    print('\nStart finding boundary ...\n')
     gp_lower_bd_list, gp_upper_bd_list = [], []
     Parallel(n_jobs=n_thread, require='sharedmem')\
             (delayed(find_bd_of_diff_origins)\
@@ -254,6 +260,5 @@ if __name__ == '__main__':
     # Print out result ...
     s_end   = time.time()
     print('\nWhole Finding {:d}D boundary took {:.3f} secs\
-           \nGenerate mult-d origins took {:.3f} secs\
            \nAverage time for each probe: {:.3f} secs\n'.format(\
-           dim, s_end-p_start, p_end-p_start, (s_end-s_start)/len(origin_list)))
+           dim, s_end-p_start, (s_end-s_start)/len(origin_list)))

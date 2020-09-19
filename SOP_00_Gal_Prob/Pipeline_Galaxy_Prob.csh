@@ -44,7 +44,7 @@ if ( ${#argv} != 14 ) then
     echo "\t[one by one]: load slice of smooth input one by one or not (yes/no)"
     echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD/BOTH)"
     echo "\t[plot]: plot galaxy probability 2D & 3D scatter (yes/no)\n"
-    echo "\t*** If gal_pos has already been calculated, just use 'SKIP' as input to 'input catalog', 'datatype', 'qualabel'"
+    echo "\t*** If gal_pos has already been calculated, just use 'SKIP' as input to 'input catalog', 'catalog format', 'datatype', 'qualabel'"
     echo "\t*** If 'smooth' option is 'no', then just use 'SKIP' as input to 'slice', 'one bye one'\n"
     exit
 endif
