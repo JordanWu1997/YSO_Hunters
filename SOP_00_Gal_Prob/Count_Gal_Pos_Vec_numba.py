@@ -101,7 +101,7 @@ if __name__ == '__main__':
         exit('\n\tError: Wrong Arguments\
         \n\tExample: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size]\
         \n\t[input catalog]: must include magnitudes\
-        \n\t[catalog format]: format of catalog (SEIP/C2D)\
+        \n\t[catalog format]: format of catalog (SEIP_JACOB/C2D_HSIEH)\
         \n\t[datatype]: "mag" or "flux" input data in magnitude or flux (mJy)\
         \n\t[qua]: if qua label is taken into calculation (True/False)\
         \n\t[dimension]: dim of magnitude space (for now only "6")\
@@ -116,10 +116,13 @@ if __name__ == '__main__':
     cube      = float(argv[6])
 
     # J, IR1, IR2, IR3, IR4, MP1
-    # If input spizer catalog, just comment below 2 lines
-    if catformat == 'SEIP':
+    if catformat == 'SEIP_JACOB':
         flux_ID = [0, 3, 4, 5, 6, 7]
         mag_ID  = [0, 3, 4, 5, 6, 7]
+    elif catformat == 'C2D_HSIEH':
+        pass
+    else:
+        exit('Wrong catalog format ...')
 
     # Use Limit Stored in Hsieh_Functions
     Jaxlim   = Hsieh_Jaxlim
