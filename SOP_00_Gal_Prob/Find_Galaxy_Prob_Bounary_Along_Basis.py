@@ -47,11 +47,10 @@ def generate_origins_on_plane(shape, band_inp, sc_fixed_bd, sc_lower_bd, sc_uppe
     XXT = np.transpose(XX)
     fixed_bd_ID = band_inp.index(str(sc_fixed_bd))
     origin_list = []
-    for i in range(shape[sc_fixed_bd]):
-        for X in XXT:
-            new_origin = list(X)
-            new_origin.insert(fixed_bd_ID, 0)
-            origin_list.append(np.array(new_origin))
+    for i in range(len(XXT)):
+        new_origin = list(XXT[i])
+        new_origin.insert(fixed_bd_ID, 0)
+        origin_list.append(np.array(new_origin))
     return origin_list
 
 def generate_probe_line(origin, probe_vec, band_upper_bd):
