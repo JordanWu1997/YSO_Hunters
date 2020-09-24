@@ -30,9 +30,9 @@ import time
 # Global Variables
 #======================================================================================
 # Input Catalog Quantity IDs
-mag_ID = [35, 98, 119, 140, 161, 182]
-qua_ID = [37, 100, 121, 142, 163, 184]
-psf_ID = [38, 102, 123, 144, 165, 186]
+# mag_ID = [35, 98, 119, 140, 161, 182]
+# qua_ID = [37, 100, 121, 142, 163, 184]
+# psf_ID = [38, 102, 123, 144, 165, 186]
 # Hsieh's limit
 Jaxlim     = Hsieh_Jaxlim
 IR1axlim   = Hsieh_IR1axlim
@@ -118,36 +118,62 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
                 Count = 1e4;  OBJ_type += 'Faint'
     return POS_vector, OBJ_type, Count
 
+# def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
+    # '''
+    # This is to check if input is larger than the lower bound of galaxy probability
+    # '''
+    # no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
+    # GP_Lower_Bound_flag = False
+    # for no_lack_id in no_lack_id_list:
+        # if GP_Lower_Bound_flag == True:
+            # break
+        # else:
+            # for bound in GP_Lower_Bound:
+                # if (POS_vector[no_lack_id] >= bound[no_lack_id]):
+                    # GP_Lower_Bound_flag = True
+                    # break
+    # return GP_Lower_Bound_flag
+
+# def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
+    # '''
+    # This is to check if input is smaller than the lower bound of galaxy probability
+    # '''
+    # no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
+    # GP_Upper_Bound_flag = False
+    # for no_lack_id in no_lack_id_list:
+        # if GP_Upper_Bound_flag == True:
+            # break
+        # else:
+            # for bound in GP_Upper_Bound:
+                # if (POS_vector[no_lack_id] <= bound[no_lack_id]):
+                    # GP_Upper_Bound_flag = True
+                    # break
+    # return GP_Upper_Bound_flag
+
 def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
     '''
     This is to check if input is larger than the lower bound of galaxy probability
     '''
-    no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
+    no_lack_POSv = POS_vector[POS_vector != -999]
     GP_Lower_Bound_flag = False
-    for no_lack_id in no_lack_id_list:
-        if GP_Lower_Bound_flag == True:
+    for bound in GP_Lower_Bound:
+        no_lack_bound = bound[POS_vector != -999]
+        if np.all(no_lack_POSv >= no_lack_bound):
+            GP_Lower_Bound_flag = True
             break
-        else:
-            for bound in GP_Lower_Bound:
-                if (POS_vector[no_lack_id] >= bound[no_lack_id]):
-                    GP_Lower_Bound_flag = True
-                    break
     return GP_Lower_Bound_flag
 
 def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
     '''
     This is to check if input is smaller than the lower bound of galaxy probability
     '''
-    no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
+    no_lack_POSv = POS_vector[POS_vector != -999]
     GP_Upper_Bound_flag = False
-    for no_lack_id in no_lack_id_list:
-        if GP_Upper_Bound_flag == True:
+    for bound in GP_Upper_Bound:
+        no_lack_bound = bound[POS_vector != -999]
+        if np.all(no_lack_POSv <= no_lack_bound):
+            GP_Upper_Bound_flag = True
             break
-        else:
-            for bound in GP_Upper_Bound:
-                if (POS_vector[no_lack_id] <= bound[no_lack_id]):
-                    GP_Upper_Bound_flag = True
-                    break
     return GP_Upper_Bound_flag
 
 def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False, system='ukidss'):

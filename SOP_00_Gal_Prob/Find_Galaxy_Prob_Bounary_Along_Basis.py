@@ -155,7 +155,6 @@ def find_bd_of_diff_origins(index, len_origin, origin, probe_vec, \
     if (index >= 100) and (index % 100 == 0):
         print('{} / {}'.format(index, len_origin))
 
-
 # Main Program
 #==========================================================
 if __name__ == '__main__':
