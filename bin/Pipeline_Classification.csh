@@ -20,12 +20,13 @@
 # Help for input arguments
 if ( ${#argv} != 7) then
     echo "\n\tExample: Pipeline.csh [GP_dir] [dimension] [cube size] [sigma] [bond] [refD] [GP method]"
-    echo "\t[GP_dir]: directory that stores galaxy probability (path_to_dir or 'default')"
+    echo "\t[GP_dir]: directory that stores galaxy probability (absolute_path_to_dir or 'default')"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
     echo "\t[cube size]: length of multi-d cube in magnitude unit"
     echo "\t[sigma]: standard deviation for gaussian dist. in magnitude"
     echo "\t[refD]: reference dimension which to modulus other dimension to"
     echo "\t[GP method]: BD/GD (Boundary method/Galaxy Dictionary method)\n"
+    echo "\t*** Warning: If you are using BD method, please check source code if the boundary array is correct ***\n"
     exit
 endif
 
@@ -105,11 +106,20 @@ foreach i (${indice})
     # --------------------------------------------------------------------------------------------------------
     echo "Calculating GP by ${method} method ..."
     if ( ${method} == BD ) then
+
+        # For SEIP catalog 6D BD method
         Calculate_GP_WI_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
         ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_012345_6D_lower_bounds_AlB0.npy \
         ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_012345_6D_upper_bounds_AlB0.npy \
         012345 ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
-        set GP_out=${cloud}_${dim}D_BD_GP_out_catalog.tbl
+
+        ## For old C2D catalog 6D BD method (5D used)
+        #Calculate_GP_WI_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
+        #${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_1_12345_6D_lower_bounds_AlB1.npy \
+        #${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_1_12345_6D_upper_bounds_AlB1.npy \
+        #12345 ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
+        #set GP_out=${cloud}_${dim}D_BD_GP_out_catalog.tbl
+
     else if ( ${method} == GD ) then
         Calculate_GP_WI_6D_Dict_Key_Tuple.py ${dim} ${cube} \
         ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/ \
