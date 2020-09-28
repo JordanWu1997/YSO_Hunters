@@ -27,9 +27,11 @@
 # ======================================================
 if ( ${#argv} != 14 ) then
     echo "\n\tError Usage"
-    echo "\tExample: Pipeline_Galaxy_Prob.csh [input catalog] [datatype] [qualabel] \
-                        [dimension] [cube size] [sigma] [bond] [refD] \
-                        [smooth] [slice] [one by one] [GP method] [plot]"
+    echo "\tExample: Pipeline_Galaxy_Prob.csh\
+                     [input catalog] [catalog format] [datatype] [qualabel]\
+                     [dimension] [cube size] [sigma] [bond] [refD] \
+                     [smooth] [slice] [one by one]\
+                     [GP method] [plot]\n"
     echo "\t[input catalog]: must include magnitudes if datatype is 'mag'"
     echo "\t[catalog format]: format of catalog (SEIP_JACOB/C2D_HSIEH)"
     echo "\t[datatype]: input data in type of magnitude or flux (in mJy) ('mag' or 'flux')"
