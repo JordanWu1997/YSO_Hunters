@@ -12,7 +12,7 @@ Input variables:
 
 TODO: Add input bands in the future
 -------------------------------------------------------
-Latest update 2020.05.26 Jordan Wu'''
+Latest update 2020.09.29 Jordan Wu'''
 
 # Load Modules
 #======================================================
@@ -30,21 +30,24 @@ from Useful_Functions import *
 #======================================================
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
+band_ID    = [0, 3, 4, 5, 6, 7]
 
 # Functions
 #======================================================
-def Remove_AGB(mag_list, IR2_mag=2, IR3_mag=3, MP1_mag=5):
+def Remove_AGB(mag_list, band_names, IR2_mag=2, IR3_mag=3, MP1_mag=5):
     '''
     This is to check if object in input catalog is AGB
     Input datatype: magnitude, int, int, int
     '''
-    # Remove AGB
+    # Initialize AGB flag
     AGB_flag = 'Not_AGB'
-    if (mag_list[IR2_mag] != 'no') and (mag_list[IR3_mag] != 'no') and (mag_list[MP1_mag] != 'no'):
-        X23 = mag_list[IR2_mag] - mag_list[IR3_mag]
-        Y35 = mag_list[IR3_mag] - mag_list[MP1_mag]
-        if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
-            AGB_flag = 'AGB'
+    # Remove AGB if IR2, IR3, MP1 band all exists in input
+    if ('IR2' in band_names) and ('IR3' in band_names) and ('MP1' in band_names):
+        if (mag_list[IR2_mag] != 'no') and (mag_list[IR3_mag] != 'no') and (mag_list[MP1_mag] != 'no'):
+            X23 = mag_list[IR2_mag] - mag_list[IR3_mag]
+            Y35 = mag_list[IR3_mag] - mag_list[MP1_mag]
+            if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
+                AGB_flag = 'AGB'
     return AGB_flag
 
 @jit(nopython=True)
@@ -117,26 +120,26 @@ if __name__ == '__main__':
 
     # J, IR1, IR2, IR3, IR4, MP1
     if catformat == 'SEIP_JACOB':
-        flux_ID = [0, 3, 4, 5, 6, 7]
-        mag_ID  = [0, 3, 4, 5, 6, 7]
+        flux_ID = band_ID
+        mag_ID  = band_ID
     elif catformat == 'C2D_HSIEH':
-        pass
+        flux_ID = flux_ID
+        mag_ID  = mag_ID
     else:
         exit('Wrong catalog format ...')
 
     # Use Limit Stored in Hsieh_Functions
     Jaxlim   = Hsieh_Jaxlim
     Ksaxlim  = Hsieh_Ksaxlim
-    Haxlim   = [0, 0]         # Not Mentioned in Hsieh
+    Haxlim   = Hsieh_Haxlim
     IR1axlim = Hsieh_IR1axlim
     IR2axlim = Hsieh_IR2axlim
     IR3axlim = Hsieh_IR3axlim
     IR4axlim = Hsieh_IR4axlim
     MP1axlim = Hsieh_MP1axlim
     # For now, only 6 out of 8 bands used
-    band_ID    = [0, 3, 4, 5, 6, 7]
-    all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-    axlim_list = [all_axlim[i] for i in band_ID]
+    band_names = [full_band_name[i] for i in band_ID]
+    axlim_list = [full_axlim[i] for i in band_ID]
 
     # Check Directory
     if path.isdir('GPV_' + str(dim) + 'Dposvec_bin' + str(cube)):
@@ -145,7 +148,7 @@ if __name__ == '__main__':
     else:
         system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 
-    bins_list = [int(round((all_axlim[i][1] - all_axlim[i][0]) / cube)) + 1 for i in band_ID]
+    bins_list = [int(round((full_axlim[i][1] - full_axlim[i][0]) / cube)) + 1 for i in band_ID]
     # Print out input information
     print('\nJHK system: {}\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua_ID: {}, {}\nShape: {}'.format(\
            JHK_system, cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))
@@ -173,7 +176,7 @@ if __name__ == '__main__':
         else:
             exit('Input type error')
         SEQ_vector = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
-        AGB_flag   = Remove_AGB(mag_list)
+        AGB_flag   = Remove_AGB(mag_list, band_names)
         if AGB_flag != 'AGB':
             pos_vec.append(SEQ_vector)
     c_end   = time.time()
