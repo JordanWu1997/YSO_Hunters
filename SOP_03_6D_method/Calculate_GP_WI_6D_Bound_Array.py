@@ -29,28 +29,19 @@ import time
 
 # Global Variables
 #======================================================================================
-# Input Catalog Quantity IDs
-# mag_ID = [35, 98, 119, 140, 161, 182]
-# qua_ID = [37, 100, 121, 142, 163, 184]
-# psf_ID = [38, 102, 123, 144, 165, 186]
-# Hsieh's limit
+band_ID    = [0, 3, 4, 5, 6, 7]
 Jaxlim     = Hsieh_Jaxlim
 IR1axlim   = Hsieh_IR1axlim
 IR2axlim   = Hsieh_IR2axlim
 IR3axlim   = Hsieh_IR3axlim
 IR4axlim   = Hsieh_IR4axlim
 MP1axlim   = Hsieh_MP1axlim
-axlim_list = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-#=====================================
-#TODO Finish the path in SPP
-#=====================================
-# Galaxy_Bound_Path
-GP_OBJ_ID, GP_ID = 241, 242
-GPP_OBJ_ID, GPP_ID = 243, 244
-POS_VEC_ID = 245
-max_column_num = 246
+all_axlim  = full_axlim
+axlim_list = [all_axlim[i] for i in band_ID]
+GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
+GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
+POS_VEC_ID = GP_KEY_ID_6D
 bound_path = spp.Selfmade_6D_GP_BD_path
-#=====================================
 
 # Functions
 #======================================================================================
@@ -218,15 +209,16 @@ if __name__ == '__main__':
     t_start = time.time()
 
     # Check inputs
-    if len(argv) != 11:
+    if len(argv) != 12:
         exit('\n\tError: Wrong Usage!\
             \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] \\\
-            \n\t\t [galaxy lower bd] [galaxy upper bd] [band_inp] [cube size] [sigma] [bond] [refD]\
+            \n\t\t [galaxy lower bd] [galaxy upper bd] [dim] [band_inp] [cube size] [sigma] [bond] [refD]\
             \n\t[catalog]: input catalog for classification\
             \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
             \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\
             \n\t[galaxy lower bd]: direct point to file or "default"\
             \n\t[galaxy upper bd]: direct point to file or "default"\
+            \n\t[dim]: dimension of magnitude space (for now only "6")\
             \n\t[band_inp]: band used to do smooth in string e.g. 012345\
             \n\t[cube size]: length of multi-d cube in magnitude unit\
             \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
@@ -241,18 +233,17 @@ if __name__ == '__main__':
     data_type    = str(argv[3])
     galaxy_lower = str(argv[4])
     galaxy_upper = str(argv[5])
-    # Galaxy Bound Quantity
-    dim          = 6
-    bd_band_axis = 0
-    band_inp     = str(argv[6])
-    cube         = float(argv[7])
-    sigma        = int(argv[8])
-    bond         = int(argv[9])
-    refD         = int(argv[10])
+    dim          = int(argv[6])
+    band_inp     = str(argv[7])
+    bd_band_ax   = int(band_inp[0]) # Default first band of input bands
+    cube         = float(argv[8])
+    sigma        = int(argv[9])
+    bond         = int(argv[10])
+    refD         = int(argv[11])
 
     # Lower bound array
     if galaxy_lower == 'default':
-        suffix = 'AlB{:d}'.format(bd_band_axis) # suffix = 'PCA0'
+        suffix = 'AlB{:d}'.format(bd_band_ax) # suffix = 'PCA0'
         lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
                             after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_{}'.format(\
                             bound_path, dim, cube, sigma, bond, refD, dim-len(band_inp), band_inp, dim, suffix)
@@ -261,7 +252,7 @@ if __name__ == '__main__':
 
     # Upper bound array
     if galaxy_upper == 'default':
-        suffix = 'AlB{:d}'.format(bd_band_axis) # suffix = 'PCA0'
+        suffix = 'AlB{:d}'.format(bd_band_ax) # suffix = 'PCA0'
         upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
                             after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_{}'.format(\
                             bound_path, dim, cube, sigma, bond, refD, dim-len(band_inp), band_inp, dim, suffix)
@@ -294,7 +285,7 @@ if __name__ == '__main__':
         row_list[POS_VEC_ID] = (','.join([str(PV) for PV in Pos_vector]))
         GP_tot_out.append('\t'.join(row_list))
         drawProgressBar(float(i+1)/len(catalog))
-    t_end = time.time()
+    t_end   = time.time()
     print('\nCalculating 6D_Gal_Prob took {:.3f} secs'.format(t_end - t_start))
 
     # Save galaxy probability results ...

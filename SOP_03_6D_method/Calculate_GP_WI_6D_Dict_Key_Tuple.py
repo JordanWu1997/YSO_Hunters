@@ -34,28 +34,22 @@ import time
 # Global Variables
 #==============================================================================
 band_ID    = [0, 3, 4, 5, 6, 7]
-band_name  = band_name
-psf_ID     = psf_ID
-flux_ID    = flux_ID
-mag_ID     = mag_ID
 MP1_ID     = qua_ID_Spitzer[4]
 JHK_system = 'ukidss'
-# Use Limit Stored in Hsieh_Functions
-Jaxlim   = Hsieh_Jaxlim
-Ksaxlim  = Hsieh_Ksaxlim
-Haxlim   = [0, 0]         # Not Mentioned in Hsieh
-IR1axlim = Hsieh_IR1axlim
-IR2axlim = Hsieh_IR2axlim
-IR3axlim = Hsieh_IR3axlim
-IR4axlim = Hsieh_IR4axlim
-MP1axlim = Hsieh_MP1axlim
-all_axlim  = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+Jaxlim     = Hsieh_Jaxlim
+Ksaxlim    = Hsieh_Ksaxlim
+Haxlim     = [0, 0]         # Not Mentioned in Hsieh
+IR1axlim   = Hsieh_IR1axlim
+IR2axlim   = Hsieh_IR2axlim
+IR3axlim   = Hsieh_IR3axlim
+IR4axlim   = Hsieh_IR4axlim
+MP1axlim   = Hsieh_MP1axlim
+all_axlim  = full_axlim
 axlim_list = [all_axlim[i] for i in band_ID]
 # Galaxy Probability IDs
-GP_OBJ_ID, GP_ID = 241, 242
-GPP_OBJ_ID, GPP_ID = 243, 244
-KEY_ID = 245
-max_column_num = 246
+GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
+GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
+POS_VEC_ID = GP_KEY_ID_6D
 
 # Functions
 #==============================================================================
