@@ -124,6 +124,7 @@ full_band_wavelength_UKIDSS_SPITZER = [1.2483, 1.6313, 2.2010, 3.6, 4.5, 5.8, 8.
 # HSIEH'S BOUNDARY
 Hsieh_Jaxlim   = [4.0, 18.0]
 Hsieh_Ksaxlim  = [8.0, 18.0]
+Hsieh_Haxlim   = [0.0,  0.0]
 Hsieh_IR1axlim = [8.0, 18.0]
 Hsieh_IR2axlim = [7.0, 18.0]
 Hsieh_IR3axlim = [5.0, 18.0]
@@ -139,6 +140,7 @@ IR3axlim = [5.0, 18.0]
 IR4axlim = [5.0, 18.0]
 MP1axlim = [3.5, 12.0]
 # Axe limit list
+axlim_6D = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
 full_axlim = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
 
 # GP/GPP Index
@@ -150,7 +152,6 @@ GPP_OBJ_ID_5D2, GPP_ID_5D2 = 239, 240
 GPP_OBJ_ID_6D, GPP_ID_6D = 243, 244
 GP_KEY_ID_5D1, GP_KEY_ID_5D2 = 245, 246
 GP_KEY_ID_6D = 247
-
 
 # Variables which used in all following programs can be modified here
 # ==============================================================================
