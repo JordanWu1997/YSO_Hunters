@@ -159,3 +159,9 @@ foreach i (${indice})
     echo "${cloud} completes ...\n"
     cd .. && pwd
 end
+
+# Merge all YSO candidates
+echo "Merging all YSO candidates ..."
+Merge_YSO_catalog.csh
+
+echo "Pipeline completed ...\n"
