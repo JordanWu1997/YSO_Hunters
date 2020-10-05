@@ -55,7 +55,8 @@ echo "\nGP_dir: ${GP_dir}"
 # cloud indice and ukidss observation indicator
 set indice=(1 2 3 4 5 6 7)
 set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
-set ukidss_obs=(0 0 0 0 1 1 1)
+set ukidss_obs=(0 0 0 0 1 1 1) # for new added UKIDSS catalog
+#set ukidss_obs=(0 0 0 0 0 0 0) #for original Hsieh's classification
 
 # Main Program
 # ======================================================
