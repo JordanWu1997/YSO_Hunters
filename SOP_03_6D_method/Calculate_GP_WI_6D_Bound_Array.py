@@ -37,15 +37,22 @@ IR3axlim   = Hsieh_IR3axlim
 IR4axlim   = Hsieh_IR4axlim
 MP1axlim   = Hsieh_MP1axlim
 all_axlim  = full_axlim
+
 axlim_list = [all_axlim[i] for i in band_ID]
+name_list  = [full_band_name[i] for i in band_ID]
 GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
 GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 POS_VEC_ID = GP_KEY_ID_6D
 bound_path = spp.Selfmade_6D_GP_BD_path
 
+MP1_qua_ID = qua_ID[name_list.index('MP1')]
+IR2_mag_ID = mag_ID[name_list.index('IR2')]
+IR3_mag_ID = mag_ID[name_list.index('IR3')]
+MP1_mag_ID = mag_ID[name_list.index('MP1')]
+
 # Functions
 #======================================================================================
-def Remove_AGB(mag_list, IR2_mag=2, IR3_mag=3, MP1_mag=5):
+def Remove_AGB(mag_list, IR2_mag=IR2_mag_ID, IR3_mag=IR2_mag_ID, MP1_mag=MP1_mag_ID):
     '''
     This is to check if object in input catalog is AGB
     Input datatype: magnitude, int, int, int
@@ -59,7 +66,7 @@ def Remove_AGB(mag_list, IR2_mag=2, IR3_mag=3, MP1_mag=5):
             AGB_flag = 'AGB'
     return AGB_flag
 
-def Find_MP1_Saturate(row_list, MP1_qua_ID=qua_ID[5]):
+def Find_MP1_Saturate(row_list, MP1_qua_ID=MP1_qua_ID):
     '''
     This is to check if object in input catalog is saturate in MP1 band
     '''

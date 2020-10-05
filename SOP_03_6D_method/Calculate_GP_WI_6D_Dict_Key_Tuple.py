@@ -23,18 +23,18 @@ latest update: 2019/07/14 Jordan Wu'''
 #==============================================================================
 from __future__ import print_function
 from sys import argv, exit
+import numpy as np
+import time
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
 import SOP_Program_Path as spp
 from Calculate_GP_WI_6D_Bound_Array import Remove_AGB
-import numpy as np
-import time
 
 # Global Variables
 #==============================================================================
 band_ID    = [0, 3, 4, 5, 6, 7]
-MP1_ID     = qua_ID_Spitzer[4]
+MP1_qua_ID = qua_ID_Spitzer[4]
 JHK_system = 'ukidss'
 Jaxlim     = Hsieh_Jaxlim
 Ksaxlim    = Hsieh_Ksaxlim
@@ -46,10 +46,16 @@ IR4axlim   = Hsieh_IR4axlim
 MP1axlim   = Hsieh_MP1axlim
 all_axlim  = full_axlim
 axlim_list = [all_axlim[i] for i in band_ID]
-# Galaxy Probability IDs
+name_list  = [full_band_name[i] for i in band_ID]
+
 GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
 GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 POS_VEC_ID = GP_KEY_ID_6D
+
+MP1_qua_ID = qua_ID[name_list.index('MP1')]
+IR2_mag_ID = mag_ID[name_list.index('IR2')]
+IR3_mag_ID = mag_ID[name_list.index('IR3')]
+MP1_mag_ID = mag_ID[name_list.index('MP1')]
 
 # Functions
 #==============================================================================
@@ -86,7 +92,6 @@ def GP_Dict_Pipeline(line, mag_list, PSF_list, cube, axlim_list=axlim_list):
                 try:
                     Count    = eval('L{}_Dict'.format(dim-Num))[KEY]
                     Ob_type += 'Lack_{}'.format(''.join([band_name[int(ind_array[i])]\
-                                                    for i in range(len(ind_array))]))
                 except KeyError:
                     Count    = 1e-3
                     Ob_type += '{:d}D_NOGALAXY_'.format(Num)
@@ -94,7 +99,7 @@ def GP_Dict_Pipeline(line, mag_list, PSF_list, cube, axlim_list=axlim_list):
     if Count == 0.0:
         Count = 1e-9
     # Find saturate candidates
-    if lines[MP1_ID] == "S":
+    if lines[MP1_qua_ID] == "S":
         Count = 1e-4
     # Record bandfill band number
     Ob_type += "bandfill=" + str(PSF_list.count(-2))
