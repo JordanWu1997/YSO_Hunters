@@ -19,51 +19,52 @@ Latest update: 2020/05/26 Jordan Wu'''
 # Import Modules
 #======================================================================================
 from __future__ import print_function
+from sys import argv, exit
+import numpy as np
+import time
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
 import SOP_Program_Path as spp
-from sys import argv, exit
-import numpy as np
-import time
 
 # Global Variables
 #======================================================================================
-band_ID    = [0, 3, 4, 5, 6, 7]
-Jaxlim     = Hsieh_Jaxlim
-IR1axlim   = Hsieh_IR1axlim
-IR2axlim   = Hsieh_IR2axlim
-IR3axlim   = Hsieh_IR3axlim
-IR4axlim   = Hsieh_IR4axlim
-MP1axlim   = Hsieh_MP1axlim
-all_axlim  = full_axlim
+# band_ID    = [0, 3, 4, 5, 6, 7]
+# GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
+# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 
-axlim_list = [all_axlim[i] for i in band_ID]
-name_list  = [full_band_name[i] for i in band_ID]
-GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
-GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 POS_VEC_ID = GP_KEY_ID_6D
-bound_path = spp.Selfmade_6D_GP_BD_path
-
-MP1_qua_ID = qua_ID[name_list.index('MP1')]
-IR2_mag_ID = mag_ID[name_list.index('IR2')]
-IR3_mag_ID = mag_ID[name_list.index('IR3')]
-MP1_mag_ID = mag_ID[name_list.index('MP1')]
+# JHK photometry system
+JHK_system = 'ukidss' #'2mass'
+all_axlim  = full_axlim
+axlim_list = [full_axlim[i] for i in band_ID]
+name_list  = [full_band_name[i] for i in band_ID]
+MP1_mag_ID = np.nan
+IR2_mag_ID = np.nan
+IR3_mag_ID = np.nan
+if 'MP1' in name_list:
+    MP1_mag_ID = name_list.index('MP1')
+if 'IR2' in name_list:
+    IR2_mag_ID = name_list.index('IR2')
+if 'IR3' in name_list:
+    IR3_mag_ID = name_list.index('IR3')
+MP1_qua_ID = qua_ID_Spitzer[4]
 
 # Functions
 #======================================================================================
-def Remove_AGB(mag_list, IR2_mag=IR2_mag_ID, IR3_mag=IR2_mag_ID, MP1_mag=MP1_mag_ID):
+def Remove_AGB(mag_list, IR2_mag_ID=IR2_mag_ID, IR3_mag_ID=IR3_mag_ID, MP1_mag_ID=MP1_mag_ID):
     '''
     This is to check if object in input catalog is AGB
     Input datatype: magnitude, int, int, int
     '''
     # Remove AGB
     AGB_flag = 'Not_AGB'
-    if (mag_list[IR2_mag] != 'no') and (mag_list[IR3_mag] != 'no') and (mag_list[MP1_mag] != 'no'):
-        X23 = mag_list[IR2_mag] - mag_list[IR3_mag]
-        Y35 = mag_list[IR3_mag] - mag_list[MP1_mag]
-        if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
-            AGB_flag = 'AGB'
+    if (IR2_mag_ID is not np.nan) and (IR3_mag_ID is not np.nan) and (MP1_mag_ID is not np.nan):
+        if (mag_list[IR2_mag_ID] != 'no') and (mag_list[IR3_mag_ID] != 'no') and (mag_list[MP1_mag_ID] != 'no'):
+            X23 = mag_list[IR2_mag_ID] - mag_list[IR3_mag_ID]
+            Y35 = mag_list[IR3_mag_ID] - mag_list[MP1_mag_ID]
+            if index_AGB(X23, Y35, [0, 0, 2, 5], [-1, 0, 2, 2]) < 0:
+                AGB_flag = 'AGB'
     return AGB_flag
 
 def Find_MP1_Saturate(row_list, MP1_qua_ID=MP1_qua_ID):
@@ -247,6 +248,7 @@ if __name__ == '__main__':
     sigma        = int(argv[9])
     bond         = int(argv[10])
     refD         = int(argv[11])
+    bound_path   = spp.Selfmade_6D_GP_BD_path
 
     # Lower bound array
     if galaxy_lower == 'default':
