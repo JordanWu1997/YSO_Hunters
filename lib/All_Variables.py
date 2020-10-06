@@ -132,16 +132,18 @@ Hsieh_IR4axlim = [5.0, 18.0]
 Hsieh_MP1axlim = [3.5, 11.0]
 # NEW BOUNDARY WI UKIDSS CATALOG
 Jaxlim   = [3.5, 22.0]
-Ksaxlim  = [8.0, 18.0]
 Haxlim   = [0.0,  0.0]
+Ksaxlim  = [8.0, 18.0]
 IR1axlim = [8.0, 20.0]
 IR2axlim = [7.0, 19.0]
 IR3axlim = [5.0, 18.0]
 IR4axlim = [5.0, 18.0]
 MP1axlim = [3.5, 12.0]
 # Axe limit list
-axlim_6D = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-full_axlim = [Jaxlim, Ksaxlim, Haxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+axlim_5D1 = [Jaxlim, Ksaxlim, IR2axlim, IR4axlim, MP1axlim]
+axlim_5D2 = [IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+axlim_6D  = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+full_axlim = [Jaxlim, Haxlim, Ksaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
 
 # GP/GPP Index
 GP_OBJ_ID_5D1, GP_ID_5D1 = 233, 234
@@ -155,6 +157,10 @@ GP_KEY_ID_6D = 247
 
 # Variables which used in all following programs can be modified here
 # ==============================================================================
+max_column_num = get_max_column_num(dir())
+
+# Var Set 1: For 6D GP (J, IR1, IR2, IR3, IR4, MP1)
+band_ID = [0, 3, 4, 5, 6, 7]
 GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
 GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 KEY_ID = GP_KEY_ID_6D
@@ -164,7 +170,30 @@ mag_ID = mag_ID_6D
 mag_err_ID = mag_err_ID_6D
 qua_ID = qua_ID_6D
 psf_ID = psf_ID_6D
-max_column_num = get_max_column_num(dir())
+
+# # Var Set 2: For 5D GP1 (J, Ks, IR2, IR4, MP1)
+# band_ID = [0, 2, 4, 6, 7]
+# GP_OBJ_ID, GP_ID = GP_OBJ_ID_5D1, GP_ID_5D1
+# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_5D1, GPP_ID_5D1
+# KEY_ID = GP_KEY_ID_6D
+# flux_ID = flux_ID_5D1
+# flux_err_ID = flux_err_ID_5D1
+# mag_ID = mag_ID_5D1
+# mag_err_ID = mag_err_ID_5D1
+# qua_ID = qua_ID_5D1
+# psf_ID = psf_ID_5D1
+
+# # Var Set 3: For 5D GP2 (IR1, IR2, IR3, IR4, MP1)
+# band_ID = [3, 4, 5, 6, 7]
+# GP_OBJ_ID, GP_ID = GP_OBJ_ID_5D2, GP_ID_5D2
+# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_5D2, GPP_ID_5D2
+# KEY_ID = GP_KEY_ID_6D
+# flux_ID = flux_ID_5D2
+# flux_err_ID = flux_err_ID_5D2
+# mag_ID = mag_ID_5D2
+# mag_err_ID = mag_err_ID_5D2
+# qua_ID = qua_ID_5D2
+# psf_ID = psf_ID_5D2
 
 # Main Programs
 # ==============================================================================

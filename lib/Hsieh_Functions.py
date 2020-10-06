@@ -22,7 +22,7 @@ from All_Variables import *
 
 # Functions
 #==============================================================================
-def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="twomass"):
+def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=False, system="twomass"):
     """
     This function is to change fluxes on the catalog to magnitudes
     This is for counting galaxy probability
@@ -131,7 +131,7 @@ def mag_error_to_mag_FULL_C2D(x):
             dm_list.append(0.0)
     return dm_list
 
-def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, Qua=True, Psf=False, system="twomass"):
+def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=False, system="twomass"):
     """
     This function is for classifying different band's magnitude by flux_Qua
     This is for new kind of catalog (with magnitudes of different bands)
