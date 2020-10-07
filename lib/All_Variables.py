@@ -30,6 +30,23 @@ def get_max_column_num(var_names):
     max_column_num = max_column_num + 1
     return max_column_num
 
+def print_all_variables(variable_dir):
+    '''
+    This is to print out all stored variables
+    '''
+    for name in variable_dir:
+        if name[:2] != '__':
+            print('{:30}:{:100}'.format(name, str(eval(name))))
+
+
+def set_common_variables(band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, \
+                         flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID):
+    '''
+    This is to set important and common variables
+    '''
+    return band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, \
+           flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID
+
 # Variables
 # ==============================================================================
 # Add on (Not in Hsieh_Functions Modules)
@@ -90,7 +107,7 @@ f0_Spitzer        = [280900., 179700., 115000., 64130., 7140.]
 f0_2MASS          = [1594000., 1024000., 666700.]
 f0_UKIDSS         = [1530000., 1019000., 631000.]
 
-# parameters [band, flux index, mag index, C_av(Exctintion_coef)]
+# Parameters [band, flux index, mag index, C_av(Exctintion_coef)]
 C_av_list = [['J',  0.2741],
             ['H',   0.1622],
             ['K',   0.1119],
@@ -155,52 +172,61 @@ GPP_OBJ_ID_6D, GPP_ID_6D = 243, 244
 GP_KEY_ID_5D1, GP_KEY_ID_5D2 = 245, 246
 GP_KEY_ID_6D = 247
 
+# Set variables
+# ==============================================================================
+# Var Set 1: For 6D GP (J, IR1, IR2, IR3, IR4, MP1)
+band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID = \
+set_common_variables(band_ID=[0, 3, 4, 5, 6, 7],
+                     GP_OBJ_ID=GP_OBJ_ID_6D,
+                     GP_ID=GP_ID_6D,
+                     GPP_OBJ_ID=GPP_OBJ_ID_6D,
+                     GPP_ID=GPP_ID_6D,
+                     KEY_ID=GP_KEY_ID_6D,
+                     flux_ID=flux_ID_6D,
+                     flux_err_ID=flux_err_ID_6D,
+                     mag_ID=mag_ID_6D,
+                     mag_err_ID=mag_err_ID_6D,
+                     qua_ID=qua_ID_6D,
+                     psf_ID=psf_ID_6D)
+
+# # Var Set 2: For 5D GP1 (J, Ks, IR2, IR4, MP1)
+# band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID = \
+# set_common_variables(band_ID=[0, 2, 4, 6, 7],
+                   # GP_OBJ_ID=GP_OBJ_ID_5D1,
+                   # GP_ID=GP_ID_5D1,
+                   # GPP_OBJ_ID=GPP_OBJ_ID_5D1,
+                   # GPP_ID=GPP_ID_5D1,
+                   # KEY_ID=GP_KEY_ID_5D1,
+                   # flux_ID=flux_ID_5D1,
+                   # flux_err_ID=flux_err_ID_5D1,
+                   # mag_ID=mag_ID_5D1,
+                   # mag_err_ID=mag_err_ID_5D1,
+                   # qua_ID=qua_ID_5D1,
+                   # psf_ID=psf_ID_5D1)
+
+# # Var Set 3: For 5D GP2 (IR1, IR2, IR3, IR4, MP1)
+# band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID = \
+# set_common_variables(band_ID=[3, 4, 5, 6, 7],
+                   # GP_OBJ_ID=GP_OBJ_ID_5D2,
+                   # GP_ID=GP_ID_5D2,
+                   # GPP_OBJ_ID=GPP_OBJ_ID_5D2,
+                   # GPP_ID=GPP_ID_5D2,
+                   # KEY_ID=GP_KEY_ID_5D2,
+                   # flux_ID=flux_ID_5D2,
+                   # flux_err_ID=flux_err_ID_5D2,
+                   # mag_ID=mag_ID_5D2,
+                   # mag_err_ID=mag_err_ID_5D2,
+                   # qua_ID=qua_ID_5D2,
+                   # psf_ID=psf_ID_5D2)
+
 # Variables which used in all following programs can be modified here
 # ==============================================================================
 max_column_num = get_max_column_num(dir())
-
-# Var Set 1: For 6D GP (J, IR1, IR2, IR3, IR4, MP1)
-band_ID = [0, 3, 4, 5, 6, 7]
-GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
-GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
-KEY_ID = GP_KEY_ID_6D
-flux_ID = flux_ID_6D
-flux_err_ID = flux_err_ID_6D
-mag_ID = mag_ID_6D
-mag_err_ID = mag_err_ID_6D
-qua_ID = qua_ID_6D
-psf_ID = psf_ID_6D
-
-# # Var Set 2: For 5D GP1 (J, Ks, IR2, IR4, MP1)
-# band_ID = [0, 2, 4, 6, 7]
-# GP_OBJ_ID, GP_ID = GP_OBJ_ID_5D1, GP_ID_5D1
-# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_5D1, GPP_ID_5D1
-# KEY_ID = GP_KEY_ID_6D
-# flux_ID = flux_ID_5D1
-# flux_err_ID = flux_err_ID_5D1
-# mag_ID = mag_ID_5D1
-# mag_err_ID = mag_err_ID_5D1
-# qua_ID = qua_ID_5D1
-# psf_ID = psf_ID_5D1
-
-# # Var Set 3: For 5D GP2 (IR1, IR2, IR3, IR4, MP1)
-# band_ID = [3, 4, 5, 6, 7]
-# GP_OBJ_ID, GP_ID = GP_OBJ_ID_5D2, GP_ID_5D2
-# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_5D2, GPP_ID_5D2
-# KEY_ID = GP_KEY_ID_6D
-# flux_ID = flux_ID_5D2
-# flux_err_ID = flux_err_ID_5D2
-# mag_ID = mag_ID_5D2
-# mag_err_ID = mag_err_ID_5D2
-# qua_ID = qua_ID_5D2
-# psf_ID = psf_ID_5D2
 
 # Main Programs
 # ==============================================================================
 if __name__ == '__main__':
     print('\nPrint All Variables')
-    print('#===================================\n')
-    for name in dir():
-        if name[:2] != '__':
-            print('{:30}:{:100}'.format(name, str(eval(name))))
-    print('\n#===================================\n')
+    print('#====================================================\n')
+    print_all_variables(dir())
+    print('\n#==================================================\n')
