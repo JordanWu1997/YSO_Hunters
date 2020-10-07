@@ -57,7 +57,7 @@ MP1_qua_ID = qua_ID_Spitzer[4]
 
 # Functions
 #==============================================================================
-def GP_Dict_Pipeline(line, mag_list, PSF_list, cube, axlim_list=axlim_list):
+def GP_Dict_Pipeline(line, name_list, mag_list, PSF_list, cube, axlim_list=axlim_list):
     '''
     This is to generate objecttype and count by input magnitude list
     '''
@@ -89,7 +89,7 @@ def GP_Dict_Pipeline(line, mag_list, PSF_list, cube, axlim_list=axlim_list):
             else:
                 try:
                     Count    = eval('L{}_Dict'.format(dim-Num))[KEY]
-                    Ob_type += 'Lack_{}'.format(''.join([band_name[int(ind_array[i])]\
+                    Ob_type += 'Lack_{}'.format(''.join([name_list[int(ind)] for ind in ind_array]))
                 except KeyError:
                     Count    = 1e-3
                     Ob_type += '{:d}D_NOGALAXY_'.format(Num)
@@ -168,8 +168,8 @@ if __name__ == '__main__':
 
         # Generate GP/GPP from pipeline procedure
         PSF_list = [int(lines[psf_ID[i]]) for i in range(len(GP_mag_list))]
-        GP_Ob_type,  GP_Count, KEY = GP_Dict_Pipeline(lines, GP_mag_list, PSF_list, cube)
-        GPP_Ob_type, GPP_Count, _  = GP_Dict_Pipeline(lines, GPP_mag_list, PSF_list, cube)
+        GP_Ob_type,  GP_Count, KEY = GP_Dict_Pipeline(lines, name_list, GP_mag_list, PSF_list, cube)
+        GPP_Ob_type, GPP_Count, _  = GP_Dict_Pipeline(lines, name_list, GPP_mag_list, PSF_list, cube)
         # Create some empty columns and Write GP/GPP type/value
         lines = fill_up_list_WI_z(lines, max_column_num=max_column_num)
         lines[GP_OBJ_ID]  = str(GP_Ob_type)
