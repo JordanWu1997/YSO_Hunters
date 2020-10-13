@@ -22,18 +22,13 @@ from All_Variables import *
 
 # Functions
 #==============================================================================
-def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=False, system="twomass"):
+def mJy_to_mag(x, flux_ID=flux_ID, f0_list=f0_list, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=False):
     """
     This function is to change fluxes on the catalog to magnitudes
     This is for counting galaxy probability
     This function is to change fluxes on the catalog to magnitudes and select whose imagetype=1
     This is for counting Galaxy Probability P
     """
-    # Different f0 values for different systems
-    if system == 'twomass':
-        F0_list = f0_2MASS_Spitzer
-    elif system == 'ukidss':
-        F0_list = f0_UKIDSS_Spitzer
     # Assign Qua, PSF index
     if Qua: flux_Qua  = [x[ID] for ID in qua_ID]
     if Psf: PSF_list  = [x[ID] for ID in psf_ID]
@@ -51,7 +46,7 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=F
                 # IR1, IR2, IR3, IR4, MP1 band ("A_fake", "U_fake" for J,H,K)
                 elif flux_Qua[i] in ["A_fake", "U_fake", "A", "B", "C", "D", "K"]:
                     if flux_list[i] > 0.0:
-                        mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
+                        mag_list.append(-2.5 * mh.log10(flux_list[i]/f0_list[i]))
                     else:
                         mag_list.append('no')
                 # Qua labeled as 'S' (saturate candidate)
@@ -64,7 +59,7 @@ def mJy_to_mag(x, flux_ID=flux_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=F
         mag_list = []
         for i in range(len(flux_list)):
             if flux_list[i] > 0.0:
-                mag_list.append(-2.5 * mh.log10(flux_list[i]/F0_list[i]))
+                mag_list.append(-2.5 * mh.log10(flux_list[i]/f0_list[i]))
             else:
                 mag_list.append('no')
     return mag_list
@@ -76,11 +71,11 @@ def mJy_to_mag_ONLY_Spitzer(x):
     '''
     flux_list = [float(x[ID]) for ID in flux_ID_Spitzer]
     flux_Qua  = [x[ID] for ID in qua_ID_Spitzer]
-    F0_list   = f0_Spitzer
+    f0_list   = f0_Spitzer
     mag_list  = []
-    for i in range(len(F0_list)):
+    for i in range(len(f0_list)):
         if float(flux_list[i]) > 0.0:
-            mag_list.append(-2.5 * mh.log10(float(flux_list[i])/F0_list[i]))
+            mag_list.append(-2.5 * mh.log10(float(flux_list[i])/f0_list[i]))
         else:
             mag_list.append(0.0)
     return mag_list
@@ -91,11 +86,11 @@ def flux_error_to_mag_ONLY_Spitzer(x):
     IR1, IR2, IR3, IR4, MP1 (SPITZER)
     '''
     df_list = [float(x[ID]) for ID in flux_err_ID_Spitzer]
-    F0_list = f0_Spitzer
+    f0_list = f0_Spitzer
     dm_list = []
-    for i in range(len(F0_list)):
+    for i in range(len(f0_list)):
         if df_list[i] > 0.0:
-            dm = float(df_list[i])/F0_list[i] * 2.5 * mh.log10(mh.e)
+            dm = float(df_list[i])/f0_list[i] * 2.5 * mh.log10(mh.e)
         else :
             dm = 0.0
         dm_list.append(dm)
@@ -107,11 +102,11 @@ def mJy_to_mag_FULL_C2D(x):
     J, H, Ks, IR1, IR2, IR3, IR4, MP1 (2MASS + SPITZER)
     '''
     flux_list = [float(x[ID]) for ID in full_flux_ID]
-    F0_list   = f0_full_C2D
+    f0_list   = f0_full_C2D
     mag_list  = []
-    for i in range(len(F0_list)):
+    for i in range(len(f0_list)):
         if float(flux_list[i]) > 0.0:
-            mag_list.append(-2.5 * mh.log10(float(flux_list[i])/F0_list[i]))
+            mag_list.append(-2.5 * mh.log10(float(flux_list[i])/f0_list[i]))
         else:
             mag_list.append(0.0)
     return mag_list
@@ -122,27 +117,22 @@ def mag_error_to_mag_FULL_C2D(x):
     J, H, Ks, IR1, IR2, IR3, IR4, MP1 (2MASS + SPITZER)
     '''
     df_list = [float(x[ID]) for ID in full_flux_ID]
-    F0_list = f0_full_C2D
+    f0_list = f0_full_C2D
     dm_list = []
-    for i in range(len(F0_list)):
+    for i in range(len(f0_list)):
         if df_list[i] > 0.0:
-            dm_list.append(float(df_list[i])/F0_list[i] * 2.5 * mh.log10(mh.e))
+            dm_list.append(float(df_list[i])/f0_list[i] * 2.5 * mh.log10(mh.e))
         else:
             dm_list.append(0.0)
     return dm_list
 
-def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=False, system="twomass"):
+def mag_to_mag(x, mag_ID=mag_ID, qua_ID=qua_ID, psf_ID=psf_ID, Qua=True, Psf=False):
     """
     This function is for classifying different band's magnitude by flux_Qua
     This is for new kind of catalog (with magnitudes of different bands)
     This function is to select those source with imagetype=1
     This is for counting Galaxy Probability P
     """
-    # Different f0 values for different systems
-    if system == 'twomass':
-        F0_list = f0_2MASS_Spitzer
-    elif system == 'ukidss':
-        F0_list = f0_UKIDSS_Spitzer
     # Assign Qua, PSF index
     if Qua: flux_Qua = [x[ID] for ID in qua_ID]
     if Psf: PSF_list = [x[ID] for ID in psf_ID]
@@ -184,11 +174,11 @@ def JHK_flux_to_mag(J_flux, H_flux, K_flux, to_UKIDSS=True):
     This function is to (1)change fluxes on the catalog to magnitudes
                         (2)transform magnitudes from 2MASS to UKIDSS
     '''
-    F0_list = f0_2MASS
+    f0_list = f0_2MASS
     if float(J_flux) > 0.0 and float(H_flux) > 0.0 and float(K_flux) > 0.0:
-        mag_J = -2.5 * np.log10(float(J_flux)/F0_list[0])
-        mag_H = -2.5 * np.log10(float(H_flux)/F0_list[1])
-        mag_K = -2.5 * np.log10(float(K_flux)/F0_list[2])
+        mag_J = -2.5 * np.log10(float(J_flux)/f0_list[0])
+        mag_H = -2.5 * np.log10(float(H_flux)/f0_list[1])
+        mag_K = -2.5 * np.log10(float(K_flux)/f0_list[2])
     else:
         mag_J, mag_H, mag_K = 0.0, 0.0, 0.0
 
@@ -206,9 +196,9 @@ def JHK_mag_to_flux_ONLY_UKIDSS(J_mag, H_mag, K_mag):
     This function is to add J, H, K band flux from magnitude
     Note: flux unit is mili-Jansky
     '''
-    F0_list = f0_UKIDSS
+    f0_list = f0_UKIDSS
     JHK_flux_list = []
-    for mag, f0 in zip([J_mag, H_mag, K_mag], F0_list):
+    for mag, f0 in zip([J_mag, H_mag, K_mag], f0_list):
         if float(mag) > 0.0:
             flux = f0 * 10**(-float(mag)/2.5)
         else:
