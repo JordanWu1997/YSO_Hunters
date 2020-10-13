@@ -38,12 +38,12 @@ set Storage = "/home/jordan/YSO_Project/"
 # Setup Working Environments For YSO Hunter Programs
 setenv PATH ${PATH}:$Storage/YSO_Hunters/bin
 setenv PATH ${PATH}:$Storage/YSO_Hunters/lib
-setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob
-setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_Preset
-setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_5D_method
-setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_03_6D_method
-setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_04_Av_Check
-setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_05_Image_Check
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob_Model
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method_from_Hsieh
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_6D_method
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_nD_method
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Av_Check
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Image_Check
 
 # Setup Python Module Environments For YSO Hunter Programs
 setenv PYTHONPATH ${PYTHONPATH}:$Storage/YSO_Hunters/lib
@@ -58,14 +58,14 @@ setenv PYTHONPYCACHEPREFIX $HOME/.cache/cpython
 export Storage="/home/jordan/YSO_Project/"
 
 # Setup Working Environments For YSO Hunter Programs
-export PATH="$Storage/YSO_Hunters/bin:$PATH"
-export PATH="$Storage/YSO_Hunters/lib:$PATH"
-export PATH="$Storage/YSO_Hunters/SOP_00_Gal_Prob:$PATH"
-export PATH="$Storage/YSO_Hunters/SOP_01_Preset:$PATH"
-export PATH="$Storage/YSO_Hunters/SOP_02_5D_method:$PATH"
-export PATH="$Storage/YSO_Hunters/SOP_03_6D_method:$PATH"
-export PATH="$Storage/YSO_Hunters/SOP_04_Av_Check:$PATH"
-export PATH="$Storage/YSO_Hunters/SOP_05_Image_Check:$PATH"
+export PATH ${PATH}:$Storage/YSO_Hunters/bin
+export PATH ${PATH}:$Storage/YSO_Hunters/lib
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob_Model
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method_from_Hsieh
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_6D_method
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_nD_method
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Av_Check
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Image_Check
 
 # Setup Python Module Environments For YSO Hunter Programs
 export PYTHONPATH="$Storage/YSO_Hunters/lib:$PYTHONPATH"
@@ -81,7 +81,7 @@ export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython/"
 - First, check YSO_HUNTER/SOP_Program_Path/SOP_Program_Path.py if **all paths/files** exist
 - Then , change some path or file that may be needed to revised
 	- e.g. location where multi-D galaxy probability dictionary stored
-- For all __variables__, please run ```All_Variables.py``` in terminal and check 
+- For all __variables__, please run ```All_Variables.py``` in terminal and check
 - For all __paths__, please run ```SOP_Program_Path.py``` in terminal and check
 
 #### 4. Standard Sequence for Execution:

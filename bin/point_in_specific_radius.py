@@ -1,4 +1,4 @@
-#!/home/jeremy/anaconda3/bin/python
+#!/usr/bin/python
 from sys import argv, exit
 import matplotlib.pyplot as plt
 from tqdm import tqdm, trange

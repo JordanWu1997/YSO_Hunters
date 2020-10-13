@@ -1,4 +1,4 @@
-#!/home/jeremy/anaconda3/bin/python
+#!/usr/bin/python
 
 from sklearn.neighbors import KDTree
 import numpy as np
