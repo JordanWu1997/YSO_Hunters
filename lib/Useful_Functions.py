@@ -108,6 +108,22 @@ def cascade_array_same_pos(sort_pos):
     after_cascade_pos.append(sort_pos[start])
     return after_cascade_pos
 
+def find_array_same_pos(sort_pos):
+    '''
+    Use this to find out sources locate in same position and extract them out
+    '''
+    same_pos = []
+    start = 0
+    end   = 0
+    for i in range(len(sort_pos)-1):
+        tar, ref = sort_pos[i], sort_pos[i+1]
+        end += 1
+        if np.all(np.equal(tar, ref)):
+            same_pos.append(sort_pos[start])
+            start = end
+    same_pos.append(sort_pos[start])
+    return same_pos
+
 @jit(nopython=True)
 def find_pos_id_in_gal_pos(gal_pos, target):
     '''
