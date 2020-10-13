@@ -33,11 +33,11 @@ from Calculate_GP_WI_6D_Bound_Array import Remove_AGB
 
 # Global Variables
 #==============================================================================
-# band_ID    = [0, 3, 4, 5, 6, 7]
-# GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
-# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
-
+band_ID    = [0, 3, 4, 5, 6, 7]
+GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
+GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 POS_VEC_ID = GP_KEY_ID_6D
+
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
 all_axlim  = full_axlim
@@ -158,11 +158,11 @@ if __name__ == '__main__':
         # Unit transformation
         lines = catalog[i].split()
         if datatype == 'flux':
-            GP_mag_list  = mJy_to_mag(lines, flux_ID=flux_ID, Qua=qualabel, system=JHK_system)
-            GPP_mag_list = mJy_to_mag(lines, flux_ID=flux_ID, Qua=qualabel, Psf=True, system=JHK_system)
+            GP_mag_list  = mJy_to_mag(lines, flux_ID=flux_ID_6D, f0_list=f0_list_6D, qua_ID=qua_ID_6D, Qua=qualabel)
+            GPP_mag_list = mJy_to_mag(lines, flux_ID=flux_ID_6D, f0_list=f0_list_6D, qua_ID=qua_ID_6D, psf_ID=psf_ID_6D, Qua=qualabel, Psf=True)
         elif datatype == 'mag':
-            GP_mag_list  = mag_to_mag(lines, mag_ID=mag_ID, Qua=qualabel, system=JHK_system)
-            GPP_mag_list = mag_to_mag(lines, mag_ID=mag_ID, Qua=qualabel, Psf=True, system=JHK_system)
+            GP_mag_list  = mag_to_mag(lines, mag_ID=mag_ID_6D, qua_ID=qua_ID_6D, Qua=qualabel)
+            GPP_mag_list = mag_to_mag(lines, mag_ID=mag_ID_6D, qua_ID=qua_ID_6D, Qua=qualabel, psf_ID=psf_ID, Psf=True)
         else:
             exit('Input type error')
 
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         lines[GP_ID]      = str(GP_Count)
         lines[GPP_OBJ_ID] = str(GPP_Ob_type)
         lines[GPP_ID]     = str(GPP_Count)
-        lines[KEY_ID]     = str(','.join([str(ele) for ele in KEY]))
+        lines[POS_VEC_ID] = str(','.join([str(ele) for ele in KEY]))
         out_line.append('\t'.join(lines))
 
     # Save to output catalog

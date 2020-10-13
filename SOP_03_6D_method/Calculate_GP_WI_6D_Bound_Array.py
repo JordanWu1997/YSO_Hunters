@@ -29,11 +29,11 @@ import SOP_Program_Path as spp
 
 # Global Variables
 #======================================================================================
-# band_ID    = [0, 3, 4, 5, 6, 7]
-# GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
-# GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
-
+band_ID    = [0, 3, 4, 5, 6, 7]
+GP_OBJ_ID, GP_ID = GP_OBJ_ID_6D, GP_ID_6D
+GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 POS_VEC_ID = GP_KEY_ID_6D
+
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
 all_axlim  = full_axlim
@@ -76,7 +76,7 @@ def Find_MP1_Saturate(row_list, MP1_qua_ID=MP1_qua_ID):
         MP1_Sat_flag = 'MP1_Sat'
     return MP1_Sat_flag
 
-def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss"):
+def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
     '''
     This is to calculate position vector and object types
     Count:
@@ -90,10 +90,10 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
     '''
     # Transform input to magnitude
     if data_type == 'flux':
-        mag_list = mJy_to_mag(row_list, flux_ID=flux_ID, qua_ID=qua_ID, Qua=Qua, Psf=Psf, system=system)
+        mag_list = mJy_to_mag(row_list, flux_ID=flux_ID_6D, f0_list=f0_list_6D, qua_ID=qua_ID_6D, Qua=Qua, psf_ID=psf_ID_6D, Psf=Psf)
     elif data_type == 'mag':
         # Command below is for UKIDSS-SWIRE type catalog
-        mag_list = mag_to_mag(row_list, mag_ID=mag_ID, qua_ID=qua_ID, Qua=Qua, Psf=Psf, system=system)
+        mag_list = mag_to_mag(row_list, mag_ID=mag_ID_6D, qua_ID=qua_ID_6D, Qua=Qua, psf_ID=psf_ID_6D, Psf=Psf)
 
     SEQ_vec      = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(mag_list))]
     AGB_flag     = Remove_AGB(mag_list)
@@ -116,38 +116,6 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False, system="ukidss
             elif (SEQ_vec.count(9999) > 0):
                 Count = 1e4;  OBJ_type += 'Faint'
     return POS_vector, OBJ_type, Count
-
-# def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
-    # '''
-    # This is to check if input is larger than the lower bound of galaxy probability
-    # '''
-    # no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
-    # GP_Lower_Bound_flag = False
-    # for no_lack_id in no_lack_id_list:
-        # if GP_Lower_Bound_flag == True:
-            # break
-        # else:
-            # for bound in GP_Lower_Bound:
-                # if (POS_vector[no_lack_id] >= bound[no_lack_id]):
-                    # GP_Lower_Bound_flag = True
-                    # break
-    # return GP_Lower_Bound_flag
-
-# def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
-    # '''
-    # This is to check if input is smaller than the lower bound of galaxy probability
-    # '''
-    # no_lack_id_list = np.arange(0, len(POS_vector))[POS_vector != -999]
-    # GP_Upper_Bound_flag = False
-    # for no_lack_id in no_lack_id_list:
-        # if GP_Upper_Bound_flag == True:
-            # break
-        # else:
-            # for bound in GP_Upper_Bound:
-                # if (POS_vector[no_lack_id] <= bound[no_lack_id]):
-                    # GP_Upper_Bound_flag = True
-                    # break
-    # return GP_Upper_Bound_flag
 
 def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
     '''
@@ -175,7 +143,7 @@ def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
             break
     return GP_Upper_Bound_flag
 
-def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False, system='ukidss'):
+def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False):
     '''
     This is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
@@ -188,7 +156,7 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
         1e4         : Faint
         1e3         : Galaxy
     '''
-    POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF, system='ukidss')
+    POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
         GP_Lower_Bound_flag = Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound)
         GP_Upper_Bound_flag = Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound)
@@ -285,9 +253,9 @@ if __name__ == '__main__':
     for i in range(len(catalog)):
         row_list = catalog[i].split()
         GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
-                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False, system='ukidss')
+                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False)
         GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
-                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=True, system='ukidss')
+                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=True)
         row_list = fill_up_list_WI_z(row_list)
         row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
         row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)

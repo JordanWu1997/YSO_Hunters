@@ -16,18 +16,19 @@ latest update: 20200524 Jordan Wu'''
 # Import Modules
 #=========================================================================
 from __future__ import print_function
-from Useful_Functions import *
 from sys import argv, exit
 import time
 import os
+from Useful_Functions import *
+from All_Variables import *
 
 # Global Variables
 #=========================================================================
-RA_ID              = 0
-DEC_ID             = 2
-MP1_Qua_ID         = 184
-GP_OBJ_ID, GP_ID   = 241, 242
-GPP_OBJ_ID, GPP_ID = 243, 244
+RA_ID              = coor_ID[0]
+DEC_ID             = coor_ID[2]
+MP1_Qua_ID         = qua_ID_Spitzer[4]
+GP_OBJ_ID, GP_ID   = GP_OBJ_ID_6D, GP_ID_6D
+GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
 
 # Functions
 #=========================================================================

@@ -171,9 +171,9 @@ if __name__ == '__main__':
         line = catalog[i]
         lines = line.split()
         if datatype == 'flux':
-            mag_list = mJy_to_mag(lines, flux_ID=flux_ID, qua_ID=qua_ID, Qua=qualabel, system=JHK_system)
+            mag_list = mJy_to_mag(lines, flux_ID=flux_ID, f0_list=f0_list, qua_ID=qua_ID, Qua=qualabel)
         elif datatype == 'mag':
-            mag_list = mag_to_mag(lines, mag_ID=mag_ID, qua_ID=qua_ID, Qua=qualabel, system=JHK_system)
+            mag_list = mag_to_mag(lines, mag_ID=mag_ID, f0_list=f0_list, qua_ID=qua_ID, Qua=qualabel)
         else:
             exit('Input type error')
         SEQ_vector = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]
