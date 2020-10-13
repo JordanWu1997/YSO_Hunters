@@ -39,13 +39,15 @@ def print_all_variables(variable_dir):
             print('{:30}:{:100}'.format(name, str(eval(name))))
 
 
-def set_common_variables(band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, \
-                         flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID):
+def set_common_variables(band_ID, band_name, axlim_list, \
+                         flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+                         GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID):
     '''
     This is to set important and common variables
     '''
-    return band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, \
-           flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID
+    return band_ID, band_name, axlim_list, \
+           flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+           GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID
 
 # Variables
 # ==============================================================================
@@ -106,6 +108,9 @@ f0_UKIDSS_Spitzer = [1530000., 280900., 179700., 115000., 64130., 7140.] # H: 10
 f0_Spitzer        = [280900., 179700., 115000., 64130., 7140.]
 f0_2MASS          = [1594000., 1024000., 666700.]
 f0_UKIDSS         = [1530000., 1019000., 631000.]
+f0_list_6D        = [1530000., 280900., 179700., 115000., 64130., 7140.]
+f0_list_5D1       = [1530000., 631000., 179700., 64130., 7140.]
+f0_list_5D2       = [280900., 179700., 115000., 64130., 7140.]
 
 # Parameters [band, flux index, mag index, C_av(Exctintion_coef)]
 C_av_list = [['J',  0.2741],
@@ -132,6 +137,9 @@ full_mag_err_ID  = [36, 57, 78, 99, 120, 141, 162, 183, 204]
 band_name         = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
 Spitzer_band_name = ['IR1', 'IR2', 'IR3', 'IR4', 'MP1']
 full_band_name    = ['J', 'H', 'Ks', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1', 'MP2']
+band_name_6D      = ['J', 'IR1', 'IR2', 'IR3', 'IR4', 'MP1']
+band_name_5D1     = ['J', 'Ks', 'IR2', 'IR4', 'MP1']
+band_name_5D2     = ['IR1', 'IR2', 'IR3', 'IR4', 'MP1']
 
 # Band wavelength
 full_band_wavelength_2MASS_SPITZER  = [1.235,   1.662,  2.159, 3.6, 4.5, 5.8, 8.0, 24.0, 70.0]
@@ -157,10 +165,10 @@ IR3axlim = [5.0, 18.0]
 IR4axlim = [5.0, 18.0]
 MP1axlim = [3.5, 12.0]
 # Axe limit list
-axlim_5D1 = [Jaxlim, Ksaxlim, IR2axlim, IR4axlim, MP1axlim]
-axlim_5D2 = [IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-axlim_6D  = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
-full_axlim = [Jaxlim, Haxlim, Ksaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+axlim_list_5D1 = [Jaxlim, Ksaxlim, IR2axlim, IR4axlim, MP1axlim]
+axlim_list_5D2 = [IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+axlim_list_6D  = [Jaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
+full_axlim_list = [Jaxlim, Haxlim, Ksaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axlim, MP1axlim]
 
 # GP/GPP Index
 GP_OBJ_ID_5D1, GP_ID_5D1 = 233, 234
@@ -175,49 +183,41 @@ GP_KEY_ID_6D = 247
 # Set variables
 # ==============================================================================
 # Var Set 1: For 6D GP (J, IR1, IR2, IR3, IR4, MP1)
-band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID = \
-set_common_variables(band_ID=[0, 3, 4, 5, 6, 7],
-                     GP_OBJ_ID=GP_OBJ_ID_6D,
-                     GP_ID=GP_ID_6D,
-                     GPP_OBJ_ID=GPP_OBJ_ID_6D,
-                     GPP_ID=GPP_ID_6D,
-                     KEY_ID=GP_KEY_ID_6D,
-                     flux_ID=flux_ID_6D,
-                     flux_err_ID=flux_err_ID_6D,
-                     mag_ID=mag_ID_6D,
-                     mag_err_ID=mag_err_ID_6D,
-                     qua_ID=qua_ID_6D,
-                     psf_ID=psf_ID_6D)
+def set_common_variables(band_ID, band_name, axlim_list, \
+                         flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+                         GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID):
+    '''
+    This is to set important and common variables
+    '''
+    return band_ID, band_name, axlim_list, \
+           flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+           GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID
+
+band_ID, band_name, axlim_list, \
+flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID = \
+set_common_variables(band_ID=[0, 3, 4, 5, 6, 7], band_name=band_name_6D, axlim_list=axlim_list_6D, \
+                     flux_ID=flux_ID_6D, flux_err_ID=flux_err_ID_6D, f0_list=f0_list_6D, \
+                     mag_ID=mag_ID_6D, mag_err_ID=mag_err_ID_6D, qua_ID=qua_ID_6D, psf_ID=psf_ID_6D, \
+                     GP_OBJ_ID=GP_OBJ_ID_6D, GP_ID=GP_ID_6D, GPP_OBJ_ID=GPP_OBJ_ID_6D, GPP_ID=GPP_ID_6D, GP_KEY_ID=GP_KEY_ID_6D)
 
 # # Var Set 2: For 5D GP1 (J, Ks, IR2, IR4, MP1)
-# band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID = \
-# set_common_variables(band_ID=[0, 2, 4, 6, 7],
-                   # GP_OBJ_ID=GP_OBJ_ID_5D1,
-                   # GP_ID=GP_ID_5D1,
-                   # GPP_OBJ_ID=GPP_OBJ_ID_5D1,
-                   # GPP_ID=GPP_ID_5D1,
-                   # KEY_ID=GP_KEY_ID_5D1,
-                   # flux_ID=flux_ID_5D1,
-                   # flux_err_ID=flux_err_ID_5D1,
-                   # mag_ID=mag_ID_5D1,
-                   # mag_err_ID=mag_err_ID_5D1,
-                   # qua_ID=qua_ID_5D1,
-                   # psf_ID=psf_ID_5D1)
+# band_ID, band_name, axlim_list, \
+# flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+# GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID = \
+# set_common_variables(band_ID=[0, 2, 4, 6, 7], band_name=band_name_5D1, axlim_list=axlim_list_5D1, \
+                     # flux_ID=flux_ID_5D1, flux_err_ID=flux_err_ID_5D1, f0_list=f0_list_5D1, \
+                     # mag_ID=mag_ID_5D1, mag_err_ID=mag_err_ID_5D1, qua_ID=qua_ID_5D1, psf_ID=psf_ID_5D1, \
+                     # GP_OBJ_ID=GP_OBJ_ID_5D1, GP_ID=GP_ID_5D1, GPP_OBJ_ID=GPP_OBJ_ID_5D1, GPP_ID=GPP_ID_5D1, GP_KEY_ID=GP_KEY_ID_5D1)
 
 # # Var Set 3: For 5D GP2 (IR1, IR2, IR3, IR4, MP1)
-# band_ID, GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, KEY_ID, flux_ID, flux_err_ID, mag_ID, mag_err_ID, qua_ID, psf_ID = \
-# set_common_variables(band_ID=[3, 4, 5, 6, 7],
-                   # GP_OBJ_ID=GP_OBJ_ID_5D2,
-                   # GP_ID=GP_ID_5D2,
-                   # GPP_OBJ_ID=GPP_OBJ_ID_5D2,
-                   # GPP_ID=GPP_ID_5D2,
-                   # KEY_ID=GP_KEY_ID_5D2,
-                   # flux_ID=flux_ID_5D2,
-                   # flux_err_ID=flux_err_ID_5D2,
-                   # mag_ID=mag_ID_5D2,
-                   # mag_err_ID=mag_err_ID_5D2,
-                   # qua_ID=qua_ID_5D2,
-                   # psf_ID=psf_ID_5D2)
+# band_ID, band_name, axlim_list, \
+# flux_ID, flux_err_ID, f0_list, mag_ID, mag_err_ID, qua_ID, psf_ID, \
+# GP_OBJ_ID, GP_ID, GPP_OBJ_ID, GPP_ID, GP_KEY_ID = \
+# set_common_variables(band_ID=[3, 4, 5, 6, 7], band_name=band_name_5D2, \
+                     # flux_ID=flux_ID_5D2, flux_err_ID=flux_err_ID_5D2, f0_list=f0_list_5D2, axlim_list=axlim_list_5D2, \
+                     # mag_ID=mag_ID_5D2, mag_err_ID=mag_err_ID_5D2, qua_ID=qua_ID_5D2, psf_ID=psf_ID_5D2, \
+                     # GP_OBJ_ID=GP_OBJ_ID_5D2, GP_ID=GP_ID_5D2, GPP_OBJ_ID=GPP_OBJ_ID_5D2, GPP_ID=GPP_ID_5D2, GP_KEY_ID=GP_KEY_ID_5D2)
 
 # Variables which used in all following programs can be modified here
 # ==============================================================================
