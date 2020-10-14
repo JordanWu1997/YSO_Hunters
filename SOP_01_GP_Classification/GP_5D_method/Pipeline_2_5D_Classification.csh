@@ -126,12 +126,12 @@ foreach i (${indice})
         set path_5D1="${GP_dir}/J_K_IR2_IR4_MP1/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}"
         set path_5D2="${GP_dir}/IR1_IR2_IR3_IR4_MP1/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}"
         Calculate_GP_WI_5D1_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
-        ${path_5D1}/after_smooth_lack_0_01234_5D_lower_bounds_AlB0.npy \
-        ${path_5D1}/after_smooth_lack_0_01234_5D_upper_bounds_AlB0.npy \
+        ${path_5D1}/after_smooth_lack_0_01234_5D_lower_bounds_AlB1.npy \
+        ${path_5D1}/after_smooth_lack_0_01234_5D_upper_bounds_AlB1.npy \
         5 01234 ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
         Calculate_GP_WI_5D2_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
-        ${path_5D2}/after_smooth_lack_0_01234_5D_lower_bounds_AlB0.npy \
-        ${path_5D2}/after_smooth_lack_0_01234_5D_upper_bounds_AlB0.npy \
+        ${path_5D2}/after_smooth_lack_0_01234_5D_lower_bounds_AlB1.npy \
+        ${path_5D2}/after_smooth_lack_0_01234_5D_upper_bounds_AlB1.npy \
         5 01234 ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
         Merge_2_5D_GPs_Result.py ${cloud} ${method} | tee -a ${logfile}
         set GP_out=${cloud}_${dim}D_tot_BD_GP_out_catalog.tbl

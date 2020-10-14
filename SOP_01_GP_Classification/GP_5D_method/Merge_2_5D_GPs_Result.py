@@ -38,14 +38,21 @@ if __name__ == '__main__':
     # Setup catalog prefix
     cloud_name = str(argv[1])
     method     = str(argv[2])
+
     prefix     = ''
+    catalog_5D1_name = '{}_5D1_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix)
+    catalog_5D2_name = '{}_5D2_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix)
+    out_catalog_name = '{}_5D_tot_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix)
     if method == 'BD':
         prefix = 'BD_'
+        catalog_5D1_name = '{}_5D1_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
+        catalog_5D2_name = '{}_5D2_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
+        out_catalog_name = '{}_5D_tot_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
 
     # Load catalog
-    with open('{}_5D1_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix), 'r') as catalog:
+    with open(catalog_5D1_name, 'r') as catalog:
         catalog_5D1 = catalog.readlines()
-    with open('{}_5D2_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix), 'r') as catalog:
+    with open(catalog_5D2_name, 'r') as catalog:
         catalog_5D2 = catalog.readlines()
 
     # Generate property indice to be merged
@@ -65,7 +72,7 @@ if __name__ == '__main__':
         result_5D_tot.append('\t'.join(result_5D1))
 
     # Save result
-    with open('{}_5D_tot_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix), 'w') as out_catalog:
+    with open(out_catalog_name, 'w') as out_catalog:
         out_catalog.write('\n'.join(result_5D_tot) + '\n')
     m_end   = time.time()
     print('\nWhole {} process took {:.3f} secs\n'.format(str(argv[0]), m_end-m_start))
