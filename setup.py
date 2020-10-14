@@ -33,19 +33,19 @@ if __name__ == '__main__':
     if verbose: print('\nFiles to change head line ...')
     exec_file_list = []
     for dirs in glob('./*'):
-        if 'backup' not in dirs:
+        if 'backup' not in dirs.lower():
             for files in glob('{}/*'.format(dirs)):
                 if ('.py' in files) and ('.pyc' not in files):
                     exec_file_list.append(files)
                     if verbose: print(files)
     for dirs in glob('./*/'):
-        if 'backup' not in dirs:
+        if 'backup' not in dirs.lower():
             for files in glob('{}/*'.format(dirs)):
                 if ('.py' in files) and ('.pyc' not in files):
                     exec_file_list.append(files)
                     if verbose: print(files)
     for dirs in glob('./*/*'):
-        if 'backup' not in dirs:
+        if 'backup' not in dirs.lower():
             for files in glob('{}/*'.format(dirs)):
                 if ('.py' in files) and ('.pyc' not in files):
                     exec_file_list.append(files)

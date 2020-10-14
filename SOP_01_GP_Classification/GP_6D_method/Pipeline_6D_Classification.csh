@@ -154,7 +154,7 @@ foreach i (${indice})
     Check_Coord.py ${cloud}_6D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_6D_GP_to_image_check.tbl default ${cloud}_6D_GP_IC default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_6D_GP_others.tbl default ${cloud}_6D_OTHERS default 7 False | tee -a ${logfile}
-    Print_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
+    Print_6D_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
 
     # Single cloud ends and change directory to next one
     echo "${cloud} completes ...\n"
@@ -163,6 +163,9 @@ end
 
 # Merge all YSO candidates
 echo "Merging all YSO candidates ..."
-Merge_YSO_catalog.csh
+Merge_6D_YSO_catalog.csh # In All_YSO dir
+Check_Coord.py all_new_LYSO.tbl default all_new_LYSO 7 False | tee -a ${logfile}
+Check_Coord.py all_new_UYSO.tbl default all_new_UYSO 7 False | tee -a ${logfile}
+Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO 7 False | tee -a ${logfile}
 
 echo "Pipeline completed ...\n"
