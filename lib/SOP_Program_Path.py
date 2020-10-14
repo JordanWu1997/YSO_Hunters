@@ -47,6 +47,11 @@ Selfmade_6D_GP_Dict_path = '/mazu/users/jordan/YSO_Project/SEIP_GP_Bound/GPV_aft
 #   - SOP_Program_6D_method/new_dict_6D_method.py
 Selfmade_6D_GP_BD_path = "{}".format(New_Table_Prefix)
 
+# PATH FOR 5D method
+SWIRE_GP_BD_path = '/mazu/users/jordan/YSO_Project/SWIRE_GP_Bound'
+Selfmade_SWIRE_5D1_GP_BD_path = "{}/J_K_IR2_IR4_MP1".format(SWIRE_GP_BD_path)
+Selfmade_SWIRE_5D2_GP_BD_path = "{}/IR1_IR2_IR3_IR4_MP1".format(SWIRE_GP_BD_path)
+
 # PATH FOR
 #   - SOP_Program_6D_method/SOP_Execution_6D_method.py
 Hsieh_YSO_List_path = '{}All_Table_To_Compare/Table_From_Hsieh/'.format(New_Table_Prefix)

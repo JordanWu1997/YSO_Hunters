@@ -217,7 +217,7 @@ if __name__ == '__main__':
     sigma        = int(argv[9])
     bond         = int(argv[10])
     refD         = int(argv[11])
-    bound_path   = spp.Selfmade_5D1_GP_BD_path
+    bound_path   = spp.Selfmade_SWIRE_5D1_GP_BD_path
 
     # Lower bound array
     if galaxy_lower == 'default':
