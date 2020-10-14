@@ -11,6 +11,6 @@ set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
 
 foreach i (${indice})
     cd ${clouds[${i}]}
-    Print_Confusion_Matrix.py ${clouds[${i}]}
+    Print_6D_Confusion_Matrix.py ${clouds[${i}]}
     cd ../
 end

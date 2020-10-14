@@ -36,8 +36,7 @@ POS_VEC_ID = GP_KEY_ID_6D
 
 # JHK photometry system
 JHK_system = 'ukidss' #'2mass'
-all_axlim  = full_axlim
-axlim_list = [full_axlim[i] for i in band_ID]
+axlim_list = [full_axlim_list[i] for i in band_ID]
 name_list  = [full_band_name[i] for i in band_ID]
 MP1_mag_ID = np.nan
 IR2_mag_ID = np.nan

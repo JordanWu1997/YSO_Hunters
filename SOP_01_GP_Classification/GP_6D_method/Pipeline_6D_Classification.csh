@@ -62,7 +62,7 @@ set ukidss_obs=(0 0 0 0 0 0 0) #for original Hsieh's classification
 # ======================================================
 
 # Setup
-set par_dir=Cloud_Classification_GPM_${method}_Original_HREL
+set par_dir=Cloud_Classification_GPM_${method}
 if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir=${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}
 if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}
@@ -164,8 +164,7 @@ end
 # Merge all YSO candidates
 echo "Merging all YSO candidates ..."
 Merge_6D_YSO_catalog.csh # In All_YSO dir
-Check_Coord.py all_new_LYSO.tbl default all_new_LYSO 7 False | tee -a ${logfile}
-Check_Coord.py all_new_UYSO.tbl default all_new_UYSO 7 False | tee -a ${logfile}
-Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO 7 False | tee -a ${logfile}
-
+#Check_Coord.py all_new_LYSO.tbl default all_new_LYSO 7 False | tee -a ${logfile}
+#Check_Coord.py all_new_UYSO.tbl default all_new_UYSO 7 False | tee -a ${logfile}
+#Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO 7 False | tee -a ${logfile}
 echo "Pipeline completed ...\n"

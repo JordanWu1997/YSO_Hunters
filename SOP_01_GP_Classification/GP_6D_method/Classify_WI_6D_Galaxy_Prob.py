@@ -18,14 +18,14 @@ latest update: 20200524 Jordan Wu'''
 from __future__ import print_function
 from sys import argv, exit
 import time
-import os
+from os import system
 from Useful_Functions import *
 from All_Variables import *
 
 # Global Variables
 #=========================================================================
 RA_ID              = coor_ID[0]
-DEC_ID             = coor_ID[2]
+DEC_ID             = coor_ID[1]
 MP1_Qua_ID         = qua_ID_Spitzer[4]
 GP_OBJ_ID, GP_ID   = GP_OBJ_ID_6D, GP_ID_6D
 GPP_OBJ_ID, GPP_ID = GPP_OBJ_ID_6D, GPP_ID_6D
@@ -114,11 +114,11 @@ if __name__ == '__main__':
             out_cat.write('{}'.format(line))
 
     # Print out catalog line numbers
-    os.system('echo "\nThe Saturate Candiates in YSO candidates:" && awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl'.format(\
-                                                    MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
-    os.system('echo "The YSO Candiates:" && wc -l {}_6D_YSO.tbl'.format(cloud_name))
-    os.system('echo "The Galaxy Candidates:" && wc -l {}_6D_Galaxy.tbl'.format(cloud_name))
-    os.system('echo "The Image Check Candidates:" && wc -l {}_6D_GP_to_image_check.tbl'.format(cloud_name))
-    os.system('echo "The Others:" && wc -l {}_6D_GP_others.tbl'.format(cloud_name))
+    system('echo "\nThe Saturate Candiates in YSO candidates:" && awk \'${:d}==\"S\" {{ print ${:d}, ${:d} }}\' {}_6D_YSO.tbl'.format(\
+                                                 MP1_Qua_ID+1, RA_ID+1, DEC_ID+1, cloud_name))
+    system('echo "The YSO Candiates:" && wc -l {}_6D_YSO.tbl'.format(cloud_name))
+    system('echo "The Galaxy Candidates:" && wc -l {}_6D_Galaxy.tbl'.format(cloud_name))
+    system('echo "The Image Check Candidates:" && wc -l {}_6D_GP_to_image_check.tbl'.format(cloud_name))
+    system('echo "The Others:" && wc -l {}_6D_GP_others.tbl'.format(cloud_name))
     s_end   = time.time()
     print('Whole {} process took {:.3f} secs'.format(argv[0], s_end - s_start))
