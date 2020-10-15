@@ -39,6 +39,7 @@ set Storage = "/home/jordan/YSO_Project/"
 setenv PATH ${PATH}:$Storage/YSO_Hunters/bin
 setenv PATH ${PATH}:$Storage/YSO_Hunters/lib
 setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob_Model
+setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method
 setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method_from_Hsieh
 setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_6D_method
 setenv PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_nD_method
@@ -61,6 +62,7 @@ export Storage="/home/jordan/YSO_Project/"
 export PATH ${PATH}:$Storage/YSO_Hunters/bin
 export PATH ${PATH}:$Storage/YSO_Hunters/lib
 export PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob_Model
+export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method
 export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method_from_Hsieh
 export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_6D_method
 export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_nD_method
