@@ -59,15 +59,15 @@ setenv PYTHONPYCACHEPREFIX $HOME/.cache/cpython
 export Storage="/home/jordan/YSO_Project/"
 
 # Setup Working Environments For YSO Hunter Programs
-export PATH ${PATH}:$Storage/YSO_Hunters/bin
-export PATH ${PATH}:$Storage/YSO_Hunters/lib
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob_Model
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method_from_Hsieh
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_6D_method
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_nD_method
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Av_Check
-export PATH ${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Image_Check
+export PATH=${PATH}:$Storage/YSO_Hunters/bin
+export PATH=${PATH}:$Storage/YSO_Hunters/lib
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_00_Gal_Prob_Model
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_5D_method_from_Hsieh
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_6D_method
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_01_GP_Classification/GP_nD_method
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Av_Check
+export PATH=${PATH}:$Storage/YSO_Hunters/SOP_02_Further_Check/Candidate_Image_Check
 
 # Setup Python Module Environments For YSO Hunter Programs
 export PYTHONPATH="$Storage/YSO_Hunters/lib:$PYTHONPATH"
