@@ -1,11 +1,20 @@
 #!/usr/bin/python
+'''
+
+'''
+
+# Modules
+#=====================================================================
 import matplotlib.pyplot as plt
 import numpy as np
+from sys import exit, argv
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import combinations
 from os import system, chdir, path
 from All_Variables import *
 
+# Functions
+#======================================================================
 def process_table(path):
     '''
     This is to get 6D magnitude from input table
@@ -17,15 +26,27 @@ def process_table(path):
     output = np.array(output)
     return output
 
+# Main Program
+#======================================================================
 if __name__ == '__main__':
+
+    # Check inputs
+    if len(argv) != 5:
+        exit('\n\tWrong Input Argument!\
+              \n\tExample: [program] [galaxy model] [GP method] [input catalog] [details]\
+              \n\t[galaxy model]: catalog for galaxy model ["SEIP"/"SWIRE_2MASS_BR"/"2MASS"]\
+              \n\t[GP method]: method to classify YSO ["GD"/"BD"]\
+              \n\t[input catalog]: catalog for classification ["Original_HREL"/""]\
+              \n\t[details]: detailed description for plotting [e.g. "6D_bin0.5_sigma2_bond0_refD5"]\n')
+    else:
+        print('Start plotting ...')
 
     mazu_path     = '/mazu/users/jordan/YSO_Project'
     out_par       = '/home/jordan/YSO_Project/Result'
-
-    galaxy_model  = 'SWIRE' #SEIP #SWIRE_2MASS_BR
-    GP_method     = 'BD' # GD
-    input_catalog = 'Original_HREL' # ''
-    details       = '6D_bin0.5_sigma2_bond0_refD5'
+    galaxy_model  = str(argv[1]) #'SWIRE' #SEIP #SWIRE_2MASS_BR
+    GP_method     = str(argv[2]) #'BD' # GD
+    input_catalog = str(argv[3]) #'Original_HREL' # ''
+    details       = str(argv[4])  #'6D_bin0.5_sigma2_bond0_refD5'
 
     # Assign path variables
     GD_pos_num_path     = '{}/{}_GP_Bound/GPV_after_smooth_{}'.format(mazu_path, galaxy_model, details)
@@ -89,15 +110,16 @@ if __name__ == '__main__':
         axis.scatter(bound[:, b1], bound[:, b2], bound[:, b3],label='BD', c='b', alpha=0.5)
         axis.scatter(GD_pos[:, b1], GD_pos[:, b2], GD_pos[:,b3], label='GD', c='g', alpha=0.5)
         # axis.scatter(GD_pos_5D[:, b1], GD_pos_5D[:, b2], GD_pos_5D[:, b3], label='GD_5D', c='g', alpha=0.5)
-        axis.scatter(GY[:, b1], GY[:, b2], GY[:, b3], label='new_YSO', c='r', alpha=0.1)
+        axis.scatter(NY[:, b1], NY[:, b2], NY[:, b3], label='new_YSO', c='r', alpha=0.1)
         axis.scatter(NLY[:, b1], NLY[:, b2], NLY[:, b3], label='new_YSO_LYSO', c='y', alpha=0.5)
         axis.scatter(NUY[:, b1], NUY[:, b2], NUY[:, b3], label='new_YSO_UYSO', c='purple', alpha=0.5)
         axis.scatter(NNULY[:, b1], NNULY[:, b2], NNULY[:, b3], label='new_YSO_NULYSO', c='cyan', alpha=0.5)
-        axis.scatter(YY[:, b1], YY[:, b2], YY[:, b3], label='YSO_and_Hsieh_YSO', c='lime', alpha=0.5)
-        axis.scatter(GY[:, b1], GY[:, b2], GY[:, b3], label='YSO_not_Hsieh_YSO', c='orange', alpha=0.5)
+        axis.scatter(YY[:, b1], YY[:, b2], YY[:, b3], label='YSO_and_Hsieh_YSO', c='lime', alpha=0.1)
+        # axis.scatter(GY[:, b1], GY[:, b2], GY[:, b3], label='YSO_not_Hsieh_YSO', c='orange', alpha=0.5)
         axis.legend()
         axis.set_xlabel(band[b1], fontsize=16)
         axis.set_ylabel(band[b2], fontsize=16)
         axis.set_zlabel(band[b3], fontsize=16)
         axis.set_title(out_title)
         plt.savefig('{:d}{:d}{:d}{}.png'.format(b1, b2, b3, out_prefix))
+        #plt.show()
