@@ -55,8 +55,8 @@ echo "\nGP_dir: ${GP_dir}"
 # cloud indice and ukidss observation indicator
 set indice=(1 2 3 4 5 6 7)
 set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
-#set ukidss_obs=(0 0 0 0 1 1 1) # for new added UKIDSS catalog
-set ukidss_obs=(0 0 0 0 0 0 0) #for original Hsieh's classification
+set ukidss_obs=(0 0 0 0 1 1 1) # for new added UKIDSS catalog
+#set ukidss_obs=(0 0 0 0 0 0 0) #for original Hsieh's classification
 
 # Main Program
 # ======================================================
@@ -163,8 +163,8 @@ end
 
 # Merge all YSO candidates
 echo "Merging all YSO candidates ..."
-Merge_6D_YSO_catalog.csh # In All_YSO dir
-#Check_Coord.py all_new_LYSO.tbl default all_new_LYSO 7 False | tee -a ${logfile}
-#Check_Coord.py all_new_UYSO.tbl default all_new_UYSO 7 False | tee -a ${logfile}
-#Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO 7 False | tee -a ${logfile}
+Merge_6D_YSO_catalog.csh && cd All_YSO
+#Check_Coord.py all_new_LYSO.tbl default all_new_LYSO default 7 False | tee -a ${logfile}
+#Check_Coord.py all_new_UYSO.tbl default all_new_UYSO default 7 False | tee -a ${logfile}
+#Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO default 7 False | tee -a ${logfile}
 echo "Pipeline completed ...\n"

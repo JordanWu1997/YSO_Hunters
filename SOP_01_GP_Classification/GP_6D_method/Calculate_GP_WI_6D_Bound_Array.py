@@ -116,7 +116,7 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
                 Count = 1e4;  OBJ_type += 'Faint'
     return POS_vector, OBJ_type, Count
 
-def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
+def Check_if_pos_larger_than_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
     '''
     This is to check if input is larger than the lower bound of galaxy probability
     '''
@@ -129,7 +129,7 @@ def Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
             break
     return GP_Lower_Bound_flag
 
-def Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
+def Check_if_pos_smaller_than_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
     '''
     This is to check if input is smaller than the lower bound of galaxy probability
     '''
@@ -146,6 +146,9 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
     '''
     This is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
+    Note:
+        Upper means larger in binning space (which means fainter)
+        Lower means smaller in binning space (which mean brighter)
     Count:
         "not_count" : LESS3BD
         "not_count" : AGB
@@ -157,8 +160,8 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
     '''
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
-        GP_Lower_Bound_flag = Check_GP_Lower_Bound(POS_vector, GP_Lower_Bound)
-        GP_Upper_Bound_flag = Check_GP_Upper_Bound(POS_vector, GP_Upper_Bound)
+        GP_Lower_Bound_flag = Check_if_pos_larger_than_GP_Lower_Bound(POS_vector, GP_Lower_Bound)
+        GP_Upper_Bound_flag = Check_if_pos_smaller_than_GP_Upper_Bound(POS_vector, GP_Upper_Bound)
         if (GP_Lower_Bound_flag) and (GP_Upper_Bound_flag):
             Count = 1e3;  OBJ_type += 'Galaxyc'
         elif (not GP_Lower_Bound_flag) and (GP_Upper_Bound_flag):
