@@ -54,7 +54,7 @@ if __name__ == '__main__':
     All_YSO_path        = '{}/{}_GP_Bound/Cloud_Classification_GPM_{}_{}/{}/All_YSO'.format(\
                            mazu_path, galaxy_model, GP_method, input_catalog, details)
     out_prefix          = '{}_{}_{}_{}'.format(galaxy_model, GP_method, input_catalog, details)
-    out_dir             = '{}/3D_MMD_{}'.format(out_par, out_prefix)
+    out_dir             = '{}/3D_MMD_{}_BDGY'.format(out_par, out_prefix)
     out_title           = out_prefix
 
     # Assign path variables
@@ -108,14 +108,14 @@ if __name__ == '__main__':
         fig = plt.figure()
         axis = fig.gca(projection='3d')
         axis.scatter(bound[:, b1], bound[:, b2], bound[:, b3],label='BD', c='b', alpha=0.5)
-        axis.scatter(GD_pos[:, b1], GD_pos[:, b2], GD_pos[:,b3], label='GD', c='g', alpha=0.5)
-        # axis.scatter(GD_pos_5D[:, b1], GD_pos_5D[:, b2], GD_pos_5D[:, b3], label='GD_5D', c='g', alpha=0.5)
-        axis.scatter(NY[:, b1], NY[:, b2], NY[:, b3], label='new_YSO', c='r', alpha=0.1)
-        axis.scatter(NLY[:, b1], NLY[:, b2], NLY[:, b3], label='new_YSO_LYSO', c='y', alpha=0.5)
-        axis.scatter(NUY[:, b1], NUY[:, b2], NUY[:, b3], label='new_YSO_UYSO', c='purple', alpha=0.5)
-        axis.scatter(NNULY[:, b1], NNULY[:, b2], NNULY[:, b3], label='new_YSO_NULYSO', c='cyan', alpha=0.5)
-        axis.scatter(YY[:, b1], YY[:, b2], YY[:, b3], label='YSO_and_Hsieh_YSO', c='lime', alpha=0.1)
-        # axis.scatter(GY[:, b1], GY[:, b2], GY[:, b3], label='YSO_not_Hsieh_YSO', c='orange', alpha=0.5)
+        #axis.scatter(GD_pos[:, b1], GD_pos[:, b2], GD_pos[:,b3], label='GD', c='g', alpha=0.5)
+        #axis.scatter(GD_pos_5D[:, b1], GD_pos_5D[:, b2], GD_pos_5D[:, b3], label='GD_5D', c='g', alpha=0.5)
+        #axis.scatter(NY[:, b1], NY[:, b2], NY[:, b3], label='new_YSO', c='r', alpha=0.1)
+        #axis.scatter(NLY[:, b1], NLY[:, b2], NLY[:, b3], label='new_YSO_LYSO', c='y', alpha=0.5)
+        #axis.scatter(NUY[:, b1], NUY[:, b2], NUY[:, b3], label='new_YSO_UYSO', c='purple', alpha=0.5)
+        #axis.scatter(NNULY[:, b1], NNULY[:, b2], NNULY[:, b3], label='new_YSO_NULYSO', c='cyan', alpha=0.5)
+        #axis.scatter(YY[:, b1], YY[:, b2], YY[:, b3], label='YSO_and_Hsieh_YSO', c='lime', alpha=0.1)
+        axis.scatter(GY[:, b1], GY[:, b2], GY[:, b3], label='YSO_not_Hsieh_YSO', c='orange', alpha=0.5)
         axis.legend()
         axis.set_xlabel(band[b1], fontsize=16)
         axis.set_ylabel(band[b2], fontsize=16)

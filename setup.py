@@ -56,5 +56,5 @@ if __name__ == '__main__':
     if verbose: print('\n{:12}: {}'.format('Default HL', de_path))
     if verbose: print(  '{:12}: {}'.format('New HL', py_path))
     headline = '\/'.join(headline.split('/'))
-    # for files in exec_file_list:
-        # system("sed -i \'1 s/.*/{}/\' {}".format(headline, files))
+    for files in exec_file_list:
+        system("sed -i \'1 s/.*/{}/\' {}".format(headline, files))
