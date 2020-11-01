@@ -75,38 +75,6 @@ def Find_MP1_Saturate(row_list, MP1_qua_ID=MP1_qua_ID):
         MP1_Sat_flag = 'MP1_Sat'
     return MP1_Sat_flag
 
-def Generate_Galaxy_Populated_Region(GP_Lower_Bound, GP_Upper_Bound, fixed_ax):
-    '''
-    This is to generate galaxy populated region by filled all points \
-    between two upper/lower boundaries.
-    '''
-    galaxy_populated_region = []
-    same_galaxy_num = 0
-    for lower, upper in zip(GP_Lower_Bound, GP_Upper_Bound):
-        if not np.all(lower == upper):
-            WO_fixed_ax = list(lower[:fixed_ax]) + list(lower[fixed_ax+1:])
-            for fixed_ax_pos in range(lower[fixed_ax], upper[fixed_ax]+1):
-                WO_fixed_ax.insert(fixed_ax, fixed_ax_pos)
-                galaxy_populated_region.append(np.array(WO_fixed_ax))
-        else:
-            galaxy_populated_region.append(lower)
-            same_galaxy_num += 1
-    return galaxy_populated_region, same_galaxy_num
-
-def Check_Within_GP_Bound(POS_vector, Galaxy_Populated_Region):
-    '''
-    This is to check if input is within galaxy populated region \
-    (galaxy boundary)
-    '''
-    no_lack_POSv = POS_vector[POS_vector != -999]
-    GP_Within_Bound_flag = False
-    for bound in GP_Upper_Bound:
-        no_lack_bound = bound[POS_vector != -999]
-        if np.all(no_lack_POSv <= no_lack_bound):
-            GP_Within_Bound_flag = True
-            break
-    return GP_Within_Bound_flag
-
 def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
     '''
     This is to calculate position vector and object types
@@ -148,10 +116,39 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
                 Count = 1e4;  OBJ_type += 'Faint'
     return POS_vector, OBJ_type, Count
 
-def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', Qua=True, GP_PSF=False):
+def Check_if_pos_larger_than_GP_Lower_Bound(POS_vector, GP_Lower_Bound):
+    '''
+    This is to check if input is larger than the lower bound of galaxy probability
+    '''
+    no_lack_POSv = POS_vector[POS_vector != -999]
+    GP_Lower_Bound_flag = False
+    for bound in GP_Lower_Bound:
+        no_lack_bound = bound[POS_vector != -999]
+        if np.all(no_lack_POSv >= no_lack_bound):
+            GP_Lower_Bound_flag = True
+            break
+    return GP_Lower_Bound_flag
+
+def Check_if_pos_smaller_than_GP_Upper_Bound(POS_vector, GP_Upper_Bound):
+    '''
+    This is to check if input is smaller than the lower bound of galaxy probability
+    '''
+    no_lack_POSv = POS_vector[POS_vector != -999]
+    GP_Upper_Bound_flag = False
+    for bound in GP_Upper_Bound:
+        no_lack_bound = bound[POS_vector != -999]
+        if np.all(no_lack_POSv <= no_lack_bound):
+            GP_Upper_Bound_flag = True
+            break
+    return GP_Upper_Bound_flag
+
+def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False):
     '''
     This is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
+    Note:
+        Upper means larger in binning space (which means fainter)
+        Lower means smaller in binning space (which mean brighter)
     Count:
         "not_count" : LESS3BD
         "not_count" : AGB
@@ -163,12 +160,26 @@ def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', 
     '''
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
-        GP_Within_Bound_flag = Check_Within_GP_Bound(POS_vector, Galaxy_Populated_Region)
-        if GP_Within_Bound_flag:
+        GP_Lower_Bound_flag = Check_if_pos_larger_than_GP_Lower_Bound(POS_vector, GP_Lower_Bound)
+        GP_Upper_Bound_flag = Check_if_pos_smaller_than_GP_Upper_Bound(POS_vector, GP_Upper_Bound)
+        if (GP_Lower_Bound_flag) and (GP_Upper_Bound_flag):
             Count = 1e3;  OBJ_type += 'Galaxyc'
+        elif (not GP_Lower_Bound_flag) and (GP_Upper_Bound_flag):
+            Count = 1e-3; OBJ_type += 'LYSOc'
+        elif (GP_Lower_Bound_flag) and (not GP_Upper_Bound_flag):
+            Count = 1e-3; OBJ_type += 'UYSOc'
         else:
-            Count = 1e-3; OBJ_type += 'YSOc'
+            Count = 1e-3; OBJ_type += 'IYSO'
     return OBJ_type, Count, POS_vector
+
+def fill_up_list_WI_z(input_list, max_column_num=max_column_num):
+    '''
+    This is to fill up list with "z" to prevent list index error
+    '''
+    if len(input_list) != max_column_num:
+        while len(input_list) <= max_column_num:
+            input_list.append('z')
+    return input_list
 
 # Main Programs
 #======================================================================================
@@ -229,15 +240,13 @@ if __name__ == '__main__':
 
     # Load catalog and bounds ...
     l_start = time.time()
-    print('\nLoading input catalogs ...')
-    with open(catalog_name, 'r') as table:
-        catalog = table.readlines()
-    print('Gernating galaxy populated regions ...')
+    print('\nLoading bounds and input catalogs ...')
     GP_Lower_Bound = np.load(lower_bound_array)
     GP_Upper_Bound = np.load(upper_bound_array)
-    Galaxy_Populated_Region = Generate_Galaxy_Populated_Region(GP_Lower_Bound, GP_Upper_Bound, bd_band_ax)
+    with open(catalog_name, 'r') as table:
+        catalog = table.readlines()
     l_end   = time.time()
-    print("Loading catalog & Generate galaxy region took {:.3f} secs".format(l_end - l_start))
+    print("Loading arrays took {:.3f} secs".format(l_end - l_start))
 
     # Start calculating 6D galaxy probability and 6D galaxy probability PSF
     t_start = time.time()
@@ -246,12 +255,10 @@ if __name__ == '__main__':
     for i in range(len(catalog)):
         row_list = catalog[i].split()
         GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
-                                            Galaxy_Populated_Region, row_list, \
-                                            data_type='mag', Qua=True, GP_PSF=False)
+                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False)
         GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
-                                            Galaxy_Populated_Region, row_list, \
-                                            data_type='mag', Qua=True, GP_PSF=True)
-        row_list = fill_up_list_WI_z(row_list, max_column_num=max_column_num)
+                                GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=True)
+        row_list = fill_up_list_WI_z(row_list)
         row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
         row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)
         row_list[POS_VEC_ID] = (','.join([str(PV) for PV in Pos_vector]))
