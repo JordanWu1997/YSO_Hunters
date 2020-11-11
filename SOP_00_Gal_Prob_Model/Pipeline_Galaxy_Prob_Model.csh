@@ -72,6 +72,17 @@ else
     set qua_label = False
 endif
 
+# Generate Full Inp bands
+set i = 0
+set full_inp = ""
+while ($i < $dim)
+   set full_inp = "${full_inp}${i}"
+   @ i++
+end
+
+# Assign BD method along axis
+set BD_axis = 0
+
 # Input Variables
 set thread=10
 set logfile='term.out'
@@ -100,18 +111,18 @@ else
     echo 'Gaussian Smooth has been done ... [SKIP]'
 endif
 
-# GP Method for calculation
+# GP Method for Calculation
 if ( ${GP_method} == GD ) then
     echo 'Constructing Galaxy Probability ... [GD method]'
     Update_GP_Dict_Key_Tuple.py ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a $logfile
 else if ( ${GP_method} == BD ) then
     echo 'Constructing Galaxy Probability ... [BD method]'
-    Find_Galaxy_Prob_Bounary_Along_Basis.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 -n_th ${thread} | tee -a $logfile
+    Find_Galaxy_Prob_Bounary_Along_Basis.py ${dim} ${cube} ${sigma} ${bond} ${refD} ${full_inp} ${BD_axis} -n_th ${thread} | tee -a $logfile
 else if ( ${GP_method} == BOTH) then
     echo 'Constructing Galaxy Probability ... [GD method]'
     Update_GP_Dict_Key_Tuple.py ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a $logfile
     echo 'Constructing Galaxy Probability ... [BD method]'
-    Find_Galaxy_Prob_Bounary_Along_Basis.py ${dim} ${cube} ${sigma} ${bond} ${refD} 012345 0 -n_th ${thread} | tee -a $logfile
+    Find_Galaxy_Prob_Bounary_Along_Basis.py ${dim} ${cube} ${sigma} ${bond} ${refD} ${full_inp} ${BD_axis} -n_th ${thread} | tee -a $logfile
 else
     echo 'Wrong GP_method ...' && exit
 endif

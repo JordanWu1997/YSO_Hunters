@@ -1,18 +1,18 @@
 #!/usr/bin/python
 '''
 -------------------------------------------------------
-Example: [program] [input catalog] [datatype] [qua] [dimension] [cube size]
-
+Example: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size] [-band_ID]
 Input variables:
     [input catalog]: must include magnitudes
+    [cat_forat]:     format of catalog (SEIP_JACOB/C2D_HSIEH)
     [datatype]:      "mag" or "flux" input data in magnitude or flux (mJy)
-    [qua]:           if qua label is taken into calculation (True/False)
+    [qualabel]:      if qua label is taken into calculation (True/False)
     [dimension]:     dim of magnitude space (for now only "6")
     [cube size]:     length of multi-d cube in magnitude unit
+    [-band_ID]:      band index to use in calculation (default: 034567)
 
-TODO: Add input bands in the future
 -------------------------------------------------------
-Latest update 2020.09.29 Jordan Wu'''
+Latest update 2020.11.11 Jordan Wu'''
 
 # Load Modules
 #======================================================
@@ -22,6 +22,7 @@ import numpy as np
 from numba import jit
 from sys import argv, exit
 from os import chdir, system, path
+from argparse import ArgumentParser
 from All_Variables import *
 from Hsieh_Functions import *
 from Useful_Functions import *
@@ -98,24 +99,47 @@ def cascade_array_pos(sort_position):
 #======================================================
 if __name__ == '__main__':
 
-    # Check inputs
-    if len(argv) != 7:
-        exit('\n\tError: Wrong Arguments\
-        \n\tExample: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size]\
-        \n\t[input catalog]: must include magnitudes\
-        \n\t[catalog format]: format of catalog (SEIP_JACOB/C2D_HSIEH)\
-        \n\t[datatype]: "mag" or "flux" input data in magnitude or flux (mJy)\
-        \n\t[qua]: if qua label is taken into calculation (True/False)\
-        \n\t[dimension]: dim of magnitude space (for now only "6")\
-        \n\t[cube size]: length of multi-d cube in magnitude unit\n')
+    # # Check inputs
+    # if len(argv) != 7:
+        # exit('\n\tError: Wrong Arguments\
+        # \n\tExample: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size]\
+        # \n\t[input catalog]: must include magnitudes\
+        # \n\t[catalog format]: format of catalog (SEIP_JACOB/C2D_HSIEH)\
+        # \n\t[datatype]: "mag" or "flux" input data in magnitude or flux (mJy)\
+        # \n\t[qua]: if qua label is taken into calculation (True/False)\
+        # \n\t[dimension]: dim of magnitude space (for now only "6")\
+        # \n\t[cube size]: length of multi-d cube in magnitude unit\n')
+    # # Input variables
+    # inpcat    = str(argv[1])
+    # catformat = str(argv[2])
+    # datatype  = str(argv[3])
+    # qualabel  = bool(argv[4] == 'True')
+    # dim       = int(argv[5])
+    # cube      = float(argv[6])
 
-    # Input variables
-    inpcat    = str(argv[1])
-    catformat = str(argv[2])
-    datatype  = str(argv[3])
-    qualabel  = bool(argv[4] == 'True')
-    dim       = int(argv[5])
-    cube      = float(argv[6])
+    parser = ArgumentParser(description='Count binning galaxy position vector in multi-dimensional magnitude space',\
+                            epilog='Band index: J[0], H[1], K[2], IR1[3], IR2[4], IR3[5], IR4[6], MP1[7]; Default: 034567')
+    parser.add_argument('input_catalog', type=str, help='Input catalog (must include magnitudes if datatype is "mag")')
+    parser.add_argument('cat_format', type=str, help='format of catalog (SEIP_JACOB/C2D_HSIEH)')
+    parser.add_argument('datatype', type=str, help='"mag" or "flux" input data in magnitude or flux (mJy)')
+    parser.add_argument('qualabel', type=bool, help='if qua label is taken into calculation (True/False)')
+    parser.add_argument('dimension', type=int, help='dim of magnitude space (for now only "6")')
+    parser.add_argument('cube_size', type=float, help='length of multi-d cube (unit: magnitude)')
+    parser.add_argument('-band_ID', '--band_index', type=str, dest='band_IDs', help='Band index to use in calculation (e.g. 012345)')
+
+    args = parser.parse_args()
+    inpcat    = args.input_catalog
+    catformat = args.cat_format
+    datatype  = args.datatype
+    qualabel  = args.qualabel
+    dim       = args.dimension
+    cube      = args.cube_size
+    band_IDs  = args.band_IDs
+
+    if band_IDs is None:
+        band_ID = band_ID
+    else:
+        band_ID = [int(ID) for ID in band_IDs]
 
     # For 6D GP (J, IR1, IR2, IR3, IR4, MP1)
     if catformat == 'SEIP_JACOB':
@@ -123,15 +147,14 @@ if __name__ == '__main__':
         mag_ID  = band_ID
     # For 6D GP (J, IR1, IR2, IR3, IR4, MP1)
     elif catformat == 'C2D_HSIEH':
-        flux_ID = flux_ID
-        mag_ID  = mag_ID
+        flux_ID = [full_flux_ID[ID] for ID in band_ID]
+        mag_ID  = [full_mag_ID[ID] for ID in band_ID]
     else:
         exit('Wrong catalog format ...')
 
     # Setup parameters
-    all_axlim  = full_axlim
-    axlim_list = [full_axlim[i] for i in band_ID]
-    name_list  = [full_band_name[i] for i in band_ID]
+    axlim_list = [full_axlim_list[ID] for ID in band_ID]
+    name_list  = [full_band_name[ID] for ID in band_ID]
     MP1_mag_ID = np.nan
     IR2_mag_ID = np.nan
     IR3_mag_ID = np.nan
@@ -149,7 +172,8 @@ if __name__ == '__main__':
     else:
         system('mkdir GPV_' + str(dim) + 'Dposvec_bin' + str(cube))
 
-    bins_list = [int(round((full_axlim[i][1] - full_axlim[i][0]) / cube)) + 1 for i in band_ID]
+    qua_ID = [full_qua_ID[ID] for ID in band_ID]
+    bins_list = [int(round((full_axlim_list[i][1] - full_axlim_list[i][0]) / cube)) + 1 for i in band_ID]
     # Print out input information
     print('\nJHK system: {}\ncubesize: {:.1f}\nflux_ID: {}\nmag_ID: {}\nQua/Qua_ID: {}, {}\nShape: {}'.format(\
            JHK_system, cube, str(flux_ID), str(mag_ID), str(qualabel), str(qua_ID), str(bins_list)))

@@ -55,11 +55,12 @@ def set_common_variables(band_ID, band_name, axlim_list, \
 c2d_lab_ID = [16]
 
 # Flux IDs
+full_flux_ID = [33, 54, 75, 96, 117, 138, 159, 180]
 # Flux ID: J, H, IR2, IR4, MP1 (2MASS + Spitzer)
 flux_ID_5D1     = [33, 75, 117, 159, 180]
 flux_err_ID_5D1 = [34, 76, 118, 160, 181]
 # Flux ID: IR1, IR2, IR3, IR4, MP1 (ONLYSpitzer)
-flux_ID_5D2    = [96, 117, 138, 159, 180]
+flux_ID_5D2     = [96, 117, 138, 159, 180]
 flux_err_ID_5D2 = [97, 118, 139, 160, 181]
 # Flux ID: J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
 flux_ID_6D     = [33, 96, 117, 138, 159, 180]
@@ -72,6 +73,7 @@ flux_ID_2Mass     = [33, 54, 75]
 flux_err_ID_2Mass = [34, 55, 76]
 
 # Magnitude IDs
+full_mag_ID  = [35, 56, 77, 99, 120, 141, 162, 183]
 mag_ID_5D1     = [35, 77, 119, 161, 182]
 mag_err_ID_5D1 = [36, 78, 120, 162, 183]
 # Flux ID: IR1, IR2, IR3, IR4, MP1 (ONLYSpitzer)
@@ -87,15 +89,16 @@ mag_err_ID_Spitzer = [99, 120, 141, 162, 183]
 
 # Quality IDs
 # Qua ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
-qua_ID_5D1          = [37, 79, 121, 163, 184]
-qua_ID_5D2          = [100, 121, 142, 163, 184]
-qua_ID_6D           = [37, 100, 121, 142, 163, 184]
-qua_ID_2Mass        = [37, 58, 79]
-qua_ID_Spitzer      = [100, 121, 142, 163, 184]
-qua_ID_Spitzer_full = [37, 58, 79, 100, 121, 142, 163, 184, 205]
+qua_ID_full    = [37, 58, 79, 100, 121, 142, 163, 184, 205]
+qua_ID_5D1     = [37, 79, 121, 163, 184]
+qua_ID_5D2     = [100, 121, 142, 163, 184]
+qua_ID_6D      = [37, 100, 121, 142, 163, 184]
+qua_ID_2Mass   = [37, 58, 79]
+qua_ID_Spitzer = [100, 121, 142, 163, 184]
 
 # PSF IDs
 # PSF_ID:  J, IR1, IR2, IR3, IR4, MP1 (2MASS + Spitzer)
+psf_ID_full    = [39, 60, 81, 102, 123, 144, 165, 186]
 psf_ID_5D1     = [39, 81, 123, 165, 186]
 psf_ID_5D2     = [102, 123, 144, 165, 186]
 psf_ID_6D      = [39, 102, 123, 144, 165, 186]
@@ -179,6 +182,26 @@ GPP_OBJ_ID_5D2, GPP_ID_5D2 = 239, 240
 GPP_OBJ_ID_6D, GPP_ID_6D = 243, 244
 GP_KEY_ID_5D1, GP_KEY_ID_5D2 = 245, 246
 GP_KEY_ID_6D = 247
+
+GP_OBJ_ID_6D_0, GP_ID_6D_0   = 241, 242
+GPP_OBJ_ID_6D_0, GPP_ID_6D_0 = 243, 244
+GP_OBJ_ID_6D_1, GP_ID_6D_1   = 245, 246
+GPP_OBJ_ID_6D_1, GPP_ID_6D_1 = 247, 248
+GP_OBJ_ID_6D_2, GP_ID_6D_2   = 249, 250
+GPP_OBJ_ID_6D_2, GPP_ID_6D_2 = 251, 252
+GP_OBJ_ID_6D_3, GP_ID_6D_3   = 253, 254
+GPP_OBJ_ID_6D_3, GPP_ID_6D_3 = 255, 256
+GP_OBJ_ID_6D_4, GP_ID_6D_4   = 257, 258
+GPP_OBJ_ID_6D_4, GPP_ID_6D_4 = 259, 260
+GP_OBJ_ID_6D_5, GP_ID_6D_5   = 261, 262
+GPP_OBJ_ID_6D_5, GPP_ID_6D_5 = 263, 264
+
+GP_KEY_ID_6D_0 = 265
+GP_KEY_ID_6D_1 = 266
+GP_KEY_ID_6D_2 = 267
+GP_KEY_ID_6D_3 = 268
+GP_KEY_ID_6D_4 = 269
+GP_KEY_ID_6D_5 = 270
 
 # Set variables
 # ==============================================================================
