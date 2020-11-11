@@ -76,38 +76,38 @@ def Find_MP1_Saturate(row_list, MP1_qua_ID=MP1_qua_ID):
         MP1_Sat_flag = 'MP1_Sat'
     return MP1_Sat_flag
 
-def Generate_Galaxy_Populated_Region(GP_Lower_Bound, GP_Upper_Bound, fixed_ax):
-    '''
-    This is to generate galaxy populated region by filled all points \
-    between two upper/lower boundaries.
-    '''
-    galaxy_populated_region = []
-    same_galaxy_num = 0
-    for lower, upper in zip(GP_Lower_Bound, GP_Upper_Bound):
-        if not np.all(lower == upper):
-            WO_fixed_ax = list(lower[:fixed_ax]) + list(lower[fixed_ax+1:])
-            for fixed_ax_pos in range(lower[fixed_ax], upper[fixed_ax]+1):
-                WI_fixed_ax = copy.deepcopy(WO_fixed_ax)
-                WI_fixed_ax.insert(fixed_ax, fixed_ax_pos)
-                galaxy_populated_region.append(np.array(WI_fixed_ax))
-        else:
-            galaxy_populated_region.append(lower)
-            same_galaxy_num += 1
-    return galaxy_populated_region, same_galaxy_num
+# def Generate_Galaxy_Populated_Region(GP_Lower_Bound, GP_Upper_Bound, fixed_ax):
+    # '''
+    # This is to generate galaxy populated region by filled all points \
+    # between two upper/lower boundaries.
+    # '''
+    # galaxy_populated_region = []
+    # same_galaxy_num = 0
+    # for lower, upper in zip(GP_Lower_Bound, GP_Upper_Bound):
+        # if not np.all(lower == upper):
+            # WO_fixed_ax = list(lower[:fixed_ax]) + list(lower[fixed_ax+1:])
+            # for fixed_ax_pos in range(lower[fixed_ax], upper[fixed_ax]+1):
+                # WI_fixed_ax = copy.deepcopy(WO_fixed_ax)
+                # WI_fixed_ax.insert(fixed_ax, fixed_ax_pos)
+                # galaxy_populated_region.append(np.array(WI_fixed_ax))
+        # else:
+            # galaxy_populated_region.append(lower)
+            # same_galaxy_num += 1
+    # return galaxy_populated_region, same_galaxy_num
 
-def Check_Within_GP_Bound(POS_vector, Galaxy_Populated_Region):
-    '''
-    This is to check if input is within galaxy populated region \
-    (galaxy boundary)
-    '''
-    no_lack_POSv = POS_vector[POS_vector != -999]
-    GP_Within_Bound_flag = False
-    for bound in Galaxy_Populated_Region:
-        no_lack_bound = bound[POS_vector != -999]
-        if np.all(no_lack_POSv == no_lack_bound):
-            GP_Within_Bound_flag = True
-            break
-    return GP_Within_Bound_flag
+# def Check_Within_GP_Bound(POS_vector, Galaxy_Populated_Region):
+    # '''
+    # This is to check if input is within galaxy populated region \
+    # (galaxy boundary)
+    # '''
+    # no_lack_POSv = POS_vector[POS_vector != -999]
+    # GP_Within_Bound_flag = False
+    # for bound in Galaxy_Populated_Region:
+        # no_lack_bound = bound[POS_vector != -999]
+        # if np.all(no_lack_POSv == no_lack_bound):
+            # GP_Within_Bound_flag = True
+            # break
+    # return GP_Within_Bound_flag
 
 def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
     '''
@@ -150,7 +150,84 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
                 Count = 1e4;  OBJ_type += 'Faint'
     return POS_vector, OBJ_type, Count
 
-def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', Qua=True, GP_PSF=False):
+def Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Bound, fixed_ax):
+    '''
+    This is to find the location of boundary on probing axis
+    '''
+    POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vecotr[fixed_ax]
+    GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
+    GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
+    # Find bounary point on probing axis
+    POS_bd_ax, indicator = [], 0
+    for i in range(len(GP_Lower_Bound_ax)):
+        Lbd = GP_Lower_Bound_ax[i]
+        Ubd = GP_Upper_Bound_ax[i]
+        # Find corresponding points in galaxy populated region -> TBD
+        if np.all(POS_vector_ax, Lbd) and np.all(POS_vector_ax, Ubd):
+            POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
+            POS_bd_ax.append(GP_Upper_Bound[i, fixed_ax])
+            break
+        indicator += 1
+    # If no corresponding boundary point
+    if (indicator == len(GP_Lower_Bound_ax)):
+        POS_bd_ax = np.nan
+    return POS_bd_ax, POS_ax
+
+def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
+    '''
+    This is to assign GP value and object type based on the location on probing axis
+    (1) Outside galaxy-populated region (at bright end) -> LYSO
+    (2) Within  galaxy-populated region (in the middle) -> Galaxy
+    (3) Outside galaxy-populated region (at faint end)  -> UYSO
+    (4) Not be coverd by any boundary (Isolated)        -> IYSO
+
+    This code is modified from Jeremy Yang's work
+    '''
+    # No corresponding boundary -> Isolated YSO (IYSO)
+    if np.isnan(POS_bd_ax):
+        label = 1e-3
+        count = IYSOc
+    # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region
+    elif (POS_bd_ax[0] == POS_ax) and (POS_bd_ax[1] == POS_ax):
+        label = 1e3
+        count = IGalaxyc
+    # POS<Lower bd -> Outside galaxy region (LYSO)
+    elif (POS_bd_ax[0] > POS_ax):
+        label = 1e-3
+        count = LYSOc
+    # POS>Upper bd -> Outside galaxy region (UYSO)
+    elif (POS_bd_ax[1] < POS_ax):
+        label = 1e-3
+        count = UYSOc
+    # WITHIN galaxy region -> Galaxy
+    else:
+        label = 1e3
+        count = Galaxyc
+    return OBJ_type, count
+
+# def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', Qua=True, GP_PSF=False):
+    # '''
+    # This is to classify input object and return object type and galaxy probability
+    # GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
+    # Count:
+        # "not_count" : LESS3BD
+        # "not_count" : AGB
+        # 1e-5        : MP1_Sat
+        # 1e-4        : Bright
+        # 1e-3        : YSO
+        # 1e4         : Faint
+        # 1e3         : Galaxy
+    # '''
+    # POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
+    # if Count == 'init':
+        # GP_Within_Bound_flag = Check_Within_GP_Bound(POS_vector, Galaxy_Populated_Region)
+        # if GP_Within_Bound_flag:
+            # Count = 1e3;  OBJ_type += 'Galaxyc'
+        # else:
+            # Count = 1e-3; OBJ_type += 'YSOc'
+    # return OBJ_type, Count, POS_vector
+
+def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False):
     '''
     This is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
@@ -165,11 +242,9 @@ def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', 
     '''
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
-        GP_Within_Bound_flag = Check_Within_GP_Bound(POS_vector, Galaxy_Populated_Region)
-        if GP_Within_Bound_flag:
-            Count = 1e3;  OBJ_type += 'Galaxyc'
-        else:
-            Count = 1e-3; OBJ_type += 'YSOc'
+        POS_bd_ax, POS_ax = Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Bound, fixed_ax)
+        AOBJ_type, Count = Assign_GP_num_and_objtype(POS_bd_ax, POS_ax)
+        OBJ_type += AOBJ_type
     return OBJ_type, Count, POS_vector
 
 # Main Programs
@@ -240,13 +315,18 @@ if __name__ == '__main__':
         else:
             upper_bound_array = galaxy_upper
 
-        print('Gernating galaxy populated regions ...')
+        # print('Gernating galaxy populated regions ...')
+        # GP_Lower_Bound = np.load(lower_bound_array)
+        # GP_Upper_Bound = np.load(upper_bound_array)
+        # Galaxy_Populated_Region, _ = Generate_Galaxy_Populated_Region(\
+                                    # GP_Lower_Bound, GP_Upper_Bound, bd_band_ax)
+        # l_end   = time.time()
+        # print("Loading catalog & Generate galaxy region took {:.3f} secs".format(l_end - l_start))
+
         GP_Lower_Bound = np.load(lower_bound_array)
         GP_Upper_Bound = np.load(upper_bound_array)
-        Galaxy_Populated_Region, _ = Generate_Galaxy_Populated_Region(\
-                                    GP_Lower_Bound, GP_Upper_Bound, bd_band_ax)
         l_end   = time.time()
-        print("Loading catalog & Generate galaxy region took {:.3f} secs".format(l_end - l_start))
+        print("Loading catalog and galaxy boundary took {:.3f} secs".format(l_end - l_start))
 
         # Start calculating 6D galaxy probability and 6D galaxy probability PSF
         c_start = time.time()
@@ -254,12 +334,18 @@ if __name__ == '__main__':
         GP_tot_out = []
         for i in range(len(catalog)):
             row_list = catalog[i].split()
+            # GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
+                                                # Galaxy_Populated_Region, row_list, \
+                                                # data_type='mag', Qua=True, GP_PSF=False)
+            # GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
+                                                # Galaxy_Populated_Region, row_list, \
+                                                # data_type='mag', Qua=True, GP_PSF=True)
             GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
-                                                Galaxy_Populated_Region, row_list, \
-                                                data_type='mag', Qua=True, GP_PSF=False)
-            GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
-                                                Galaxy_Populated_Region, row_list, \
-                                                data_type='mag', Qua=True, GP_PSF=True)
+                                                GP_Lower_Bound, GP_Upper_Bound,\
+                                                row_list, data_type='mag', Qua=True, GP_PSF=False)
+            GPP_OBJ_type, GPP_Count, Pos_vector = Classification_Pipeline(\
+                                                GP_Lower_Bound, GP_Upper_Bound,\
+                                                row_list, data_type='mag', Qua=True, GP_PSF=True)
             row_list = fill_up_list_WI_z(row_list, max_column_num=max_column_num)
             row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
             row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)

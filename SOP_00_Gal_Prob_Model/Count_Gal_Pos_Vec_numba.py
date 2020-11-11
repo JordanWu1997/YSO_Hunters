@@ -122,7 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('input_catalog', type=str, help='Input catalog (must include magnitudes if datatype is "mag")')
     parser.add_argument('cat_format', type=str, help='format of catalog (SEIP_JACOB/C2D_HSIEH)')
     parser.add_argument('datatype', type=str, help='"mag" or "flux" input data in magnitude or flux (mJy)')
-    parser.add_argument('qualabel', type=bool, help='if qua label is taken into calculation (True/False)')
+    parser.add_argument('qualabel', type=str, help='if qua label is taken into calculation (True/False)')
     parser.add_argument('dimension', type=int, help='dim of magnitude space (for now only "6")')
     parser.add_argument('cube_size', type=float, help='length of multi-d cube (unit: magnitude)')
     parser.add_argument('-band_ID', '--band_index', type=str, dest='band_IDs', help='Band index to use in calculation (e.g. 012345)')
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     inpcat    = args.input_catalog
     catformat = args.cat_format
     datatype  = args.datatype
-    qualabel  = args.qualabel
+    qualabel  = (args.qualabel == 'True')
     dim       = args.dimension
     cube      = args.cube_size
     band_IDs  = args.band_IDs
