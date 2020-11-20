@@ -186,23 +186,23 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     # No corresponding boundary -> Isolated YSO (IYSO)
     if np.isnan(POS_bd_ax):
         label = 1e-3
-        count = IYSOc
+        count = 'IYSOc'
     # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region
     elif (POS_bd_ax[0] == POS_ax) and (POS_bd_ax[1] == POS_ax):
         label = 1e3
-        count = IGalaxyc
+        count = 'IGalaxyc'
     # POS<Lower bd -> Outside galaxy region (LYSO)
     elif (POS_bd_ax[0] > POS_ax):
         label = 1e-3
-        count = LYSOc
+        count = 'LYSOc'
     # POS>Upper bd -> Outside galaxy region (UYSO)
     elif (POS_bd_ax[1] < POS_ax):
         label = 1e-3
-        count = UYSOc
+        count = 'UYSOc'
     # WITHIN galaxy region -> Galaxy
     else:
         label = 1e3
-        count = Galaxyc
+        count = 'Galaxyc'
     return OBJ_type, count
 
 # def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', Qua=True, GP_PSF=False):
@@ -253,15 +253,14 @@ if __name__ == '__main__':
     t_start = time.time()
 
     # Check inputs
-    if len(argv) != 12:
+    if len(argv) != 10:
         exit('\n\tError: Wrong Usage!\
             \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] \
             \n\t\t [galaxy lower bd] [galaxy upper bd] [dim] [cube size] [sigma] [bond] [refD]\
             \n\t[catalog]: input catalog for classification\
             \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
             \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\
-            \n\t[galaxy lower bd]: direct point to file or "default"\
-            \n\t[galaxy upper bd]: direct point to file or "default"\
+            \n\t[bound_path]: absolute path to GP directory\
             \n\t[dim]: dimension of magnitude space (for now only "6")\
             \n\t[cube size]: length of multi-d cube in magnitude unit\
             \n\t[sigma]: standard deviation for gaussian dist. in magnitude\
@@ -274,14 +273,12 @@ if __name__ == '__main__':
     catalog_name = str(argv[1])
     cloud_name   = str(argv[2])
     data_type    = str(argv[3])
-    galaxy_lower = str(argv[4])
-    galaxy_upper = str(argv[5])
-    dim          = int(argv[6])
-    cube         = float(argv[7])
-    sigma        = int(argv[8])
-    bond         = int(argv[9])
-    refD         = int(argv[10])
-    bound_path   = spp.Selfmade_6D_GP_BD_path
+    bound_path   = int(argv[4])
+    dim          = int(argv[5])
+    cube         = float(argv[6])
+    sigma        = int(argv[7])
+    bond         = int(argv[8])
+    refD         = int(argv[9])
 
     # Load catalog and bounds ...
     l_start = time.time()
@@ -289,71 +286,62 @@ if __name__ == '__main__':
     with open(catalog_name, 'r') as table:
         catalog = table.readlines()
 
-    # Loop all fixed axes
+    # Load all boundaries
+    GP_Lower_Bound_list = []
+    GP_Upper_Bound_list = []
+    GP_OBJ_ID_list, GP_ID_list = [], []
+    GPP_OBJ_ID_list, GPP_ID_list = [], []
+    POS_VEC_ID_list = []
     for bd_band_ax in range(dim):
-
         # Setup output
         GP_OBJ_ID, GP_ID = eval('GP_OBJ_ID_6D_{:d}'.format(bd_band_ax)), eval('GP_ID_6D_{:d}'.format(bd_band_ax))
         GPP_OBJ_ID, GPP_ID = eval('GPP_OBJ_ID_6D_{:d}'.format(bd_band_ax)), eval('GPP_ID_6D_{:d}'.format(bd_band_ax))
         POS_VEC_ID = eval('GP_KEY_ID_6D_{:d}'.format(bd_band_ax))
-
         # Lower bound array
-        if galaxy_lower == 'default':
-            suffix = 'AlB{:d}'.format(bd_band_ax)
-            lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
-                                after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_{}'.format(\
-                                bound_path, dim, cube, sigma, bond, refD, 0, band_inp, dim, suffix)
-        else:
-            lower_bound_array = galaxy_lower
-
+        lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
+                                after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_AlB{}'.format(\
+                                bound_path, dim, cube, sigma, bond, refD, 0,\
+                                ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
         # Upper bound array
-        if galaxy_upper == 'default':
-            suffix = 'AlB{:d}'.format(bd_band_ax)
-            upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
-                                after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_{}'.format(\
-                                bound_path, dim, cube, sigma, bond, refD, 0, band_inp, dim, suffix)
-        else:
-            upper_bound_array = galaxy_upper
-
-        # print('Gernating galaxy populated regions ...')
-        # GP_Lower_Bound = np.load(lower_bound_array)
-        # GP_Upper_Bound = np.load(upper_bound_array)
-        # Galaxy_Populated_Region, _ = Generate_Galaxy_Populated_Region(\
-                                    # GP_Lower_Bound, GP_Upper_Bound, bd_band_ax)
-        # l_end   = time.time()
-        # print("Loading catalog & Generate galaxy region took {:.3f} secs".format(l_end - l_start))
-
+        upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
+                                after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_AlB{}'.format(\
+                                bound_path, dim, cube, sigma, bond, refD, 0,\
+                                ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
+        # Load all bound arrray
         GP_Lower_Bound = np.load(lower_bound_array)
         GP_Upper_Bound = np.load(upper_bound_array)
-        l_end   = time.time()
-        print("Loading catalog and galaxy boundary took {:.3f} secs".format(l_end - l_start))
+        # Append to list
+        GP_Lower_Bound_list.append(GP_Lower_Bound)
+        GP_Upper_Bound_list.append(GP_Upper_Bound)
+        GP_OBJ_ID_list.append(GP_OBJ_ID)
+        GP_ID_list.append(GP_ID)
+        GPP_OBJ_ID_list.append(GP_OBJ_ID)
+        GPP_ID_list.append(GPP_ID)
+        POS_VEC_ID_list.append(POS_VEC_ID)
+    l_end   = time.time()
+    print("Loading catalog and galaxy boundary took {:.3f} secs".format(l_end - l_start))
 
-        # Start calculating 6D galaxy probability and 6D galaxy probability PSF
-        c_start = time.time()
-        print('\nStart Calculating 6D GP/GPP...')
-        GP_tot_out = []
-        for i in range(len(catalog)):
-            row_list = catalog[i].split()
-            # GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
-                                                # Galaxy_Populated_Region, row_list, \
-                                                # data_type='mag', Qua=True, GP_PSF=False)
-            # GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
-                                                # Galaxy_Populated_Region, row_list, \
-                                                # data_type='mag', Qua=True, GP_PSF=True)
+    # Start calculating 6D galaxy probability and 6D galaxy probability PSF
+    c_start = time.time()
+    print('\nStart Calculating 6D GP/GPP...')
+    GP_tot_out = []
+    for i in range(len(catalog)):
+        row_list = catalog[i].split()
+        row_list = fill_up_list_WI_z(row_list, max_column_num=max_column_num)
+        for j in range(dim):
             GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
-                                                GP_Lower_Bound, GP_Upper_Bound,\
+                                                GP_Lower_Bound_list[j], GP_Upper_Bound_list[j],\
                                                 row_list, data_type='mag', Qua=True, GP_PSF=False)
             GPP_OBJ_type, GPP_Count, Pos_vector = Classification_Pipeline(\
-                                                GP_Lower_Bound, GP_Upper_Bound,\
+                                                GP_Lower_Bound_list[j], GP_Upper_Bound_list[j],\
                                                 row_list, data_type='mag', Qua=True, GP_PSF=True)
-            row_list = fill_up_list_WI_z(row_list, max_column_num=max_column_num)
-            row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
-            row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)
-            row_list[POS_VEC_ID] = (','.join([str(PV) for PV in Pos_vector]))
-            GP_tot_out.append('\t'.join(row_list))
-            drawProgressBar(float(i+1)/len(catalog))
-        c_end   = time.time()
-        print('\nCalculating 6D_Gal_Prob took {:.3f} secs'.format(t_end - t_start))
+            row_list[GP_OBJ_ID_list[j]], row_list[GP_ID_list[j]] = str(GP_OBJ_type), str(GP_Count)
+            row_list[GPP_OBJ_ID_list[j]], row_list[GPP_ID_list[j]] = str(GPP_OBJ_type), str(GPP_Count)
+            row_list[POS_VEC_ID_list[j]] = (','.join([str(PV) for PV in Pos_vector]))
+        GP_tot_out.append('\t'.join(row_list))
+        drawProgressBar(float(i+1)/len(catalog))
+    c_end   = time.time()
+    print('\nCalculating 6D_Gal_Prob took {:.3f} secs'.format(t_end - t_start))
 
     # Save galaxy probability results ...
     s_start = time.time()
