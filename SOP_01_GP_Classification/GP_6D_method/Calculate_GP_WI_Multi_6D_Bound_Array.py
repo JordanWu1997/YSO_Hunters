@@ -154,7 +154,7 @@ def Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Boun
     '''
     This is to find the location of boundary on probing axis
     '''
-    POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vecotr[fixed_ax]
+    POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
     GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
     GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
     # Find bounary point on probing axis
@@ -163,7 +163,7 @@ def Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Boun
         Lbd = GP_Lower_Bound_ax[i]
         Ubd = GP_Upper_Bound_ax[i]
         # Find corresponding points in galaxy populated region -> TBD
-        if np.all(POS_vector_ax, Lbd) and np.all(POS_vector_ax, Ubd):
+        if np.all(POS_vector_ax == Lbd) and np.all(POS_vector_ax == Ubd):
             POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
             POS_bd_ax.append(GP_Upper_Bound[i, fixed_ax])
             break
@@ -184,26 +184,26 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     This code is modified from Jeremy Yang's work
     '''
     # No corresponding boundary -> Isolated YSO (IYSO)
-    if np.isnan(POS_bd_ax):
-        label = 1e-3
-        count = 'IYSOc'
+    if POS_bd_ax is np.nan:
+        count = 1e-3
+        label = 'IYSOc'
     # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region
     elif (POS_bd_ax[0] == POS_ax) and (POS_bd_ax[1] == POS_ax):
-        label = 1e3
-        count = 'IGalaxyc'
+        count = 1e3
+        label = 'IGalaxyc'
     # POS<Lower bd -> Outside galaxy region (LYSO)
     elif (POS_bd_ax[0] > POS_ax):
-        label = 1e-3
-        count = 'LYSOc'
+        count = 1e-3
+        label = 'LYSOc'
     # POS>Upper bd -> Outside galaxy region (UYSO)
     elif (POS_bd_ax[1] < POS_ax):
-        label = 1e-3
-        count = 'UYSOc'
+        count = 1e-3
+        label = 'UYSOc'
     # WITHIN galaxy region -> Galaxy
     else:
-        label = 1e3
-        count = 'Galaxyc'
-    return OBJ_type, count
+        count = 1e3
+        label = 'Galaxyc'
+    return label, count
 
 # def Classification_Pipeline(Galaxy_Populated_Region, row_list, data_type='mag', Qua=True, GP_PSF=False):
     # '''
@@ -227,7 +227,7 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
             # Count = 1e-3; OBJ_type += 'YSOc'
     # return OBJ_type, Count, POS_vector
 
-def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False):
+def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, fixed_ax=0, data_type='mag', Qua=True, GP_PSF=False):
     '''
     This is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     catalog_name = str(argv[1])
     cloud_name   = str(argv[2])
     data_type    = str(argv[3])
-    bound_path   = int(argv[4])
+    bound_path   = str(argv[4])
     dim          = int(argv[5])
     cube         = float(argv[6])
     sigma        = int(argv[7])
@@ -298,13 +298,11 @@ if __name__ == '__main__':
         GPP_OBJ_ID, GPP_ID = eval('GPP_OBJ_ID_6D_{:d}'.format(bd_band_ax)), eval('GPP_ID_6D_{:d}'.format(bd_band_ax))
         POS_VEC_ID = eval('GP_KEY_ID_6D_{:d}'.format(bd_band_ax))
         # Lower bound array
-        lower_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
-                                after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_AlB{}'.format(\
+        lower_bound_array = '{}/GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_AlB{}.npy'.format(\
                                 bound_path, dim, cube, sigma, bond, refD, 0,\
                                 ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
         # Upper bound array
-        upper_bound_array = '{}GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/\
-                                after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_AlB{}'.format(\
+        upper_bound_array = '{}/GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_AlB{}.npy'.format(\
                                 bound_path, dim, cube, sigma, bond, refD, 0,\
                                 ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
         # Load all bound arrray
@@ -331,17 +329,19 @@ if __name__ == '__main__':
         for j in range(dim):
             GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
                                                 GP_Lower_Bound_list[j], GP_Upper_Bound_list[j],\
-                                                row_list, data_type='mag', Qua=True, GP_PSF=False)
+                                                row_list, data_type='mag', Qua=True, GP_PSF=False,\
+                                                fixed_ax=j)
             GPP_OBJ_type, GPP_Count, Pos_vector = Classification_Pipeline(\
                                                 GP_Lower_Bound_list[j], GP_Upper_Bound_list[j],\
-                                                row_list, data_type='mag', Qua=True, GP_PSF=True)
+                                                row_list, data_type='mag', Qua=True, GP_PSF=True,\
+                                                fixed_ax=j)
             row_list[GP_OBJ_ID_list[j]], row_list[GP_ID_list[j]] = str(GP_OBJ_type), str(GP_Count)
             row_list[GPP_OBJ_ID_list[j]], row_list[GPP_ID_list[j]] = str(GPP_OBJ_type), str(GPP_Count)
             row_list[POS_VEC_ID_list[j]] = (','.join([str(PV) for PV in Pos_vector]))
         GP_tot_out.append('\t'.join(row_list))
         drawProgressBar(float(i+1)/len(catalog))
     c_end   = time.time()
-    print('\nCalculating 6D_Gal_Prob took {:.3f} secs'.format(t_end - t_start))
+    print('\nCalculating 6D_Gal_Prob took {:.3f} secs'.format(c_end - c_start))
 
     # Save galaxy probability results ...
     s_start = time.time()
