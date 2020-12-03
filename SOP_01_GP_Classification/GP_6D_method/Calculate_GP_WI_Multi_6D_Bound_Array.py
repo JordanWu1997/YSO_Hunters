@@ -157,11 +157,14 @@ def Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Boun
     POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
     GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
     GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
-    # Find bounary point on probing axis
+    # Find boundary point on probing axis
     POS_bd_ax, indicator = [], 0
+    lack_ind = np.where(POS_vector_ax==-999)
     for i in range(len(GP_Lower_Bound_ax)):
         Lbd = GP_Lower_Bound_ax[i]
         Ubd = GP_Upper_Bound_ax[i]
+        for ind in lack_ind:
+            Lbd[ind], Ubd[ind] = -999, -999
         # Find corresponding points in galaxy populated region -> TBD
         if np.all(POS_vector_ax == Lbd) and np.all(POS_vector_ax == Ubd):
             POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
@@ -176,18 +179,25 @@ def Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Boun
 def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     '''
     This is to assign GP value and object type based on the location on probing axis
-    (1) Outside galaxy-populated region (at bright end) -> LYSO
-    (2) Within  galaxy-populated region (in the middle) -> Galaxy
-    (3) Outside galaxy-populated region (at faint end)  -> UYSO
-    (4) Not be coverd by any boundary (Isolated)        -> IYSO
+    (1) Outside galaxy-populated region (at bright end)   -> LYSO
+    (2) Within  galaxy-populated region (in the middle)   -> Galaxy
+    (3) On both upper & lower boundary overlapped region  -> IGalaxy
+    (3) Outside galaxy-populated region (at faint end)    -> UYSO
+    (4) Not be coverd by any boundary (Isolated)          -> IYSO
+    (5) No information on the fixed axis (No information) -> Other
 
     This code is modified from Jeremy Yang's work
     '''
     # No corresponding boundary -> Isolated YSO (IYSO)
-    if POS_bd_ax is np.nan:
+    # Lack on fixed axis
+    if POS_ax == -999:
+        count = 0.
+        label = 'Other'
+    # Isolated
+    elif POS_bd_ax is np.nan:
         count = 1e-3
         label = 'IYSOc'
-    # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region
+    # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region (IGalaxy)
     elif (POS_bd_ax[0] == POS_ax) and (POS_bd_ax[1] == POS_ax):
         count = 1e3
         label = 'IGalaxyc'
@@ -199,7 +209,7 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     elif (POS_bd_ax[1] < POS_ax):
         count = 1e-3
         label = 'UYSOc'
-    # WITHIN galaxy region -> Galaxy
+    # WITHIN galaxy region -> Galaxy (Galaxy)
     else:
         count = 1e3
         label = 'Galaxyc'
@@ -313,7 +323,7 @@ if __name__ == '__main__':
         GP_Upper_Bound_list.append(GP_Upper_Bound)
         GP_OBJ_ID_list.append(GP_OBJ_ID)
         GP_ID_list.append(GP_ID)
-        GPP_OBJ_ID_list.append(GP_OBJ_ID)
+        GPP_OBJ_ID_list.append(GPP_OBJ_ID)
         GPP_ID_list.append(GPP_ID)
         POS_VEC_ID_list.append(POS_VEC_ID)
     l_end   = time.time()
