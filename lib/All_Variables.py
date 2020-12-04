@@ -203,6 +203,11 @@ GP_KEY_ID_6D_3 = 268
 GP_KEY_ID_6D_4 = 269
 GP_KEY_ID_6D_5 = 270
 
+# GP/GPP Diag Index
+GP_OBJ_ID_6D_Diag, GP_ID_6D_Diag = 271, 272
+GPP_OBJ_ID_6D_Diag, GPP_ID_6D_Diag = 273, 274
+GP_KEY_ID_6D_Diag = 275
+
 # Set variables
 # ==============================================================================
 # Var Set 1: For 6D GP (J, IR1, IR2, IR3, IR4, MP1)

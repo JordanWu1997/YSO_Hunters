@@ -133,17 +133,23 @@ def Check_On_Same_Diag(reference, target):
         pass
     return Same_flag
 
-def Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound, fixed_ax):
+def Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound):
     '''
     This is to find the location of boundary on probing axis
+    fixed_ax: first non -999 component
     '''
+    # Assign fixed ax (first non -999 component)
+    if len(np.where(POS_vector!=-999)[0]) == 0:
+        fixed_ax = 0
+    else:
+        fixed_ax = np.where(POS_vector!=-999)[0][0]
     POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
     GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
     GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
     # Find boundary point on probing axis
     POS_bd_ax, indicator = [], 0
     no_lack_ind = np.where(POS_vector_ax!=-999)
-    POS_vector_ax_no_lack = POS_bd_ax[no_lack_ind]
+    POS_vector_ax_no_lack = POS_vector_ax[no_lack_ind]
     for i in range(len(GP_Lower_Bound_ax)):
         Lbd_no_lack = GP_Lower_Bound_ax[i][no_lack_ind]
         Ubd_no_lack = GP_Upper_Bound_ax[i][no_lack_ind]
@@ -199,9 +205,9 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
         label = 'Galaxyc'
     return label, count
 
-def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, fixed_ax=0, data_type='mag', Qua=True, GP_PSF=False):
+def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False):
     '''
-    This is to classify input object and return object type and galaxy probability
+    IThis is to classify input object and return object type and galaxy probability
     GP_PSF: Galaxy Probability PSF (Considering PSF for c2d catalog)
     Count:
         "not_count" : LESS3BD
@@ -214,7 +220,7 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, fixed_ax=0
     '''
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
-        POS_bd_ax, POS_ax = Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound, fixed_ax)
+        POS_bd_ax, POS_ax = Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound)
         AOBJ_type, Count = Assign_GP_num_and_objtype(POS_bd_ax, POS_ax)
         OBJ_type += AOBJ_type
     return OBJ_type, Count, POS_vector
@@ -259,35 +265,22 @@ if __name__ == '__main__':
         catalog = table.readlines()
 
     # Load all boundaries
-    GP_Lower_Bound_list = []
-    GP_Upper_Bound_list = []
-    GP_OBJ_ID_list, GP_ID_list = [], []
-    GPP_OBJ_ID_list, GPP_ID_list = [], []
-    POS_VEC_ID_list = []
-    for bd_band_ax in range(dim):
-        # Setup output
-        GP_OBJ_ID, GP_ID = eval('GP_OBJ_ID_6D_{:d}'.format(bd_band_ax)), eval('GP_ID_6D_{:d}'.format(bd_band_ax))
-        GPP_OBJ_ID, GPP_ID = eval('GPP_OBJ_ID_6D_{:d}'.format(bd_band_ax)), eval('GPP_ID_6D_{:d}'.format(bd_band_ax))
-        POS_VEC_ID = eval('GP_KEY_ID_6D_{:d}'.format(bd_band_ax))
-        # Lower bound array
-        lower_bound_array = '{}/GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_AlB{}.npy'.format(\
-                                bound_path, dim, cube, sigma, bond, refD, 0,\
-                                ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
-        # Upper bound array
-        upper_bound_array = '{}/GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_AlB{}.npy'.format(\
-                                bound_path, dim, cube, sigma, bond, refD, 0,\
-                                ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
-        # Load all bound arrray
-        GP_Lower_Bound = np.load(lower_bound_array)
-        GP_Upper_Bound = np.load(upper_bound_array)
-        # Append to list
-        GP_Lower_Bound_list.append(GP_Lower_Bound)
-        GP_Upper_Bound_list.append(GP_Upper_Bound)
-        GP_OBJ_ID_list.append(GP_OBJ_ID)
-        GP_ID_list.append(GP_ID)
-        GPP_OBJ_ID_list.append(GPP_OBJ_ID)
-        GPP_ID_list.append(GPP_ID)
-        POS_VEC_ID_list.append(POS_VEC_ID)
+    bd_band_ax = 'Diag'
+    GP_OBJ_ID, GP_ID = eval('GP_OBJ_ID_6D_{}'.format(bd_band_ax)), eval('GP_ID_6D_{}'.format(bd_band_ax))
+    GPP_OBJ_ID, GPP_ID = eval('GPP_OBJ_ID_6D_{}'.format(bd_band_ax)), eval('GPP_ID_6D_{}'.format(bd_band_ax))
+    POS_VEC_ID = eval('GP_KEY_ID_6D_{}'.format(bd_band_ax))
+    # Lower bound array
+    lower_bound_array = '{}/GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_lack_{:d}_{}_{:d}D_lower_bounds_Al{}.npy'.format(\
+                            bound_path, dim, cube, sigma, bond, refD, 0,\
+                            ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
+    # Upper bound array
+    upper_bound_array = '{}/GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/after_smooth_lack_{:d}_{}_{:d}D_upper_bounds_Al{}.npy'.format(\
+                            bound_path, dim, cube, sigma, bond, refD, 0,\
+                            ''.join([str(i) for i in range(dim)]), dim, bd_band_ax)
+    # Load all bound arrray
+    GP_Lower_Bound = np.load(lower_bound_array)
+    GP_Upper_Bound = np.load(upper_bound_array)
+    # Append to list
     l_end   = time.time()
     print("Loading catalog and galaxy boundary took {:.3f} secs".format(l_end - l_start))
 
@@ -298,18 +291,15 @@ if __name__ == '__main__':
     for i in range(len(catalog)):
         row_list = catalog[i].split()
         row_list = fill_up_list_WI_z(row_list, max_column_num=max_column_num)
-        for j in range(dim):
-            GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
-                                                GP_Lower_Bound_list[j], GP_Upper_Bound_list[j],\
-                                                row_list, data_type='mag', Qua=True, GP_PSF=False,\
-                                                fixed_ax=j)
-            GPP_OBJ_type, GPP_Count, Pos_vector = Classification_Pipeline(\
-                                                GP_Lower_Bound_list[j], GP_Upper_Bound_list[j],\
-                                                row_list, data_type='mag', Qua=True, GP_PSF=True,\
-                                                fixed_ax=j)
-            row_list[GP_OBJ_ID_list[j]], row_list[GP_ID_list[j]] = str(GP_OBJ_type), str(GP_Count)
-            row_list[GPP_OBJ_ID_list[j]], row_list[GPP_ID_list[j]] = str(GPP_OBJ_type), str(GPP_Count)
-            row_list[POS_VEC_ID_list[j]] = (','.join([str(PV) for PV in Pos_vector]))
+        GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
+                                            GP_Lower_Bound, GP_Upper_Bound,\
+                                            row_list, data_type='mag', Qua=True, GP_PSF=False)
+        GPP_OBJ_type, GPP_Count, Pos_vector = Classification_Pipeline(\
+                                            GP_Lower_Bound, GP_Upper_Bound,\
+                                            row_list, data_type='mag', Qua=True, GP_PSF=True)
+        row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
+        row_list[GPP_OBJ_ID], row_list[GPP_ID] = str(GPP_OBJ_type), str(GPP_Count)
+        row_list[POS_VEC_ID] = (','.join([str(PV) for PV in Pos_vector]))
         GP_tot_out.append('\t'.join(row_list))
         drawProgressBar(float(i+1)/len(catalog))
     c_end   = time.time()
