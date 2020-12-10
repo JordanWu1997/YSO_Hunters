@@ -1,7 +1,7 @@
 #!/usr/bin/python
 '''
 -------------------------------------------------------
-Example: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size] [-band_ID]
+Example: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size] [band_ID]
 Input variables:
     [input catalog]: must include magnitudes
     [cat_forat]:     format of catalog (SEIP_JACOB/C2D_HSIEH)
@@ -9,7 +9,7 @@ Input variables:
     [qualabel]:      if qua label is taken into calculation (True/False)
     [dimension]:     dim of magnitude space (for now only "6")
     [cube size]:     length of multi-d cube in magnitude unit
-    [-band_ID]:      band index to use in calculation (default: 034567)
+    [band_ID]:       band index to use in calculation (default: 034567)
 
 -------------------------------------------------------
 Latest update 2020.11.11 Jordan Wu'''
@@ -197,7 +197,7 @@ if __name__ == '__main__':
         if datatype == 'flux':
             mag_list = mJy_to_mag(lines, flux_ID=flux_ID, f0_list=f0_list, qua_ID=qua_ID, Qua=qualabel)
         elif datatype == 'mag':
-            mag_list = mag_to_mag(lines, mag_ID=mag_ID, f0_list=f0_list, qua_ID=qua_ID, Qua=qualabel)
+            mag_list = mag_to_mag(lines, mag_ID=mag_ID, qua_ID=qua_ID, Qua=qualabel)
         else:
             exit('Input type error')
         SEQ_vector = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(axlim_list))]

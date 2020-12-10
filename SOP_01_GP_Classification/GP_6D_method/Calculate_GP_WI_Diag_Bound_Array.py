@@ -294,7 +294,7 @@ if __name__ == '__main__':
         GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
                                             GP_Lower_Bound, GP_Upper_Bound,\
                                             row_list, data_type='mag', Qua=True, GP_PSF=False)
-        GPP_OBJ_type, GPP_Count, Pos_vector = Classification_Pipeline(\
+        GPP_OBJ_type, GPP_Count,  = Classification_Pipeline(\
                                             GP_Lower_Bound, GP_Upper_Bound,\
                                             row_list, data_type='mag', Qua=True, GP_PSF=True)
         row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)

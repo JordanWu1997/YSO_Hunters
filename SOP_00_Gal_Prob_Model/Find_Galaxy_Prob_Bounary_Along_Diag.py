@@ -192,7 +192,7 @@ if __name__ == '__main__':
     if posv_dir is None:
         posv_dir = 'GPV_{:d}Dposvec_bin{:.1f}/'.format(dim, cube)
     if out_dir is None:
-        out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}'.format(dim, cube, sigma, bond, refD)
+        out_prefix  = 'GPV_after_smooth_{:d}D_bin{:.1f}_sigma{:d}_bond{:d}_refD{:d}/'.format(dim, cube, sigma, bond, refD)
         out_dir     = '{}/'.format(out_prefix)
     print('\nGalaxy Position Vector Directory: {}\
            \nOutput Boundary Directory:        {}'.format(posv_dir, out_dir))
@@ -200,7 +200,7 @@ if __name__ == '__main__':
     # Load arrays for calculations
     # probe_vec0    = [0] * (len(band_inp)-1); probe_vec0.insert(sc_fixed_bd, 1)
     probe_vec0    = [1] * dim
-    shape         = np.load(posv_dir + 'Shape.npy')
+    shape         = np.load(posv_dir + '/Shape.npy')
     band_upper_bd = np.array([int(shape[int(ind)]) for ind in band_inp])
     band_lower_bd = np.array([0 for ind in band_inp])
 
@@ -222,8 +222,8 @@ if __name__ == '__main__':
 
     # Galaxy position vector and number (Remove pos with num < 1.0 to increase efficiency)
     print('\nLoad galaxy position vectors and correspoding values ...')
-    gal_pos = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
-    gal_num = np.load(out_dir + 'after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
+    gal_pos = np.load(out_dir + '/after_smooth_lack_{}_{}_all_cas_pos.npy'.format(dim-len(band_inp), band_inp))
+    gal_num = np.load(out_dir + '/after_smooth_lack_{}_{}_all_cas_num.npy'.format(dim-len(band_inp), band_inp))
     gal_pos = gal_pos[gal_num >= 1.0]
     gal_num = gal_num[gal_num >= 1.0]
 
