@@ -81,7 +81,7 @@ end
 # Input Variables
 # ====================================================================================================
 set thread=10
-set logfile="term_GPV_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}.out"
+set logfile="term_Diag_BD_GPV_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}.out"
 set bin_dir=GPV_smooth_sigma${sigma}_bond${bond}_refD${refD}
 set band_inp=034567
 

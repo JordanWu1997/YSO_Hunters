@@ -75,17 +75,19 @@ endif
 # Generate Full Inp bands
 set i = 0
 set full_inp = ""
-while ($i < $dim)
+while ( ${i} < ${dim} )
    set full_inp = "${full_inp}${i}"
    @ i++
 end
 
 # Assign BD method along axis
+# fix axis for BD method
 set BD_axis = 0
+if ( ${method} == BD ) echo "BD fix axis: ${BD_axis}"
 
 # Input Variables
 set thread=10
-set logfile='term.out'
+set logfile="term_${method}_GPV_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}.out"
 set bin_dir=GPV_smooth_sigma${sigma}_bond${bond}_refD${refD}
 set pos_slice_num=10
 set inc=45
