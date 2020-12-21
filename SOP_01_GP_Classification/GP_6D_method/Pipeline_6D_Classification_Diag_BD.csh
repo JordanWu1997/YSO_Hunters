@@ -3,7 +3,7 @@
 # This program is a pipeline for cloud catalog
 # MCCloud: CHA_II, LUP_I, LUP_III, LUP_IV, OPH, SER, PER
 #
-# Pipeline.csh [GP dir] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [GP only] [GP method]"
+# Pipeline.csh [GP dir] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [GP only]"
 
 # [GP_dir]:      directory that stores galaxy probability (absolute_path_to_dir or 'default')"
 # [Add UKIDSSj]: add UKIDSS data or not (yes/no)"
@@ -19,21 +19,19 @@
 # Variables
 # ======================================================
 # Help for input arguments
-if ( ${#argv} != 9) then
-    echo "\n\tExample: Pipeline.csh [GP dir] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [Only GP] [GP method]"
+if ( ${#argv} != 8 ) then
+    echo "\n\tExample: Pipeline.csh [GP dir] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [GP only]"
     echo "\t[GP_dir]: directory that stores galaxy probability (absolute_path_to_dir or 'default')"
     echo "\t[Add UKIDSS]: add UKIDSS data or not (yes/no)"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
     echo "\t[cube size]: length of multi-d cube in magnitude unit"
-    echo "\t[sigma]: standard deviation for gaussian dist. in magnitude"
+    echo "\t[sigma]: standard deviation for gaussian dist. (in magnitude)"
     echo "\t[bond]: boundary for gaussian smooth radius (in magnitude)"
     echo "\t[refD]: reference dimension which to modulus other dimension to"
-    echo "\t[Only GP]: option to only calculate GP and skip all process before [yes/no]"
-    echo "\t[GP method]: GD/BD/Mult_BD (Galaxy Dictionary/Boundary/Mulitple-Boundary method)\n"
+    echo "\t[GP only]: option to only calculate GP and skip all process before [yes/no]"
     echo "\t*** Warning: This program must be executed in directory which also stores galaxy probability ... ***"
-    echo "\t*** Warning: UKIDSS data here only contains data with mag < 11.5, and fake qua, psf labels are assigned ... ***"
+    echo "\t*** Warning: UKIDSS data here only contains data with mag < 11.5, and fake qua, psf labels are assigned ...***"
     echo "\t*** Warning: If you are using BD method, please check source code if the boundary array is correct ... ***"
-    echo "\t*** Warning: For now, multi_BD method is not available for classification though it still return multi_GP value ... ***"
     echo "\t*** Process before GP method: Catalog_transformation, Star_removal, Extinction_correction, Find_saturate ... ***\n"
     exit
 endif
@@ -50,7 +48,8 @@ set sigma=${5}
 set bond=${6}
 set refD=${7}
 set only_GP=${8}
-set method=${9}
+
+# Set GP directory
 if ( ${1} == default ) then
     set GP_dir='/mazu/users/jordan/YSO_Project/SEIP_GP_Bound'
 else
@@ -61,7 +60,7 @@ echo "\nGP_dir: ${GP_dir}"
 # Generate Full Inp bands
 set i = 0
 set full_inp = ""
-while ( ${i} < ${dim} )
+while ($i < $dim)
    set full_inp = "${full_inp}${i}"
    @ i++
 end
@@ -70,7 +69,7 @@ end
 set indice=(1 2 3 4 5 6 7)
 set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
 
-if ( ${UKIDSS} == yes ) then
+if ( ${2} == yes ) then
     # for new added UKIDSS catalog
     set ukidss_obs=(0 0 0 0 1 1 1)
 else
@@ -78,24 +77,22 @@ else
     set ukidss_obs=(0 0 0 0 0 0 0)
 endif
 
-# fix axis for BD method
-set fix_bd = 0
-if ( ${method} == BD ) echo "BD fix axis: ${fix_bd}"
-
 # Main Program
 # ======================================================
 
 # Setup
-set par_dir=Cloud_Classification_GPM_${method}
+set par_dir=Cloud_Classification_GPM_BD}
 if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir=${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}
 if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}
 
 # Run for all clouds
 foreach i (${indice})
+
     # Initialization
     set cloud=${clouds[${i}]}
     echo "\nInitializing ${cloud} ..."
+
     # Only GP method
     if ( ${only_GP} == yes ) then
         if ( ! -d ${cloud} ) mkdir ${cloud} && cd ${cloud}
@@ -143,54 +140,31 @@ foreach i (${indice})
             echo "Please check UKIDSS observation data ..."
         endif
     endif
-    # Method to calculate galaxy probability (BD or GP)
-    echo "Calculating GP by ${method} method ..."
-    if ( ${method} == GD ) then
-        Calculate_GP_WI_6D_Dict_Key_Tuple.py ${dim} ${cube} \
-        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/ \
-        ${cloud}_saturate_correct_file.tbl ${cloud} mag True | tee -a ${logfile}
-        set GP_out=${cloud}_${dim}D_GP_all_out_catalog.tbl
-    else if ( ${method} == BD ) then
-        Calculate_GP_WI_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
-        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_${full_inp}_${dim}D_lower_bounds_AlB${fix_bd}.npy \
-        ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_${full_inp}_${dim}D_upper_bounds_AlB${fix_bd}.npy \
-        ${dim} ${full_inp} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
-        set GP_out=${cloud}_${dim}D_BD_GP_out_catalog.tbl
-    else if ( ${method} == Multi_BD ) then
-        Calculate_GP_WI_Multi_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
-        ${GP_dir} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
-        set GP_out=${cloud}_${dim}D_multi_BD_GP_out_catalog.tbl
-    else
-        echo "No assigned method ..."
-    endif
 
-    # For now, multi_BD not available for classify YSO
-    if ( ${method} == Multi_BD ) then
-        echo "Using Multi_BD method, skip YSO classification ..."
-    else
-        # Classfy objects by galaxy probability and compare with Hsieh's 1310 YSO candidates
-        echo "Classifying and compare with Hsieh's YSOc ..."
-        Classify_WI_6D_Galaxy_Prob.py ${GP_out} ${cloud} | tee -a ${logfile}
-        Check_Coord.py ${cloud}_6D_YSO.tbl default ${cloud}_YSO default 7 False | tee -a ${logfile}
-        Check_Coord.py ${cloud}_6D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
-        Check_Coord.py ${cloud}_6D_GP_to_image_check.tbl default ${cloud}_6D_GP_IC default 7 False | tee -a ${logfile}
-        Check_Coord.py ${cloud}_6D_GP_others.tbl default ${cloud}_6D_OTHERS default 7 False | tee -a ${logfile}
-        Print_6D_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
-    endif
+    # Method to calculate galaxy probability
+    echo "Calculating GP by diagonal boundary method ..."
+    Calculate_GP_WI_Diag_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
+    ${GP_dir} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
+    set GP_out=${cloud}_${dim}D_diag_BD_GP_out_catalog.tbl
+
+    # Classify YSO and compare to Hsieh's YSO candidates
+    echo "Classifying and compare with Hsieh's YSOc ..."
+    Classify_WI_6D_Diag_Galaxy_Prob.py ${GP_out} ${cloud} | tee -a ${logfile}
+    Check_Coord.py ${cloud}_6D_YSO.tbl default ${cloud}_YSO default 7 False | tee -a ${logfile}
+    Check_Coord.py ${cloud}_6D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
+    Check_Coord.py ${cloud}_6D_GP_to_image_check.tbl default ${cloud}_6D_GP_IC default 7 False | tee -a ${logfile}
+    Check_Coord.py ${cloud}_6D_GP_others.tbl default ${cloud}_6D_OTHERS default 7 False | tee -a ${logfile}
+    Print_6D_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
 
     # Single cloud ends and change directory to next one
     echo "${cloud} completes ...\n"
     cd .. && pwd
 end
 
-if ( ${method} == Multi_BD ) then
-    echo "Using Multi_BD method, skip YSO result merge..."
-else
-    # Merge all YSO candidates
-    echo "Merging all YSO candidates ..."
-    Merge_6D_YSO_catalog.csh && cd All_YSO
-    Check_Coord.py all_new_LYSO.tbl default all_new_LYSO default 7 False | tee -a ${logfile}
-    Check_Coord.py all_new_UYSO.tbl default all_new_UYSO default 7 False | tee -a ${logfile}
-    Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO default 7 False | tee -a ${logfile}
-endif
-echo "Pipeline completed ...\n"
+# Merge all YSO candidates
+echo "Merging all YSO candidates ..."
+Merge_6D_YSO_catalog.csh && cd All_YSO
+Check_Coord.py all_new_LYSO.tbl default all_new_LYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_new_UYSO.tbl default all_new_UYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO default 7 False | tee -a ${logfile}
+cd .. && echo "Pipeline completed ...\n"
