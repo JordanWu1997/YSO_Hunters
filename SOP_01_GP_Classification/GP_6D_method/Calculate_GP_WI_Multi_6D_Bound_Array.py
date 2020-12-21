@@ -207,7 +207,7 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
         label = 'LYSOc'
     # POS>Upper bd -> Outside galaxy region (UYSO)
     elif (POS_bd_ax[1] < POS_ax):
-        count = 1e-3
+        count = 1e6
         label = 'UYSOc'
     # WITHIN galaxy region -> Galaxy (Galaxy)
     else:
