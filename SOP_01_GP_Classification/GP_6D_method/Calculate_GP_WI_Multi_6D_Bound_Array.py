@@ -266,7 +266,7 @@ if __name__ == '__main__':
     if len(argv) != 10:
         exit('\n\tError: Wrong Usage!\
             \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] \
-            \n\t\t [galaxy lower bd] [galaxy upper bd] [dim] [cube size] [sigma] [bond] [refD]\
+            \n\t\t [bound_path] [dim] [cube size] [sigma] [bond] [refD]\
             \n\t[catalog]: input catalog for classification\
             \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
             \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\

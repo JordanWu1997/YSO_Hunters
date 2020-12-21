@@ -197,7 +197,7 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
         label = 'LYSOc'
     # POS>Upper bd -> Outside galaxy region (UYSO)
     elif (POS_bd_ax[1] < POS_ax):
-        count = 1e-3
+        count = 1e6
         label = 'UYSOc'
     # WITHIN galaxy region -> Galaxy (Galaxy)
     else:
@@ -214,9 +214,10 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
         "not_count" : AGB
         1e-5        : MP1_Sat
         1e-4        : Bright
-        1e-3        : YSO
+        1e-3        : LYSO, IYSO
         1e4         : Faint
         1e3         : Galaxy
+        1e6         : UYSO
     '''
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
@@ -234,7 +235,7 @@ if __name__ == '__main__':
     if len(argv) != 10:
         exit('\n\tError: Wrong Usage!\
             \n\tExample: [program] [catalog] [cloud\'s name] [inp_data_type] \
-            \n\t\t [galaxy lower bd] [galaxy upper bd] [dim] [cube size] [sigma] [bond] [refD]\
+            \n\t\t [bound_path] [dim] [cube size] [sigma] [bond] [refD]\
             \n\t[catalog]: input catalog for classification\
             \n\t[cloud\'s name]: name of molecular cloud e.g. CHA_II\
             \n\t[inp_data_type]: flux or mag [Note: flux unit "mJy"]\
@@ -294,7 +295,7 @@ if __name__ == '__main__':
         GP_OBJ_type, GP_Count, Pos_vector = Classification_Pipeline(\
                                             GP_Lower_Bound, GP_Upper_Bound,\
                                             row_list, data_type='mag', Qua=True, GP_PSF=False)
-        GPP_OBJ_type, GPP_Count,  = Classification_Pipeline(\
+        GPP_OBJ_type, GPP_Count, _ = Classification_Pipeline(\
                                             GP_Lower_Bound, GP_Upper_Bound,\
                                             row_list, data_type='mag', Qua=True, GP_PSF=True)
         row_list[GP_OBJ_ID], row_list[GP_ID] = str(GP_OBJ_type), str(GP_Count)
@@ -307,7 +308,7 @@ if __name__ == '__main__':
 
     # Save galaxy probability results ...
     s_start = time.time()
-    with open('{}_6D_multi_BD_GP_out_catalog.tbl'.format(cloud_name), 'w') as GP_tot_out_catalog:
+    with open('{}_6D_diag_BD_GP_out_catalog.tbl'.format(cloud_name), 'w') as GP_tot_out_catalog:
         GP_tot_out_catalog.write('\n'.join(GP_tot_out) + '\n')
     s_end   = time.time()
     print('Saving result took {:.3f} secs'.format(s_end - s_start))
