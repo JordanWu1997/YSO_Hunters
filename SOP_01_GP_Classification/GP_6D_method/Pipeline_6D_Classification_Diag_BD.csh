@@ -81,7 +81,7 @@ endif
 # ======================================================
 
 # Setup
-set par_dir=Cloud_Classification_GPM_BD}
+set par_dir=Cloud_Classification_GPM_Diag_BD}
 if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir=${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}
 if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}

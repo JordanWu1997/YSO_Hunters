@@ -29,7 +29,7 @@ if ( ${#argv} != 9) then
     echo "\t[bond]: boundary for gaussian smooth radius (in magnitude)"
     echo "\t[refD]: reference dimension which to modulus other dimension to"
     echo "\t[Only GP]: option to only calculate GP and skip all process before [yes/no]"
-    echo "\t[GP method]: GD/BD/Mult_BD (Galaxy Dictionary/Boundary/Mulitple-Boundary method)\n"
+    echo "\t[GP method]: GD/BD/Multi_BD (Galaxy Dictionary/Boundary/Mulitple-Boundary method)\n"
     echo "\t*** Warning: This program must be executed in directory which also stores galaxy probability ... ***"
     echo "\t*** Warning: UKIDSS data here only contains data with mag < 11.5, and fake qua, psf labels are assigned ... ***"
     echo "\t*** Warning: If you are using BD method, please check source code if the boundary array is correct ... ***"
