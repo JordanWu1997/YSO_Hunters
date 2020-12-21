@@ -1,6 +1,9 @@
 /lib/*.pyc
 /lib/__pycache__
+/lib/__pycache__/*
 /SOP_01_GP_Classification/GP_5D_method/*.pyc
 /SOP_01_GP_Classification/GP_5D_method/__pycache__
+/SOP_01_GP_Classification/GP_5D_method/__pycache__/*
 /SOP_01_GP_Classification/GP_6D_method/*.pyc
 /SOP_01_GP_Classification/GP_6D_method/__pycache__
+/SOP_01_GP_Classification/GP_6D_method/__pycache__/*

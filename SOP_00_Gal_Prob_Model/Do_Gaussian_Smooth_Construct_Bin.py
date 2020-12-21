@@ -132,14 +132,14 @@ XX = []
 for i in range(-bond, 1+bond):
     XX.append(float(i+0.5))
 
-import matplotlib.pyplot as plt
-plt.plot(XX, fig0, ls='steps')
-plt.plot(XX, fig1, ls='steps')
-plt.plot(XX, fig2, ls='steps')
-plt.plot(XX, fig3, ls='steps')
-plt.xlabel("cube: cube_size mag")
-plt.ylabel("counts")
-system('mkdir ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
-chdir('ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
-plt.savefig("Beam_in_diff_dim.png")
-chdir('../../')
+# import matplotlib.pyplot as plt
+# plt.plot(XX, fig0, ls='steps')
+# plt.plot(XX, fig1, ls='steps')
+# plt.plot(XX, fig2, ls='steps')
+# plt.plot(XX, fig3, ls='steps')
+# plt.xlabel("cube: cube_size mag")
+# plt.ylabel("counts")
+# system('mkdir ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
+# chdir('ND_Beam_sigma' + str(sigma) + '_refD' + str(ref))
+# plt.savefig("Beam_in_diff_dim.png")
+# chdir('../../')
