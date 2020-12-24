@@ -14,7 +14,7 @@ Input Variables:
     [bond]: boundary radius of gaussian beam unit in cell
     [ref-D]: reference dimension which to modulus other dimension to
 ----------------------------------------------------------------
-Latest update: 2020/11/11 Jordan Wu'''
+Latest update: 2020/12/24 Jordan Wu'''
 
 # Import Modules
 #======================================================================================
@@ -146,21 +146,29 @@ def Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Boun
     POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
     GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
     GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
-    # Find boundary point on probing axis
+
+    # Initialize (Remove -999 band)
     POS_bd_ax, indicator = [], 0
-    no_lack_ind = np.where(POS_vector_ax!=-999)
+    no_lack_ind = np.where(POS_vector_ax!=-999)[0]
     POS_vector_ax_no_lack = POS_vector_ax[no_lack_ind]
-    for i in range(len(GP_Lower_Bound_ax)):
-        Lbd_no_lack = GP_Lower_Bound_ax[i][no_lack_ind]
-        Ubd_no_lack = GP_Upper_Bound_ax[i][no_lack_ind]
-        L_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Lbd_no_lack)
-        U_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Ubd_no_lack)
+    GP_Lower_Bound_ax_no_lack = GP_Lower_Bound_ax[:, no_lack_ind]
+    GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax[:, no_lack_ind]
+
+    # Sortup boundary array based on lower boundary (to prevent projection effect), near to far (respect to origin)
+    GP_Lower_Bound_ax_no_lack_sort_ID, GP_Lower_Bound_ax_no_lack = sort_up_array_element(GP_Lower_Bound_ax_no_lack)
+    GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax_no_lack[GP_Lower_Bound_ax_no_lack_sort_ID]
+
+    # Find boundary point on probing axis
+    for i, (Lbd, Ubd) in enumerate(zip(GP_Lower_Bound_ax_no_lack, GP_Upper_Bound_ax_no_lack)):
+        L_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Lbd)
+        U_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Ubd)
         # Find corresponding points in galaxy populated region -> TBD
         if L_Diag_Flag and U_Diag_Flag:
             POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
             POS_bd_ax.append(GP_Upper_Bound[i, fixed_ax])
             break
         indicator += 1
+
     # If no corresponding boundary point
     if (indicator == len(GP_Lower_Bound_ax)):
         POS_bd_ax = np.nan
@@ -281,7 +289,7 @@ if __name__ == '__main__':
     # Load all bound arrray
     GP_Lower_Bound = np.load(lower_bound_array)
     GP_Upper_Bound = np.load(upper_bound_array)
-    # Append to list
+
     l_end   = time.time()
     print("Loading catalog and galaxy boundary took {:.3f} secs".format(l_end - l_start))
 
