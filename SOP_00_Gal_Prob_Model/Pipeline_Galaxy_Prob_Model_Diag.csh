@@ -25,17 +25,18 @@
 
 # Input Variables
 # ====================================================================================================
-if ( ${#argv} != 13 ) then
+if ( ${#argv} != 14 ) then
     echo "\n\tError Usage"
     echo "\tExample: Pipeline_Galaxy_Prob.csh\
                      [input catalog] [catalog format] [datatype] [qualabel]\
-                     [dimension] [cube size] [sigma] [bond] [refD] \
+                     [band_inp] [dimension] [cube size] [sigma] [bond] [refD] \
                      [smooth] [slice] [one by one]\
                      [GP method]\n"
     echo "\t[input catalog]: must include magnitudes if datatype is 'mag'"
     echo "\t[catalog format]: format of catalog (SEIP_JACOB/C2D_HSIEH)"
     echo "\t[datatype]: input data in type of magnitude or flux (in mJy) ('mag' or 'flux')"
     echo "\t[qualabel]: if flux quality is considered in calculation (yes/no)"
+    echo "\t[band_inp]: band index to use in calculation (e.g. 034567)"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
     echo "\t[cube size]: length of multi-d cube in magnitude unit (must in float)"
     echo "\t[sigma]: standard deviation for gaussian dist. in magnitude (must in integer)"
@@ -44,9 +45,10 @@ if ( ${#argv} != 13 ) then
     echo "\t[smooth]: gaussian smooth or use existed gaussian smooth result if there is one (yes/no)"
     echo "\t[slice]: the number of slice to gaussian smooth input catalog (must in integer)"
     echo "\t[one by one]: load slice of smooth input one by one or not (yes/no)"
-    echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD/BOTH)"
-    echo "\t*** If gal_pos has already been calculated, just use 'SKIP' as input to 'input catalog', 'catalog format', 'datatype', 'qualabel'"
-    echo "\t*** If 'smooth' option is 'no', then just use 'SKIP' as input to 'slice', 'one bye one'\n"
+    echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD/BOTH)\n"
+    echo "\t*** If gal_pos has already been calculated, just use 'SKIP' as input to 'input catalog', 'catalog format', 'datatype', 'qualabel' ***"
+    echo "\t*** If 'smooth' option is 'no', then just use 'SKIP' as input to 'slice', 'one bye one' ***"
+    echo "\t*** Band index: J[0], H[1], K[2], IR1[3], IR2[4], IR3[5], IR4[6], MP1[7] ***\n"
     exit
 endif
 
@@ -55,17 +57,19 @@ endif
 set inp_catalog=${1}
 set cat_format=${2}
 set cat_datatype=${3}
-set dim=${5}
-set cube=${6}
-set sigma=${7}
-set bond=${8}
-set refD=${9}
-set smooth_option=${10}
-set slice_num=${11}
-set one_by_one=${12}
-set GP_method=${13}
+set qua=${4}
+set band_inp=${5}
+set dim=${6}
+set cube=${7}
+set sigma=${8}
+set bond=${9}
+set refD=${10}
+set smooth_option=${11}
+set slice_num=${12}
+set one_by_one=${13}
+set GP_method=${14}
 # Set Label
-if ( ${4} == yes ) then
+if ( ${qua} == yes ) then
     set qua_label = True
 else
     set qua_label = False
@@ -73,7 +77,7 @@ endif
 # Generate Full Inp bands
 set i = 0
 set full_inp = ""
-while ($i < $dim)
+while (${i} < ${dim})
    set full_inp = "${full_inp}${i}"
    @ i++
 end
@@ -83,7 +87,6 @@ end
 set thread=10
 set logfile="term_Diag_BD_GPV_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}.out"
 set bin_dir=GPV_smooth_sigma${sigma}_bond${bond}_refD${refD}
-set band_inp=034567
 
 # Main Programs
 # ====================================================================================================
