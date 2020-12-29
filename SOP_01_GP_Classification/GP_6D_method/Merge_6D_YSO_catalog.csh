@@ -26,6 +26,11 @@ foreach cloud (${clouds})
 end
 cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
-awk '$242~"UYSO"' ${out_all_new} > all_new_UYSO.tbl
-awk '$242~"LYSO"' ${out_all_new} > all_new_LYSO.tbl
-awk '$242!~"UYSO" && $242!~"LYSO"' ${out_all_new} > all_new_NULYSO.tbl
+# For normal BD method
+#awk '$242~"UYSO"' ${out_all_new} > all_new_UYSO.tbl
+#awk '$242~"LYSO"' ${out_all_new} > all_new_LYSO.tbl
+#awk '$242!~"UYSO" && $242!~"LYSO"' ${out_all_new} > all_new_NULYSO.tbl
+
+# For Diag BD method
+awk '$272~"LYSO"' ${out_all_new} > all_new_LYSO.tbl
+awk '$272!~"UYSO" && $272!~"LYSO"' ${out_all_new} > all_new_NULYSO.tbl
