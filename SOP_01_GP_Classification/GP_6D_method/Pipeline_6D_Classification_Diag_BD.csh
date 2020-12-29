@@ -21,13 +21,13 @@
 # Help for input arguments
 if ( ${#argv} != 8 ) then
     echo "\n\tExample: Pipeline.csh [GP dir] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [GP only]"
-    echo "\t[GP_dir]: directory that stores galaxy probability (absolute_path_to_dir or 'default')"
+    echo "\t[GP_dir]: to the directory which contains the directory that stores galaxy probability (absolute_path_to_dir or 'default')"
     echo "\t[Add UKIDSS]: add UKIDSS data or not (yes/no)"
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
-    echo "\t[cube size]: length of multi-d cube in magnitude unit"
+    echo "\t[cube size]: length of multi-d cube in magnitude unit (in magnitude)"
     echo "\t[sigma]: standard deviation for gaussian dist. (in magnitude)"
     echo "\t[bond]: boundary for gaussian smooth radius (in magnitude)"
-    echo "\t[refD]: reference dimension which to modulus other dimension to"
+    echo "\t[refD]: reference dimension which to modulus other dimension to (integeter only)"
     echo "\t[GP only]: option to only calculate GP and skip all process before [yes/no]"
     echo "\t*** Warning: This program must be executed in directory which also stores galaxy probability ... ***"
     echo "\t*** Warning: UKIDSS data here only contains data with mag < 11.5, and fake qua, psf labels are assigned ...***"
