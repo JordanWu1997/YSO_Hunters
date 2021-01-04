@@ -138,40 +138,40 @@ def Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Boun
     This is to find the location of boundary on probing axis
     fixed_ax: first non -999 component
     '''
-    if len(POS_vector) - len(np.where(POS_vector!=-999)[0]) < 3:
-        POS_bd_ax, POS_ax = np.nan, np.nan
+    # Assign fixed ax (first non -999 component)
+    if len(np.where(POS_vector!=-999)[0]) == 0:
+        fixed_ax = 0
     else:
-        # Assign fixed ax (first non -999 component)
         fixed_ax = np.where(POS_vector!=-999)[0][0]
-        POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
-        GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
-        GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
+    POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
+    GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
+    GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
 
-        # Initialize (Remove -999 band)
-        POS_bd_ax, indicator = [], 0
-        no_lack_ind = np.where(POS_vector_ax!=-999)[0]
-        POS_vector_ax_no_lack = POS_vector_ax[no_lack_ind]
-        GP_Lower_Bound_ax_no_lack = GP_Lower_Bound_ax[:, no_lack_ind]
-        GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax[:, no_lack_ind]
+    # Initialize (Remove -999 band)
+    POS_bd_ax, indicator = [], 0
+    no_lack_ind = np.where(POS_vector_ax!=-999)[0]
+    POS_vector_ax_no_lack = POS_vector_ax[no_lack_ind]
+    GP_Lower_Bound_ax_no_lack = GP_Lower_Bound_ax[:, no_lack_ind]
+    GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax[:, no_lack_ind]
 
-        # Sortup boundary array based on lower boundary (to prevent projection effect), near to far (respect to origin)
-        GP_Lower_Bound_ax_no_lack_sort_ID, GP_Lower_Bound_ax_no_lack = sort_up_array_element(GP_Lower_Bound_ax_no_lack)
-        GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax_no_lack[GP_Lower_Bound_ax_no_lack_sort_ID]
+    # Sortup boundary array based on lower boundary (to prevent projection effect), near to far (respect to origin)
+    GP_Lower_Bound_ax_no_lack_sort_ID, GP_Lower_Bound_ax_no_lack = sort_up_array_element(GP_Lower_Bound_ax_no_lack)
+    GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax_no_lack[GP_Lower_Bound_ax_no_lack_sort_ID]
 
-        # Find boundary point on probing axis
-        for i, (Lbd, Ubd) in enumerate(zip(GP_Lower_Bound_ax_no_lack, GP_Upper_Bound_ax_no_lack)):
-            L_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Lbd)
-            U_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Ubd)
-            # Find corresponding points in galaxy populated region -> TBD
-            if L_Diag_Flag and U_Diag_Flag:
-                POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
-                POS_bd_ax.append(GP_Upper_Bound[i, fixed_ax])
-                break
-            indicator += 1
+    # Find boundary point on probing axis
+    for i, (Lbd, Ubd) in enumerate(zip(GP_Lower_Bound_ax_no_lack, GP_Upper_Bound_ax_no_lack)):
+        L_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Lbd)
+        U_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Ubd)
+        # Find corresponding points in galaxy populated region -> TBD
+        if L_Diag_Flag and U_Diag_Flag:
+            POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
+            POS_bd_ax.append(GP_Upper_Bound[i, fixed_ax])
+            break
+        indicator += 1
 
-        # If no corresponding boundary point
-        if (indicator == len(GP_Lower_Bound_ax)):
-            POS_bd_ax = np.nan
+    # If no corresponding boundary point
+    if (indicator == len(GP_Lower_Bound_ax)):
+        POS_bd_ax = np.nan
     return POS_bd_ax, POS_ax
 
 def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
@@ -186,12 +186,13 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
 
     This code is modified from Jeremy Yang's work
     '''
-    # Lack on fixed axis (detected band less than 3)
-    if (POS_bd_ax is np.nan) and (POS_ax is np.nan):
-        count = 1e10
-        label = 'Other'
     # No corresponding boundary -> Isolated YSO (IYSO)
-    elif (POS_bd_ax is np.nan) and (POS_ax is not np.nan):
+    # Lack on fixed axis
+    if POS_ax == -999:
+        count = 0.
+        label = 'Other'
+    # Isolated
+    elif POS_bd_ax is np.nan:
         count = 1e-3
         label = 'IYSOc'
     # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region (IGalaxy)
@@ -199,11 +200,11 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
         count = 1e3
         label = 'IGalaxyc'
     # POS<Lower bd -> Outside galaxy region (LYSO)
-    elif (POS_bd_ax[0] > POS_ax) and (POS_bd_ax[1] > POS_ax):
+    elif (POS_bd_ax[0] > POS_ax):
         count = 1e-3
         label = 'LYSOc'
     # POS>Upper bd -> Outside galaxy region (UYSO)
-    elif (POS_bd_ax[1] < POS_ax) and (POS_bd_ax[0] < POS_ax):
+    elif (POS_bd_ax[1] < POS_ax):
         count = 1e6
         label = 'UYSOc'
     # WITHIN galaxy region -> Galaxy (Galaxy)
