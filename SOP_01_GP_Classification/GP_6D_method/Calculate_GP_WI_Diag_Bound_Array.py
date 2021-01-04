@@ -188,7 +188,7 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     '''
     # Lack on fixed axis (detected band less than 3)
     if (POS_bd_ax is np.nan) and (POS_ax is np.nan):
-        count = 0.
+        count = 1e10
         label = 'Other'
     # No corresponding boundary -> Isolated YSO (IYSO)
     elif (POS_bd_ax is np.nan) and (POS_ax is not np.nan):
