@@ -95,6 +95,7 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
         # Command below is for UKIDSS-SWIRE type catalog
         mag_list = mag_to_mag(row_list, mag_ID=mag_ID_6D, qua_ID=qua_ID_6D, Qua=Qua, psf_ID=psf_ID_6D, Psf=Psf)
 
+    # Set flags and other indicator
     SEQ_vec      = [sort_up_lack999(mag_list[i], axlim_list[i], cube) for i in range(len(mag_list))]
     AGB_flag     = Remove_AGB(mag_list)
     MP1_Sat_flag = Find_MP1_Saturate(row_list)
@@ -103,6 +104,7 @@ def Cal_Position_Vector(row_list, data_type, Qua=True, Psf=False):
     Count        = 'init'
     POS_vector   = np.array(SEQ_vec)
 
+    # Assign objecttype and count
     if OBS_num < 3:
         Count = 'no_count'; OBJ_type += 'LESS3BD'
     else:
@@ -138,43 +140,34 @@ def Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Boun
     This is to find the location of boundary on probing axis
     fixed_ax: first non -999 component
     '''
-    # Assign fixed ax (first non -999 component)
-    if len(np.where(POS_vector!=-999)[0]) == 0:
-        fixed_ax = 0
-    else:
-        fixed_ax = np.where(POS_vector!=-999)[0][0]
-    POS_vector_ax, POS_ax = np.delete(POS_vector, fixed_ax), POS_vector[fixed_ax]
-    GP_Lower_Bound_ax = np.delete(GP_Lower_Bound, fixed_ax, axis=1)
-    GP_Upper_Bound_ax = np.delete(GP_Upper_Bound, fixed_ax, axis=1)
-
     # Initialize (Remove -999 band)
-    POS_bd_ax, indicator = [], 0
-    no_lack_ind = np.where(POS_vector_ax!=-999)[0]
-    POS_vector_ax_no_lack = POS_vector_ax[no_lack_ind]
-    GP_Lower_Bound_ax_no_lack = GP_Lower_Bound_ax[:, no_lack_ind]
-    GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax[:, no_lack_ind]
+    no_lack_ind = np.where(POS_vector!=-999)[0]
+    POS_vector_no_lack = POS_vector[no_lack_ind]
+    GP_Lower_Bound_no_lack = GP_Lower_Bound[:, no_lack_ind]
+    GP_Upper_Bound_no_lack = GP_Upper_Bound[:, no_lack_ind]
 
     # Sortup boundary array based on lower boundary (to prevent projection effect), near to far (respect to origin)
-    GP_Lower_Bound_ax_no_lack_sort_ID, GP_Lower_Bound_ax_no_lack = sort_up_array_element(GP_Lower_Bound_ax_no_lack)
-    GP_Upper_Bound_ax_no_lack = GP_Upper_Bound_ax_no_lack[GP_Lower_Bound_ax_no_lack_sort_ID]
+    GP_Lower_Bound_no_lack_sort_ID, GP_Lower_Bound_no_lack = sort_up_array_element(GP_Lower_Bound_no_lack)
+    GP_Upper_Bound_no_lack = GP_Upper_Bound_no_lack[GP_Lower_Bound_no_lack_sort_ID]
 
     # Find boundary point on probing axis
-    for i, (Lbd, Ubd) in enumerate(zip(GP_Lower_Bound_ax_no_lack, GP_Upper_Bound_ax_no_lack)):
-        L_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Lbd)
-        U_Diag_Flag = Check_On_Same_Diag(POS_vector_ax_no_lack, Ubd)
+    POS_bd, POS_bd_no_lack, indicator = [], [], 0
+    for i, (Lbd, Ubd) in enumerate(zip(GP_Lower_Bound_no_lack, GP_Upper_Bound_no_lack)):
+        L_Diag_Flag = Check_On_Same_Diag(POS_vector_no_lack, Lbd)
+        U_Diag_Flag = Check_On_Same_Diag(POS_vector_no_lack, Ubd)
         # Find corresponding points in galaxy populated region -> TBD
         if L_Diag_Flag and U_Diag_Flag:
-            POS_bd_ax.append(GP_Lower_Bound[i, fixed_ax])
-            POS_bd_ax.append(GP_Upper_Bound[i, fixed_ax])
+            POS_bd_no_lack.append(GP_Lower_Bound_no_lack[i])
+            POS_bd_no_lack.append(GP_Upper_Bound_no_lack[i])
             break
         indicator += 1
 
     # If no corresponding boundary point
-    if (indicator == len(GP_Lower_Bound_ax)):
-        POS_bd_ax = np.nan
-    return POS_bd_ax, POS_ax
+    if (indicator == len(GP_Lower_Bound)):
+        POS_bd_no_lack = [np.nan, np.nan]
+    return POS_vector_no_lack, POS_bd_no_lack
 
-def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
+def Assign_GP_num_and_objtype(POS_vector_no_lack, POS_bd_no_lack):
     '''
     This is to assign GP value and object type based on the location on probing axis
     (1) Outside galaxy-populated region (at bright end)   -> LYSO
@@ -186,25 +179,23 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
 
     This code is modified from Jeremy Yang's work
     '''
-    # No corresponding boundary -> Isolated YSO (IYSO)
     # Lack on fixed axis
-    if POS_ax == -999:
-        count = 0.
-        label = 'Other'
-    # Isolated
-    elif POS_bd_ax is np.nan:
+    lbd, ubd = POS_bd_no_lack[0], POS_bd_no_lack[1]
+
+    # Isolated, No corresponding boundary -> Isolated YSO (IYSO)
+    if (lbd is np.nan) and (ubd is np.nan):
         count = 1e-3
         label = 'IYSOc'
     # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region (IGalaxy)
-    elif (POS_bd_ax[0] == POS_ax) and (POS_bd_ax[1] == POS_ax):
+    elif np.all(POS_vector_no_lack == lbd) and np.all(POS_vector_no_lack == ubd):
         count = 1e3
         label = 'IGalaxyc'
     # POS<Lower bd -> Outside galaxy region (LYSO)
-    elif (POS_bd_ax[0] > POS_ax):
+    elif np.all(np.less(POS_vector_no_lack, lbd)):
         count = 1e-3
         label = 'LYSOc'
     # POS>Upper bd -> Outside galaxy region (UYSO)
-    elif (POS_bd_ax[1] < POS_ax):
+    elif np.all(np.greater(POS_vector_no_lack, ubd)):
         count = 1e6
         label = 'UYSOc'
     # WITHIN galaxy region -> Galaxy (Galaxy)
@@ -229,8 +220,8 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
     '''
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
-        POS_bd_ax, POS_ax = Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound)
-        AOBJ_type, Count = Assign_GP_num_and_objtype(POS_bd_ax, POS_ax)
+        POS_vector_no_lack, POS_bd_no_lack = Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound)
+        AOBJ_type, Count = Assign_GP_num_and_objtype(POS_bd_no_lack, POS_bd_no_lack)
         OBJ_type += AOBJ_type
     return OBJ_type, Count, POS_vector
 
@@ -289,7 +280,6 @@ if __name__ == '__main__':
     # Load all bound arrray
     GP_Lower_Bound = np.load(lower_bound_array)
     GP_Upper_Bound = np.load(upper_bound_array)
-
     l_end   = time.time()
     print("Loading catalog and galaxy boundary took {:.3f} secs".format(l_end - l_start))
 
