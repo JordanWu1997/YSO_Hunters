@@ -179,29 +179,33 @@ def Assign_GP_num_and_objtype(POS_vector_no_lack, POS_bd_no_lack):
 
     This code is modified from Jeremy Yang's work
     '''
-    # Lack on fixed axis
+    # Input lower/upper boundary and check if lower<=upper
     lbd, ubd = POS_bd_no_lack[0], POS_bd_no_lack[1]
-
-    # Isolated, No corresponding boundary -> Isolated YSO (IYSO)
-    if (lbd is np.nan) and (ubd is np.nan):
-        count = 1e-3
-        label = 'IYSOc'
-    # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region (IGalaxy)
-    elif np.all(POS_vector_no_lack == lbd) and np.all(POS_vector_no_lack == ubd):
-        count = 1e3
-        label = 'IGalaxyc'
-    # POS<Lower bd -> Outside galaxy region (LYSO)
-    elif np.all(np.less(POS_vector_no_lack, lbd)):
-        count = 1e-3
-        label = 'LYSOc'
-    # POS>Upper bd -> Outside galaxy region (UYSO)
-    elif np.all(np.greater(POS_vector_no_lack, ubd)):
-        count = 1e6
-        label = 'UYSOc'
-    # WITHIN galaxy region -> Galaxy (Galaxy)
+    if np.all(np.less_equal(lbd, ubd))
+        # Isolated, No corresponding boundary -> Isolated YSO (IYSO)
+        if (lbd is np.nan) and (ubd is np.nan):
+            count = 1e-3
+            label = 'IYSOc'
+        # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region (IGalaxy)
+        elif np.all(POS_vector_no_lack == lbd) and np.all(POS_vector_no_lack == ubd):
+            count = 1e3
+            label = 'IGalaxyc'
+        # POS<Lower bd -> Outside galaxy region (LYSO)
+        elif np.all(np.less(POS_vector_no_lack, lbd)):
+            count = 1e-3
+            label = 'LYSOc'
+        # POS>Upper bd -> Outside galaxy region (UYSO)
+        elif np.all(np.greater(POS_vector_no_lack, ubd)):
+            count = 1e6
+            label = 'UYSOc'
+        # WITHIN galaxy region -> Galaxy (Galaxy)
+        else:
+            count = 1e3
+            label = 'Galaxyc'
     else:
-        count = 1e3
-        label = 'Galaxyc'
+        print('Wrong boundary (LBD > UBD)')
+        count = np.nan
+        label = np.nan
     return label, count
 
 def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type='mag', Qua=True, GP_PSF=False):
