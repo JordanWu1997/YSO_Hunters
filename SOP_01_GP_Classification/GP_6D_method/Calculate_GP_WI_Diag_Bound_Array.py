@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 ----------------------------------------------------------------
 Example: [program] [catalog] [cloud\'s name] [inp_data_type] [galaxy lower bd] [galaxy upper bd] [dim] [cube size] [sigma] [bond] [refD]
@@ -181,13 +181,14 @@ def Assign_GP_num_and_objtype(POS_vector_no_lack, POS_bd_no_lack):
     '''
     # Input lower/upper boundary and check if lower<=upper
     lbd, ubd = POS_bd_no_lack[0], POS_bd_no_lack[1]
-    if np.all(np.less_equal(lbd, ubd))
-        # Isolated, No corresponding boundary -> Isolated YSO (IYSO)
-        if (lbd is np.nan) and (ubd is np.nan):
-            count = 1e-3
-            label = 'IYSOc'
+
+    # Isolated, No corresponding boundary -> Isolated YSO (IYSO)
+    if (lbd is np.nan) and (ubd is np.nan):
+        count = 1e-3
+        label = 'IYSOc'
+    elif np.all(np.less_equal(lbd, ubd)):
         # POS=Lower POS=Upper -> Isolated galaxy / In the fringe of galaxy region (IGalaxy)
-        elif np.all(POS_vector_no_lack == lbd) and np.all(POS_vector_no_lack == ubd):
+        if np.all(POS_vector_no_lack == lbd) and np.all(POS_vector_no_lack == ubd):
             count = 1e3
             label = 'IGalaxyc'
         # POS<Lower bd -> Outside galaxy region (LYSO)

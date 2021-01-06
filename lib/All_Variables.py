@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''----------------------------------------------------------------
 Abstract:
     This program is for packing all variables for YSO Hunters

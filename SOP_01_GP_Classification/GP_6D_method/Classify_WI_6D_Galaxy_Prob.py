@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 -------------------------------------------------------------------------
 This program is to check 6d galaxy probability and sort the candidates

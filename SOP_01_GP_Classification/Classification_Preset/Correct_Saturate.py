@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 -------------------------------------------------------------------
 This program is for step4 (MP1_Saturate)

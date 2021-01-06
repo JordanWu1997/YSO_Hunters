@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 from sys import argv, exit
 import matplotlib.pyplot as plt
 from tqdm import tqdm, trange

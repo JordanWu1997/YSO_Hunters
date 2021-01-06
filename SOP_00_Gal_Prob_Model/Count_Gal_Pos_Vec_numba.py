@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 -------------------------------------------------------
 Example: [program] [input catalog] [catalog format] [datatype] [qua] [dimension] [cube size] [band_ID]

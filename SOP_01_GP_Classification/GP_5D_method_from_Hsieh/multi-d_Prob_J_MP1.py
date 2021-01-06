@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 #-----------------------------------------------------------
 Lastest Change: (1) Unify indents of all code lines

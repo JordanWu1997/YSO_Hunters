@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 ----------------------------------------------------------------
 Example: [program] [dim] [cube size] [sigma] [bond] [ref-D] [num_slice] [inclination]

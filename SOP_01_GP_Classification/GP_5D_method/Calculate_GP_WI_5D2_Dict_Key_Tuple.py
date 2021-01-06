@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''-----------------------------------------------------------------------------------
 This program is for calculating 5D2 galaxy probability (P) by GP Dict
 

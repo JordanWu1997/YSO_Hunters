@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''-------------------------------------------------------------------------------------
 This program is to write :
     (1) new UKIDSS J,H,K mag and error

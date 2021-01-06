@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 ----------------------------------------------------------------------
 Abstract:
@@ -20,9 +20,9 @@ from argparse import ArgumentParser
 if __name__ == '__main__':
 
     # Default argument and parser
-    de_path = '/usr/bin/python'
+    de_path = '/usr/bin/env python'
     parser = ArgumentParser(description='Setup python working paths for YSO Hunters.',
-                            epilog='Default working path: /usr/bin/python')
+                            epilog='Default working path: /usr/bin/env python')
     parser.add_argument("-p", dest="py_path", default=de_path, type=str, help="python working path to be set", required=True)
     parser.add_argument("-v", dest="verbose", action='store_true', help="print info verbosely",)
     args = parser.parse_args()

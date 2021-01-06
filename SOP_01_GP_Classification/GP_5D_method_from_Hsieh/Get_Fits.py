@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 '''----------------------------------------------------------------
 This program is a part of program for Step6 (Image_Check)

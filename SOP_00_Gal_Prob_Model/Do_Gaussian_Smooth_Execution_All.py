@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 # Sort_Source_Lack999_Slice.py (SLICE)
 # [program] [dim] [cube size] [sl_num]

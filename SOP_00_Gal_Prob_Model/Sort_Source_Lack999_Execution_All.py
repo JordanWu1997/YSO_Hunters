@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 Executing following programs
 # Sort_Source_Lack999.py [program] [sigma] [bond] [ref-D]

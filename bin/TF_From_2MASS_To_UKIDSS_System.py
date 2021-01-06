@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''------------------------------------------------------------------------------------
 This program is to transform 2MASS J,H,K bands to UKIDSS Jw, Hw, Kw bands
 

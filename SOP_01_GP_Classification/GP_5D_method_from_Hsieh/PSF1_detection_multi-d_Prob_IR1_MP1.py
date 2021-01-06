@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''
 #-----------------------------------------------------------
 Lastest Change: (1) Change value of Gal_Prob for case (GP=0)

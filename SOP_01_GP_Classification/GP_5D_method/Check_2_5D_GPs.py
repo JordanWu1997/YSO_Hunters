@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''-------------------------------------------------------------------------
 This program is between step5,step6 (Gal_Prob_(N/P)) and step6 (Image_Check)
 

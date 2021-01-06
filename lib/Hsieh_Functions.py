@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 '''----------------------------------------------------------------
 Abstract:
     This program is for packing all functions needed for calculating galaxy probability (P)
