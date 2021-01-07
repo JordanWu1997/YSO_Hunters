@@ -226,7 +226,7 @@ def Classification_Pipeline(GP_Lower_Bound, GP_Upper_Bound, row_list, data_type=
     POS_vector, OBJ_type, Count = Cal_Position_Vector(row_list, data_type=data_type, Qua=Qua, Psf=GP_PSF)
     if Count == 'init':
         POS_vector_no_lack, POS_bd_no_lack = Check_Boundary_Position_Along_Diag(POS_vector, GP_Lower_Bound, GP_Upper_Bound)
-        AOBJ_type, Count = Assign_GP_num_and_objtype(POS_bd_no_lack, POS_bd_no_lack)
+        AOBJ_type, Count = Assign_GP_num_and_objtype(POS_vector_no_lack, POS_bd_no_lack)
         OBJ_type += AOBJ_type
     return OBJ_type, Count, POS_vector
 
