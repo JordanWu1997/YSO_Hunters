@@ -17,10 +17,10 @@ set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
 set out_dir='All_YSO'
 set out_int_hsieh='all_YSO_and_Hsieh.tbl'
 set out_not_hsieh='all_YSO_not_Hsieh.tbl'
-set out_all_new='all_new_YSO.tbl'
+set out_all_new='all_GP_Diag_new_YSO.tbl'
 
 # Initialization
-if ( ! -d ${out_dir} ) rm ${out_dir} && mkdir ${out_dir} && cd ${out_dir}
+if ( -d ${out_dir} ) rm -fr ${out_dir} && mkdir ${out_dir} && cd ${out_dir}
 
 # Merge All Clouds
 foreach cloud (${clouds})
@@ -29,6 +29,7 @@ foreach cloud (${clouds})
 end
 cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
-# For normal BD method
-awk '$242~"YSO"' ${out_all_new} > all_new_YSO.tbl
-awk '$242!~"YSO"' ${out_all_new} > all_new_NYSO.tbl
+# For Diag BD method
+awk '$272~"LYSO"' ${out_all_new} > all_GP_Diag_new_LYSO.tbl
+awk '$272~"LYSO"' ${out_all_new} > all_GP_Diag_new_IYSO.tbl
+awk '$272!~"IYSO" && $272!~"LYSO"' ${out_all_new} > all_GP_Diag_new_NILYSO.tbl

@@ -164,7 +164,7 @@ end
 # Merge all YSO candidates
 echo "Merging all YSO candidates ..."
 Merge_6D_YSO_catalog.csh && cd All_YSO
-Check_Coord.py all_new_LYSO.tbl default all_new_LYSO default 7 False | tee -a ${logfile}
-#Check_Coord.py all_new_UYSO.tbl default all_new_UYSO default 7 False | tee -a ${logfile}
-Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_GP_Diag_new_LYSO.tbl default all_GP_Diag_new_LYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_GP_Diag_new_IYSO.tbl default all_GP_Diag_new_IYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_GP_Diag_new_NILYSO.tbl default all_GP_Diag_new_NILYSO default 7 False | tee -a ${logfile}
 cd .. && echo "Pipeline completed ...\n"
