@@ -20,7 +20,7 @@
 # ======================================================
 # Help for input arguments
 if ( ${#argv} != 9 ) then
-    echo "\n\tExample: Pipeline.csh [GP dir] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [GP only]"
+    echo "\n\tExample: Pipeline.csh [GP_dir 1] [GP_dir 2] [Add UKIDSS] [dimension] [cube size] [sigma] [bond] [refD] [GP only]"
     echo "\t[GP_dir 1]: directory that stores 1st galaxy probability (absolute_path_to_dir or 'default')"
     echo "\t[GP_dir 2]: directory that stores 2nd galaxy probability (absolute_path_to_dir or 'default')"
     echo "\t[Add UKIDSS]: add UKIDSS data or not (yes/no)"
@@ -43,7 +43,7 @@ set logfile='term.out'
 
 # command line argument
 set UKIDSS=${3}
-set dim=${4}}
+set dim=${4}
 set cube=${5}
 set sigma=${6}
 set bond=${7}
@@ -89,7 +89,7 @@ endif
 # ======================================================
 
 # Setup
-set par_dir="Cloud_Classification_GPM_2_${dim}d_${method}"
+set par_dir="Cloud_Classification_GPM_2_${dim}D_Diag_BD"
 if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir="${dim}Ds_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}"
 if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}
@@ -162,8 +162,7 @@ foreach i (${indice})
 
     # Classify YSO and compare to Hsieh's YSO candidates
     echo "Classifying and compare with Hsieh's YSOc ..."
-
-    Check_2_5D_Diag_GPs.py ${GP_out} ${cloud} | tee -a ${logfile}
+    Check_2_5D_Diag_GPs.py ${GP_out} ${cloud} default | tee -a ${logfile}
     Check_Coord.py ${cloud}_2_5D_YSO.tbl default ${cloud}_YSO default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_2_5D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_2_5D_GP_to_image_check.tbl default ${cloud}_2_5D_GP_IC default 7 False | tee -a ${logfile}

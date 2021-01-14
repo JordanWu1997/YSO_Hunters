@@ -92,7 +92,7 @@ if ( ${method} == BD ) echo "BD fix axis: ${fix_bd}"
 # ======================================================
 
 # Setup
-set par_dir="Cloud_Classification_GPM_2_${dim}d_${method}"
+set par_dir="Cloud_Classification_GPM_2_${dim}D_${method}"
 if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir="${dim}Ds_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}"
 if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}

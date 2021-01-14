@@ -41,8 +41,8 @@ if __name__ == '__main__':
 
     if method == 'BD':
         prefix = 'BD_'
-    elif method = 'Diag':
-        prefix = 'Diag_'
+    elif method == 'Diag':
+        prefix = 'diag_BD_'
     else:
         prefix = ''
     catalog_5D1_name = '{}_5D1_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
@@ -55,14 +55,12 @@ if __name__ == '__main__':
     with open(catalog_5D2_name, 'r') as catalog:
         catalog_5D2 = catalog.readlines()
 
-    # Generate property indice to be merged
-    ind_to_merge = [GP_OBJ_ID_5D2, \
-                    GP_ID_5D2, \
-                    GPP_OBJ_ID_5D2, \
-                    GPP_ID_5D2, \
-                    GP_KEY_ID_5D2]
+    # Generate property indice to be merged [from catalog2 to catalog1]
+    ind_to_merge = [GP_OBJ_ID_5D2_Diag, GP_ID_5D2_Diag, \
+                    GPP_OBJ_ID_5D2_Diag, GPP_ID_5D2_Diag, \
+                    GP_KEY_ID_5D2_Diag]
 
-    # Start merging
+    # Start merging [from catalog2 to catalog1]
     result_5D_tot = []
     for i in range(len(catalog_5D1)):
         result_5D1 = catalog_5D1[i].split()

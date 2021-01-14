@@ -45,7 +45,7 @@ if ( ${#argv} != 14 ) then
     echo "\t[smooth]: gaussian smooth or use existed gaussian smooth result if there is one (yes/no)"
     echo "\t[slice]: the number of slice to gaussian smooth input catalog (must in integer)"
     echo "\t[one by one]: load slice of smooth input one by one or not (yes/no)"
-    echo "\t[GP method]: Boundary method/Galaxy Dictionary method (BD/GD/BOTH)\n"
+    echo "\t[GP method]: Boundary method [Diag]/Galaxy Dictionary method (BD/GD/BOTH)\n"
     echo "\t*** If gal_pos has already been calculated, just use 'SKIP' as input to 'input catalog', 'catalog format', 'datatype', 'qualabel' ***"
     echo "\t*** If 'smooth' option is 'no', then just use 'SKIP' as input to 'slice', 'one bye one' ***"
     echo "\t*** Band index: J[0], H[1], K[2], IR1[3], IR2[4], IR3[5], IR4[6], MP1[7] ***\n"
