@@ -69,7 +69,7 @@ end
 set indice=(1 2 3 4 5 6 7)
 set clouds=(CHA_II LUP_I LUP_III LUP_IV OPH SER PER)
 
-if ( ${2} == yes ) then
+if ( ${UKIDSS} == yes ) then
     # for new added UKIDSS catalog
     set ukidss_obs=(0 0 0 0 1 1 1)
 else
@@ -143,7 +143,7 @@ foreach i (${indice})
 
     # Method to calculate galaxy probability
     echo "Calculating GP by diagonal boundary method ..."
-    Calculate_GP_WI_Diag_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
+    Calculate_GP_WI_6D_Diag_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
     ${GP_dir} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
     set GP_out=${cloud}_${dim}D_diag_BD_GP_out_catalog.tbl
 

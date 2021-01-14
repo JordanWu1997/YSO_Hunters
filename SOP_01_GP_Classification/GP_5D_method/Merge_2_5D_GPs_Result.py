@@ -31,7 +31,7 @@ if __name__ == '__main__':
         exit('\n\tError: Wrong Usage!\
               \n\tExample: [program] [cloud name] [method] \
               \n\t[cloud name]: name of cloud of input catalog \
-              \n\t[method]: method of calculating GP [BD/GD]\n')
+              \n\t[method]: method of calculating GP [BD/GD/Diag]\n')
     else:
         print('\nStart merging ...')
 
@@ -39,15 +39,15 @@ if __name__ == '__main__':
     cloud_name = str(argv[1])
     method     = str(argv[2])
 
-    prefix     = ''
-    catalog_5D1_name = '{}_5D1_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix)
-    catalog_5D2_name = '{}_5D2_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix)
-    out_catalog_name = '{}_5D_tot_{}GP_all_out_catalog.tbl'.format(cloud_name, prefix)
     if method == 'BD':
         prefix = 'BD_'
-        catalog_5D1_name = '{}_5D1_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
-        catalog_5D2_name = '{}_5D2_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
-        out_catalog_name = '{}_5D_tot_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
+    elif method = 'Diag':
+        prefix = 'Diag_'
+    else:
+        prefix = ''
+    catalog_5D1_name = '{}_5D1_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
+    catalog_5D2_name = '{}_5D2_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
+    out_catalog_name = '{}_5D_tot_{}GP_out_catalog.tbl'.format(cloud_name, prefix)
 
     # Load catalog
     with open(catalog_5D1_name, 'r') as catalog:

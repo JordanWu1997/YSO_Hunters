@@ -177,9 +177,11 @@ full_axlim_list = [Jaxlim, Haxlim, Ksaxlim, IR1axlim, IR2axlim, IR3axlim, IR4axl
 GP_OBJ_ID_5D1, GP_ID_5D1 = 233, 234
 GP_OBJ_ID_5D2, GP_ID_5D2 = 235, 236
 GP_OBJ_ID_6D, GP_ID_6D = 241, 242
+
 GPP_OBJ_ID_5D1, GPP_ID_5D1 = 237, 238
 GPP_OBJ_ID_5D2, GPP_ID_5D2 = 239, 240
 GPP_OBJ_ID_6D, GPP_ID_6D = 243, 244
+
 GP_KEY_ID_5D1, GP_KEY_ID_5D2 = 245, 246
 GP_KEY_ID_6D = 247
 
@@ -207,6 +209,16 @@ GP_KEY_ID_6D_5 = 270
 GP_OBJ_ID_6D_Diag, GP_ID_6D_Diag = 271, 272
 GPP_OBJ_ID_6D_Diag, GPP_ID_6D_Diag = 273, 274
 GP_KEY_ID_6D_Diag = 275
+
+# GP/GPP Diag Index
+GP_OBJ_ID_5D1_Diag, GP_ID_5D1_Diag = 276, 277
+GPP_OBJ_ID_5D1_Diag, GPP_ID_5D1_Diag = 278, 279
+
+GP_OBJ_ID_5D2_Diag, GP_ID_5D2_Diag = 280, 281
+GPP_OBJ_ID_5D2_Diag, GPP_ID_5D2_Diag = 282, 283
+
+GP_KEY_ID_5D1_Diag = 284
+GP_KEY_ID_5D2_Diag = 285
 
 # Set variables
 # ==============================================================================
