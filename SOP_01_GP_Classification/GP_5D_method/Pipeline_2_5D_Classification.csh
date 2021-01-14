@@ -42,7 +42,7 @@ set logfile='term.out'
 
 # command line argument
 set UKIDSS=${3}
-set dim=${4}}
+set dim=${4}
 set cube=${5}
 set sigma=${6}
 set bond=${7}

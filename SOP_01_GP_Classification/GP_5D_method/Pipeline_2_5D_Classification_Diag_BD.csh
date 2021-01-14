@@ -32,8 +32,7 @@ if ( ${#argv} != 9 ) then
     echo "\t[GP only]: option to only calculate GP and skip all process before [yes/no]"
     echo "\t*** Warning: This program must be executed in directory which also stores galaxy probability ... ***"
     echo "\t*** Warning: UKIDSS data here only contains data with mag < 11.5, and fake qua, psf labels are assigned ...***"
-    echo "\t*** Warning: If you are using BD method, please check source code if the boundary array is correct ... ***"
-    echo "\t*** Process before GP method: Catalog_transformation, Star_removal, Extinction_correction, Find_saturate ... ***\n"
+    echo "\t*** Process before calculating GP: Catalog_transformation, Star_removal, Extinction_correction, Find_saturate ... ***\n"
     exit
 endif
 
@@ -157,7 +156,7 @@ foreach i (${indice})
     ${GP_dir_2} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
 
     # Merge 2 5D results
-    Merge_2_5D_GPs_Result.py ${cloud} Diag | tee -a ${logfile}
+    Merge_2_Diag_5D_GPs_Result.py ${cloud} Diag | tee -a ${logfile}
     set GP_out=${cloud}_${dim}D_tot_diag_BD_GP_out_catalog.tbl
 
     # Classify YSO and compare to Hsieh's YSO candidates
