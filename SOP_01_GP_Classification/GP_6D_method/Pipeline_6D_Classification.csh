@@ -160,11 +160,11 @@ foreach i (${indice})
         ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_${full_inp}_${dim}D_lower_bounds_AlB${fix_bd}.npy \
         ${GP_dir}/GPV_after_smooth_${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}/after_smooth_lack_0_${full_inp}_${dim}D_upper_bounds_AlB${fix_bd}.npy \
         ${dim} ${full_inp} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
-        set GP_out=${cloud}_${dim}D_BD_GP_out_catalog.tbl
+        set GP_out=${cloud}_${dim}D_BD_GP_all_out_catalog.tbl
     else if ( ${method} == Multi_BD ) then
         Calculate_GP_WI_Multi_6D_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
         ${GP_dir} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
-        set GP_out=${cloud}_${dim}D_multi_BD_GP_out_catalog.tbl
+        set GP_out=${cloud}_${dim}D_multi_BD_GP_all_out_catalog.tbl
     else
         echo "No assigned method ..."
     endif

@@ -161,8 +161,8 @@ foreach i (${indice})
     ${GP_dir_2} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
 
     # Merge 2 5D results
-    Merge_2_Diag_5D_GPs_Result.py ${cloud} Diag | tee -a ${logfile}
-    set GP_out=${cloud}_${dim}D_tot_diag_BD_GP_out_catalog.tbl
+    Merge_2_5D_Diag_GPs_Result.py ${cloud} Diag | tee -a ${logfile}
+    set GP_out=${cloud}_${dim}D_tot_diag_BD_GP_all_out_catalog.tbl
 
     # Classify YSO and compare to Hsieh's YSO candidates
     echo "Classifying and compare with Hsieh's YSOc ..."

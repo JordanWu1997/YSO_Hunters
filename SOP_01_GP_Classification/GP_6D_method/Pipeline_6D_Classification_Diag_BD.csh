@@ -150,7 +150,7 @@ foreach i (${indice})
     echo "Calculating GP by diagonal boundary method ..."
     Calculate_GP_WI_6D_Diag_Bound_Array.py ${cloud}_saturate_correct_file.tbl ${cloud} mag \
     ${GP_dir} ${dim} ${cube} ${sigma} ${bond} ${refD} | tee -a ${logfile}
-    set GP_out=${cloud}_${dim}D_diag_BD_GP_out_catalog.tbl
+    set GP_out=${cloud}_${dim}D_diag_BD_GP_all_out_catalog.tbl
 
     # Classify YSO and compare to Hsieh's YSO candidates
     echo "Classifying and compare with Hsieh's YSOc ..."

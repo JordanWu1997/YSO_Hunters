@@ -26,6 +26,7 @@ if ( ${#argv} != 10 ) then
     echo "\t[dimension]: dimension of magnitude space (for now only '6')"
     echo "\t[cube size]: length of multi-d cube in magnitude unit"
     echo "\t[sigma]: standard deviation for gaussian dist. in magnitude"
+    echo "\t[bond]: boundary for gaussian smooth radius (in magnitude)"
     echo "\t[refD]: reference dimension which to modulus other dimension to"
     echo "\t[Only GP]: option to only calculate GP and skip all process before [yes/no]"
     echo "\t[GP method]: BD/GD (Boundary method/Galaxy Dictionary method)\n"
@@ -199,11 +200,12 @@ foreach i (${indice})
     cd .. && pwd
 end
 
+## Merge all YSO candidates [Not for 2 5D case]
 # Merge all YSO candidates
-echo "Merging all YSO candidates ..."
-Merge_2_5D_YSO_catalog.csh | tee -a ${logfile}
-cd All_YSO
-Check_Coord.py all_new_LYSO.tbl default all_new_LYSO default 7 False | tee -a ${logfile}
-Check_Coord.py all_new_UYSO.tbl default all_new_UYSO default 7 False | tee -a ${logfile}
-Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO default 7 False | tee -a ${logfile}
+#echo "Merging all YSO candidates ..."
+#Merge_2_5D_YSO_catalog.csh | tee -a ${logfile}
+#cd All_YSO
+#Check_Coord.py all_new_LYSO.tbl default all_new_LYSO default 7 False | tee -a ${logfile}
+#Check_Coord.py all_new_UYSO.tbl default all_new_UYSO default 7 False | tee -a ${logfile}
+#Check_Coord.py all_new_NULYSO.tbl default all_new_NULYSO default 7 False | tee -a ${logfile}
 echo "Pipeline completed ...\n"

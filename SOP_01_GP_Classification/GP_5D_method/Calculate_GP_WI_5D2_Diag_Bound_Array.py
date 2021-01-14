@@ -309,7 +309,7 @@ if __name__ == '__main__':
 
     # Save galaxy probability results ...
     s_start = time.time()
-    with open('{}_5D2_diag_BD_GP_out_catalog.tbl'.format(cloud_name), 'w') as GP_tot_out_catalog:
+    with open('{}_5D2_diag_BD_GP_all_out_catalog.tbl'.format(cloud_name), 'w') as GP_tot_out_catalog:
         GP_tot_out_catalog.write('\n'.join(GP_tot_out) + '\n')
     s_end   = time.time()
     print('Saving result took {:.3f} secs'.format(s_end - s_start))
