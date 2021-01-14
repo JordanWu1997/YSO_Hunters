@@ -81,7 +81,12 @@ endif
 # ======================================================
 
 # Setup
-set par_dir="Cloud_Classification_GPM_Diag_BD"
+if ( ${UKIDSS} == yes ) then
+    set par_dir=Cloud_Classification_GPM_${dim}D_Diag_BD_UKIDSS
+else
+    set par_dir=Cloud_Classification_GPM_${dim}D_Diag_BD_ORIGINAL
+endif
+
 if ( ! -d ${par_dir} ) mkdir ${par_dir} && cd ${par_dir}
 set out_dir="${dim}D_bin${cube}_sigma${sigma}_bond${bond}_refD${refD}"
 if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}
