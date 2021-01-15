@@ -25,6 +25,7 @@ def get_list_number(list_name):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         inplist = np.loadtxt(list_name, dtype=str)
+    print(list_name)
     if len(inplist.shape) == 1:
         if inplist.shape[0] == 0:
             number = 0
@@ -51,7 +52,7 @@ if __name__ == '__main__':
     GPIC      = get_list_number(glob('*_GP_to_image_check.tbl')[0])
     OTHER     = get_list_number(glob('*_2_5D_GP_others.tbl')[0])
     GPIC_YSO  = get_list_number(glob('AND_*_GP_IC_all_Hsieh_YSOc.tbl')[0])
-    OTHER_YSO = get_list_number(glob('AND_*_2_5D_GP_OTHERS_all_Hsieh_YSOc.tbl')[0])
+    OTHER_YSO = get_list_number(glob('AND_*_2_5D_OTHERS_all_Hsieh_YSOc.tbl')[0])
     GALA_YSO  = get_list_number(glob('AND_*_Galaxy_all_Hsieh_YSOc.tbl')[0])
     YSO_YSO   = get_list_number(glob('AND_*_YSO_all_Hsieh_YSOc.tbl')[0])
     Hsieh_YSO = YSO_YSO + GALA_YSO + GPIC_YSO + OTHER_YSO

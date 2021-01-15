@@ -179,10 +179,10 @@ def Check_Boundary_Position_Along_Axis(POS_vector, GP_Lower_Bound, GP_Upper_Boun
 def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     '''
     This is to assign GP value and object type based on the location on probing axis
-    (1) Outside galaxy-populated region (at bright end)   -> LYSO
+    (1) Outside galaxy-populated region (at bright end)   -> BYSO
     (2) Within  galaxy-populated region (in the middle)   -> Galaxy
     (3) On both upper & lower boundary overlapped region  -> IGalaxy
-    (3) Outside galaxy-populated region (at faint end)    -> UYSO
+    (3) Outside galaxy-populated region (at faint end)    -> FYSO
     (4) Not be coverd by any boundary (Isolated)          -> IYSO
     (5) No information on the fixed axis (No information) -> Other
 
@@ -201,14 +201,14 @@ def Assign_GP_num_and_objtype(POS_bd_ax, POS_ax):
     elif (POS_bd_ax[0] == POS_ax) and (POS_bd_ax[1] == POS_ax):
         count = 1e3
         label = 'IGalaxyc'
-    # POS<Lower bd -> Outside galaxy region (LYSO)
+    # POS<Lower bd -> Outside galaxy region (BYSO)
     elif (POS_bd_ax[0] > POS_ax):
         count = 1e-3
-        label = 'LYSOc'
-    # POS>Upper bd -> Outside galaxy region (UYSO)
+        label = 'BYSOc'
+    # POS>Upper bd -> Outside galaxy region (FYSO)
     elif (POS_bd_ax[1] < POS_ax):
         count = 1e6
-        label = 'UYSOc'
+        label = 'FYSOc'
     # WITHIN galaxy region -> Galaxy (Galaxy)
     else:
         count = 1e3

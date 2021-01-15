@@ -30,6 +30,6 @@ end
 cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
 # For Diag BD method
-awk '$272~"LYSO"' ${out_all_new} > all_GP_Diag_new_LYSO.tbl
-awk '$272~"LYSO"' ${out_all_new} > all_GP_Diag_new_IYSO.tbl
-awk '$272!~"IYSO" && $272!~"LYSO"' ${out_all_new} > all_GP_Diag_new_NILYSO.tbl
+awk '$272~"BYSO"' ${out_all_new} > all_GP_Diag_new_BYSO.tbl
+awk '$272~"BYSO"' ${out_all_new} > all_GP_Diag_new_IYSO.tbl
+awk '$272!~"IYSO" && $272!~"BYSO"' ${out_all_new} > all_GP_Diag_new_NIBYSO.tbl

@@ -26,6 +26,6 @@ foreach cloud (${clouds})
 end
 cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
-awk '$242~"UYSO"' ${out_all_new} > all_new_UYSO.tbl
-awk '$242~"LYSO"' ${out_all_new} > all_new_LYSO.tbl
-awk '$242!~"UYSO" && $242!~"LYSO"' ${out_all_new} > all_new_NULYSO.tbl
+awk '$242~"FYSO"' ${out_all_new} > all_new_FYSO.tbl
+awk '$242~"BYSO"' ${out_all_new} > all_new_BYSO.tbl
+awk '$242!~"FYSO" && $242!~"BYSO"' ${out_all_new} > all_new_NFBYSO.tbl

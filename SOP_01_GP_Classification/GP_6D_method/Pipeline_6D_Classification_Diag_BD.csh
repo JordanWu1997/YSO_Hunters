@@ -168,7 +168,7 @@ end
 
 # Merge all YSO candidates
 echo "Merging all YSO candidates ..."
-Merge_6D_YSO_catalog.csh && cd All_YSO
+Merge_6D_Diag_BD_YSO_catalog.csh && cd All_YSO
 Check_Coord.py all_GP_Diag_new_LYSO.tbl default all_GP_Diag_new_LYSO default 7 False | tee -a ${logfile}
 Check_Coord.py all_GP_Diag_new_IYSO.tbl default all_GP_Diag_new_IYSO default 7 False | tee -a ${logfile}
 Check_Coord.py all_GP_Diag_new_NILYSO.tbl default all_GP_Diag_new_NILYSO default 7 False | tee -a ${logfile}
