@@ -19,11 +19,13 @@ set out_int_hsieh='all_YSO_and_Hsieh.tbl'
 set out_not_hsieh='all_YSO_not_Hsieh.tbl'
 set out_all_new='all_new_YSO.tbl'
 
-if ( ! -d ${out_dir} ) mkdir ${out_dir} && cd ${out_dir}
-foreach cloud (${clouds})
-    cat ../${cloud}/AND_${cloud}_YSO_all_Hsieh_YSOc.tbl >> ${out_int_hsieh}
-    cat ../${cloud}/DIFF_${cloud}_YSO.tbl >> ${out_not_hsieh}
-end
+# Initialization
+if ( -d ${out_dir} ) then
+    rm ${out_dir} && mkdir ${out_dir}
+else
+    mkdir ${out_dir}
+cd ${out_dir}
+
 cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
 awk '$242~"FYSO"' ${out_all_new} > all_new_FYSO.tbl

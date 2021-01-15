@@ -20,7 +20,11 @@ set out_not_hsieh='all_YSO_not_Hsieh.tbl'
 set out_all_new='all_new_YSO.tbl'
 
 # Initialization
-if ( ! -d ${out_dir} ) rm ${out_dir} && mkdir ${out_dir} && cd ${out_dir}
+if ( -d ${out_dir} ) then
+    rm ${out_dir} && mkdir ${out_dir}
+else
+    mkdir ${out_dir}
+cd ${out_dir}
 
 # Merge All Clouds
 foreach cloud (${clouds})

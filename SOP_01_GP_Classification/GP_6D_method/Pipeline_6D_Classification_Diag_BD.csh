@@ -159,7 +159,7 @@ foreach i (${indice})
     Check_Coord.py ${cloud}_6D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_6D_GP_to_image_check.tbl default ${cloud}_6D_GP_IC default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_6D_GP_others.tbl default ${cloud}_6D_OTHERS default 7 False | tee -a ${logfile}
-    Print_6D_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
+    Print_6D_GP_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
 
     # Single cloud ends and change directory to next one
     echo "${cloud} completes ...\n"
@@ -169,7 +169,7 @@ end
 # Merge all YSO candidates
 echo "Merging all YSO candidates ..."
 Merge_6D_Diag_BD_YSO_catalog.csh && cd All_YSO
-Check_Coord.py all_GP_Diag_new_LYSO.tbl default all_GP_Diag_new_LYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_GP_Diag_new_BYSO.tbl default all_GP_Diag_new_BYSO default 7 False | tee -a ${logfile}
 Check_Coord.py all_GP_Diag_new_IYSO.tbl default all_GP_Diag_new_IYSO default 7 False | tee -a ${logfile}
-Check_Coord.py all_GP_Diag_new_NILYSO.tbl default all_GP_Diag_new_NILYSO default 7 False | tee -a ${logfile}
+Check_Coord.py all_GP_Diag_new_NIBYSO.tbl default all_GP_Diag_new_NIBYSO default 7 False | tee -a ${logfile}
 cd .. && echo "Pipeline completed ...\n"
