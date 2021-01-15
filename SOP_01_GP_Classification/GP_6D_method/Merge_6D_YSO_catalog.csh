@@ -21,7 +21,7 @@ set out_all_new='all_new_YSO.tbl'
 
 # Initialization
 if ( -d ${out_dir} ) then
-    rm ${out_dir} && mkdir ${out_dir}
+    rm -fr ${out_dir} && mkdir ${out_dir}
 else
     mkdir ${out_dir}
 cd ${out_dir}
