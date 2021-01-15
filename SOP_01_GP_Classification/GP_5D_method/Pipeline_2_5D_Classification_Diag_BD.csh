@@ -171,7 +171,7 @@ foreach i (${indice})
     Check_Coord.py ${cloud}_2_5D_Galaxy.tbl default ${cloud}_Galaxy default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_2_5D_GP_to_image_check.tbl default ${cloud}_2_5D_GP_IC default 7 False | tee -a ${logfile}
     Check_Coord.py ${cloud}_2_5D_GP_others.tbl default ${cloud}_2_5D_OTHERS default 7 False | tee -a ${logfile}
-    Print_2_5D_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
+    Print_2_5D_GPs_Confusion_Matrix.py ${cloud} | tee -a ${logfile}
 
     # Single cloud ends and change directory to next one
     echo "${cloud} completes ...\n"
