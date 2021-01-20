@@ -24,6 +24,7 @@ if ( -d ${out_dir} ) then
     rm -fr ${out_dir} && mkdir ${out_dir}
 else
     mkdir ${out_dir}
+endif
 cd ${out_dir}
 
 # Merge All Clouds
@@ -35,5 +36,5 @@ cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
 # For Diag BD method
 awk '$272~"BYSO"' ${out_all_new} > all_GP_Diag_new_BYSO.tbl
-awk '$272~"BYSO"' ${out_all_new} > all_GP_Diag_new_IYSO.tbl
+awk '$272~"IYSO"' ${out_all_new} > all_GP_Diag_new_IYSO.tbl
 awk '$272!~"IYSO" && $272!~"BYSO"' ${out_all_new} > all_GP_Diag_new_NIBYSO.tbl
