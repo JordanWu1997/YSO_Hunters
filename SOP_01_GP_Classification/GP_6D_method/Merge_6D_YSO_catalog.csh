@@ -18,12 +18,15 @@ set out_dir='All_YSO'
 set out_int_hsieh='all_YSO_and_Hsieh.tbl'
 set out_not_hsieh='all_YSO_not_Hsieh.tbl'
 set out_all_new='all_new_YSO.tbl'
+set out_all_galaxy='all_new_Galaxy.tbl'
 
 # Initialization
 if ( -d ${out_dir} ) then
     rm -fr ${out_dir} && mkdir ${out_dir}
 else
     mkdir ${out_dir}
+endif
+
 cd ${out_dir}
 
 # Merge All Clouds
@@ -33,6 +36,13 @@ foreach cloud (${clouds})
 end
 cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 
+# YSO
 # For normal BD method
 awk '$242~"YSO"' ${out_all_new} > all_new_YSO.tbl
 awk '$242!~"YSO"' ${out_all_new} > all_new_NYSO.tbl
+
+# Galaxy
+# Merge All Clouds
+foreach cloud (${clouds})
+    cat ../${cloud}/${cloud}_6D_Galaxy.tbl >> ${out_all_galaxy}
+end

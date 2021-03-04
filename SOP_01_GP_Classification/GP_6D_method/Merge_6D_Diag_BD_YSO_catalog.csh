@@ -18,6 +18,7 @@ set out_dir='All_YSO'
 set out_int_hsieh='all_YSO_and_Hsieh.tbl'
 set out_not_hsieh='all_YSO_not_Hsieh.tbl'
 set out_all_new='all_GP_Diag_new_YSO.tbl'
+set out_all_galaxy='all_GP_Diag_new_Galaxy.tbl'
 
 # Initialization
 if ( -d ${out_dir} ) then
@@ -38,3 +39,9 @@ cat ${out_int_hsieh} ${out_not_hsieh} >> ${out_all_new}
 awk '$272~"BYSO"' ${out_all_new} > all_GP_Diag_new_BYSO.tbl
 awk '$272~"IYSO"' ${out_all_new} > all_GP_Diag_new_IYSO.tbl
 awk '$272!~"IYSO" && $272!~"BYSO"' ${out_all_new} > all_GP_Diag_new_NIBYSO.tbl
+
+# Galaxy
+# Merge All Clouds
+foreach cloud (${clouds})
+    cat ../${cloud}/${cloud}_6D_Galaxy.tbl >> ${out_all_galaxy}
+end
